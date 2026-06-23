@@ -1,0 +1,2 @@
+//{$DEFINE  BT2}
+//{$DEFINE ENG_VERSION }

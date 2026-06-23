@@ -1,0 +1,193 @@
+
+{$DEFINE USE_LUA_SCRIPT}
+
+{Name                                Size Group Package
+--------------------------------- ------ ----- ----------------------
+CPort                                  8 CODE  cportlibdxe260.bpl
+Xml.Win.msxmldom                      16 CODE  xmlrtl260.bpl
+VirtualTrees.AccessibilityFactory      8 CODE  virtualtreesr26.bpl
+Vcl.CheckLst                           8 CODE  vclx260.bpl
+Vcl.Imaging.jpeg                       8 CODE  vclimg260.bpl
+Vcl.PlatformDefaultStyleActnCtrls      8 ICODE vclactnband260.bpl
+Vcl.Graphics                          16 CODE  vcl260.bpl
+VCLTee.TeeHtml                         8 CODE  tee9260.bpl
+Winapi.MsCTF                           4 BSS   rtl260.bpl
+JvSpeedButton                          8 CODE  jvstdctrls260.bpl
+JvWndProcHook                          8 ICODE jvsystem260.bpl
+JvInspector                            8 ICODE jvruntimedesign260.bpl
+JvDockControlForm                      8 ICODE jvdocking260.bpl
+JvPropertyStorage                      8 ICODE jvcore260.bpl
+JclDebug                               8 ICODE jcl260.bpl
+GR32_System                            8 CODE  gr32_r260.bpl
+Data.DB                                8 ICODE dbrtl260.bpl
+System.Bindings.Search                 8 CODE  bindengine260.bpl
+REST.Client                     168 (CODE+ICODE+DATA) restcomponents260.bpl
+IdBaseComponent                   8 (CODE+ICODE+DATA) indysystem260.bpl
+
+
+ Name                           Size Group             Package
+--------------------------- ------- ----------------- ----------------------
+Xml.Win.msxmldom                 32 (CODE+ICODE+DATA) xmlrtl260.bpl
+Xml.xmldom                       16 (CODE+ICODE+DATA) xmlrtl260.bpl
+Xml.XMLSchema                    16 (CODE+ICODE+DATA) xmlrtl260.bpl
+Vcl.Imaging.jpeg                 16 (CODE+ICODE+DATA) vclimg260.bpl
+Vcl.ActnList                     16 (CODE+ICODE+DATA) vcl260.bpl
+Vcl.Buttons                      32 (CODE+ICODE+DATA) vcl260.bpl
+Vcl.Clipbrd                      16 (CODE+ICODE+DATA) vcl260.bpl
+Vcl.ComCtrls                    400 (CODE+ICODE+DATA) vcl260.bpl
+Vcl.Controls                     16 (CODE+ICODE+DATA) vcl260.bpl
+Vcl.Dialogs                      48 (CODE+ICODE+DATA) vcl260.bpl
+Vcl.ExtCtrls                    112 (CODE+ICODE+DATA) vcl260.bpl
+Vcl.Forms                        72 (CODE+ICODE+DATA) vcl260.bpl
+Vcl.Graphics                     40 (CODE+ICODE+DATA) vcl260.bpl
+Vcl.GraphUtil                    16 (CODE+ICODE+DATA) vcl260.bpl
+Vcl.Grids                        64 (CODE+ICODE+DATA) vcl260.bpl
+Vcl.Menus                        16 (CODE+ICODE+DATA) vcl260.bpl
+Vcl.Printers                     16 (CODE+ICODE+DATA) vcl260.bpl
+Vcl.StdCtrls                    288 (CODE+ICODE+DATA) vcl260.bpl
+Vcl.Themes                       32 (CODE+ICODE+DATA) vcl260.bpl
+System                          824 (CODE+ICODE+DATA) rtl260.bpl
+System.Actions                   16 (CODE+ICODE+DATA) rtl260.bpl
+System.AnsiStrings               16 (CODE+ICODE+DATA) rtl260.bpl
+System.Character                 16 (CODE+ICODE+DATA) rtl260.bpl
+System.Classes                  672 (CODE+ICODE+DATA) rtl260.bpl
+System.DateUtils                 32 (CODE+ICODE+DATA) rtl260.bpl
+System.Generics.Collections     520 (CODE+ICODE+DATA) rtl260.bpl
+System.Generics.Defaults         40 (CODE+ICODE+DATA) rtl260.bpl
+System.HelpIntfs                 16 (CODE+ICODE+DATA) rtl260.bpl
+System.IniFiles                  16 (CODE+ICODE+DATA) rtl260.bpl
+System.Internal.ExcUtils         16 (CODE+ICODE+DATA) rtl260.bpl
+System.IOUtils                   72 (CODE+ICODE+DATA) rtl260.bpl
+System.JSON                      16 (CODE+ICODE+DATA) rtl260.bpl
+System.JSON.Readers              16 (CODE+ICODE+DATA) rtl260.bpl
+System.JSON.Types                16 (CODE+ICODE+DATA) rtl260.bpl
+System.JSON.Utils                16 (CODE+ICODE+DATA) rtl260.bpl
+System.JSON.Writers              16 (CODE+ICODE+DATA) rtl260.bpl
+System.Math                      64 (CODE+ICODE+DATA) rtl260.bpl
+System.Messaging                 16 (CODE+ICODE+DATA) rtl260.bpl
+System.Net.HttpClient            16 (CODE+ICODE+DATA) rtl260.bpl
+System.Net.HttpClient.Win        32 (CODE+ICODE+DATA) rtl260.bpl
+System.Net.Mime                  16 (CODE+ICODE+DATA) rtl260.bpl
+System.Net.URLClient             32 (CODE+ICODE+DATA) rtl260.bpl
+System.NetEncoding               16 (CODE+ICODE+DATA) rtl260.bpl
+System.Rtti                      32 (CODE+ICODE+DATA) rtl260.bpl
+System.SyncObjs                  48 (CODE+ICODE+DATA) rtl260.bpl
+System.SysUtils                 392 (CODE+ICODE+DATA) rtl260.bpl
+System.Threading                112 (CODE+ICODE+DATA) rtl260.bpl
+System.TimeSpan                  16 (CODE+ICODE+DATA) rtl260.bpl
+System.Types                     16 (CODE+ICODE+DATA) rtl260.bpl
+System.TypInfo                   16 (CODE+ICODE+DATA) rtl260.bpl
+System.UIConsts                  16 (CODE+ICODE+DATA) rtl260.bpl
+System.UITypes                   16 (CODE+ICODE+DATA) rtl260.bpl
+System.Variants                 168 (CODE+ICODE+DATA) rtl260.bpl
+System.VarUtils                  16 (CODE+ICODE+DATA) rtl260.bpl
+System.Win.ComObj                32 (CODE+ICODE+DATA) rtl260.bpl
+System.Win.Registry              16 (CODE+ICODE+DATA) rtl260.bpl
+Winapi.ActiveX                   16 (CODE+ICODE+DATA) rtl260.bpl
+Winapi.FlatSB                    16 (CODE+ICODE+DATA) rtl260.bpl
+Winapi.MsCTF                    124 (CODE+ICODE+DATA) rtl260.bpl
+Winapi.PsAPI                     44 (CODE+ICODE+DATA) rtl260.bpl
+Winapi.UxTheme                   16 (CODE+ICODE+DATA) rtl260.bpl
+Winapi.Windows                  160 (CODE+ICODE+DATA) rtl260.bpl
+REST.Client                     168 (CODE+ICODE+DATA) restcomponents260.bpl
+REST.Json.Interceptors           16 (CODE+ICODE+DATA) restcomponents260.bpl
+REST.JsonReflect                 16 (CODE+ICODE+DATA) restcomponents260.bpl
+JvInspector                     904 (CODE+ICODE+DATA) jvruntimedesign260.bpl
+JvDockControlForm                16 (CODE+ICODE+DATA) jvdocking260.bpl
+JvDockSupportProc                16 (CODE+ICODE+DATA) jvdocking260.bpl
+JvDockVSNetStyle                 16 (CODE+ICODE+DATA) jvdocking260.bpl
+JvAppStorage                     16 (CODE+ICODE+DATA) jvcore260.bpl
+JvJVCLUtils                      16 (CODE+ICODE+DATA) jvcore260.bpl
+JvTypes                          16 (CODE+ICODE+DATA) jvcore260.bpl
+JclAnsiStrings                   16 (CODE+ICODE+DATA) jcl260.bpl
+JclBase                          16 (CODE+ICODE+DATA) jcl260.bpl
+JclDebug                         16 (CODE+ICODE+DATA) jcl260.bpl
+JclHookExcept                    16 (CODE+ICODE+DATA) jcl260.bpl
+JclMath                          16 (CODE+ICODE+DATA) jcl260.bpl
+JclRTTI                          16 (CODE+ICODE+DATA) jcl260.bpl
+JclShell                         16 (CODE+ICODE+DATA) jcl260.bpl
+JclSimpleXml                     16 (CODE+ICODE+DATA) jcl260.bpl
+JclStrings                       16 (CODE+ICODE+DATA) jcl260.bpl
+JclSysInfo                       16 (CODE+ICODE+DATA) jcl260.bpl
+JclSysUtils                      16 (CODE+ICODE+DATA) jcl260.bpl
+JclUnicode                       16 (CODE+ICODE+DATA) jcl260.bpl
+Snmp                             16 (CODE+ICODE+DATA) jcl260.bpl
+IdBaseComponent                   8 (CODE+ICODE+DATA) indysystem260.bpl
+IdComponent                      16 (CODE+ICODE+DATA) indysystem260.bpl
+IdGlobal                         24 (CODE+ICODE+DATA) indysystem260.bpl
+IdIDN                            16 (CODE+ICODE+DATA) indysystem260.bpl
+IdStack                          16 (CODE+ICODE+DATA) indysystem260.bpl
+IdStackWindows                   16 (CODE+ICODE+DATA) indysystem260.bpl
+IdWinsock2                       16 (CODE+ICODE+DATA) indysystem260.bpl
+IdWship6                         16 (CODE+ICODE+DATA) indysystem260.bpl
+IdIOHandler                      16 (CODE+ICODE+DATA) indycore260.bpl
+IdIOHandlerStack                 16 (CODE+ICODE+DATA) indycore260.bpl
+IdTCPClient                       8 (CODE+ICODE+DATA) indycore260.bpl
+IdTCPConnection                   8 (CODE+ICODE+DATA) indycore260.bpl
+IdThread                         16 (CODE+ICODE+DATA) indycore260.bpl
+IdUDPBase                         8 (CODE+ICODE+DATA) indycore260.bpl
+IdUDPClient                       8 (CODE+ICODE+DATA) indycore260.bpl
+IdUDPServer                       8 (CODE+ICODE+DATA) indycore260.bpl
+Data.DB                          16 (CODE+ICODE+DATA) dbrtl260.bpl
+Data.FmtBcd                      16 (CODE+ICODE+DATA) dbrtl260.bpl
+Data.SqlTimSt                    16 (CODE+ICODE+DATA) dbrtl260.bpl
+CPort                           136 (CODE+ICODE+DATA) cportlibdxe260.bpl
+CPortCtl                         16 (CODE+ICODE+DATA) cportlibdxe260.bpl
+Actns                            32 (CODE+ICODE+DATA) core.bpl
+Container                       120 (CODE+ICODE+DATA) core.bpl
+debug_except                     64 (CODE+ICODE+DATA) core.bpl
+DeviceIntf                       16 (CODE+ICODE+DATA) core.bpl
+Fibonach                         48 (CODE+ICODE+DATA) core.bpl
+Fifo.Decoder                     16 (CODE+ICODE+DATA) core.bpl
+Fifo.FFT                         48 (CODE+ICODE+DATA) core.bpl
+FileCachImpl                     24 (CODE+ICODE+DATA) core.bpl
+FileDataSet                      16 (CODE+ICODE+DATA) core.bpl
+IDataSets                        16 (CODE+ICODE+DATA) core.bpl
+IndexBuffer                      48 (CODE+ICODE+DATA) core.bpl
+JDtools                          48 (CODE+ICODE+DATA) core.bpl
+Math.Telesistem                  32 (CODE+ICODE+DATA) core.bpl
+Math.Telesistem.Custom           72 (CODE+ICODE+DATA) core.bpl
+MathIntf                         48 (CODE+ICODE+DATA) core.bpl
+Parser                           64 (CODE+ICODE+DATA) core.bpl
+RootImpl                        296 (CODE+ICODE+DATA) core.bpl
+tools                           216 (CODE+ICODE+DATA) core.bpl
+WlanClass                        32 (CODE+ICODE+DATA) core.bpl
+XMLDataSet                       56 (CODE+ICODE+DATA) core.bpl
+System.Bindings.EvalSys          16 (CODE+ICODE+DATA) bindengine260.bpl
+System.Bindings.Evaluator        16 (CODE+ICODE+DATA) bindengine260.bpl
+System.Bindings.Factories        32 (CODE+ICODE+DATA) bindengine260.bpl
+System.Bindings.Graph            16 (CODE+ICODE+DATA) bindengine260.bpl
+System.Bindings.Helper            8 (CODE+ICODE+DATA) bindengine260.bpl
+System.Bindings.Methods          32 (CODE+ICODE+DATA) bindengine260.bpl
+System.Bindings.Outputs          48 (CODE+ICODE+DATA) bindengine260.bpl
+System.Bindings.Search           16 (CODE+ICODE+DATA) bindengine260.bpl
+Data.Bind.Components             16 (CODE+ICODE+DATA) bindcomp260.bpl
+Data.Bind.Grid                   16 (CODE+ICODE+DATA) bindcomp260.bpl
+Data.Bind.JSON                   16 (CODE+ICODE+DATA) bindcomp260.bpl
+Data.Bind.ObjectScope            32 (CODE+ICODE+DATA) bindcomp260.bpl
+AbstractDev                  46 600 (CODE+ICODE+DATA)
+ComDev                       23 544 (CODE+ICODE+DATA)
+CRC16                         1 468 (CODE+ICODE+DATA)
+CRC16err                        624 (CODE+ICODE+DATA)
+Dev.BK                        2 440 (CODE+ICODE+DATA)
+Dev.GLUSonic                  5 248 (CODE+ICODE+DATA)
+Dev.StolGK                   17 684 (CODE+ICODE+DATA)
+Dev.TelesisRetr2             35 948 (CODE+ICODE+DATA)
+Dev.Telesistem               39 140 (CODE+ICODE+DATA)
+Dev.Telesistem.Data          18 620 (CODE+ICODE+DATA)
+Dev.Telesistem.Decoder        6 028 (CODE+ICODE+DATA)
+Dev.Telesistem.Shum           1 808 (CODE+ICODE+DATA)
+DevBur                       30 660 (CODE+ICODE+DATA)
+DevPsk                      113 224 (CODE+ICODE+DATA)
+DevUaki                      17 700 (CODE+ICODE+DATA)
+DevUaki2                      9 032 (CODE+ICODE+DATA)
+MicroSDConn                   2 020 (CODE+ICODE+DATA)
+NetConn                       5 332 (CODE+ICODE+DATA)
+RestConn                      5 128 (CODE+ICODE+DATA)
+SubDevImpl                   10 436 (CODE+ICODE+DATA)
+SysInit                       3 380 (CODE+ICODE+DATA)
+UDPConn                      21 100 (CODE+ICODE+DATA)
+WlanConn                      2 152 (CODE+ICODE+DATA)
+
+Units: 161, Forms: 0, Code: 421004, ICode: 4532, Data: 2244, Bss: 460, Resources: 3072   }
+

@@ -1,0 +1,37 @@
+object GraphDataForm: TGraphDataForm
+  Left = 0
+  Top = 0
+  Caption = 'GraphDataForm'
+  ClientHeight = 289
+  ClientWidth = 554
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OnShow = FormShow
+  TextHeight = 13
+  object Graph: TGraph
+    Left = 0
+    Top = 0
+    Width = 554
+    Height = 289
+    YLastAvail = 1000.000000000000000000
+    YMirror = False
+    YScale = 1.000000000000000000
+    OnParamsAdded = GraphParamsAdded
+    Align = alClient
+    ParentFont = False
+    Parent = Owner
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clBlack
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentColor = False
+    Color = clWhite
+    GraphRows = <>
+    GraphColumns = <>
+  end
+end

@@ -1,0 +1,129 @@
+// JCL_DEBUG_EXPERT_DELETEMAPFILE OFF
+// JCL_DEBUG_EXPERT_GENERATEJDBG OFF
+{$IFDEF RELEASE}
+// JCL_DEBUG_EXPERT_INSERTJDBG OFF
+{$ELSE}
+// JCL_DEBUG_EXPERT_INSERTJDBG ON
+{$ENDIF}
+package Core;
+
+{$R *.res}
+{$R 'OtklonitelPaintClass.dcr'}
+{$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
+{$ALIGN 8}
+{$ASSERTIONS ON}
+{$BOOLEVAL OFF}
+{$DEBUGINFO OFF}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS OFF}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION ON}
+{$OVERFLOWCHECKS OFF}
+{$RANGECHECKS OFF}
+{$REFERENCEINFO OFF}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES OFF}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST OFF}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$DEFINE RELEASE}
+{$ENDIF IMPLICITBUILDING}
+{$DESCRIPTION 'Core 2.0.0 Корневые классы и утилиты Плагинов '}
+{$IMPLICITBUILD ON}
+
+requires
+  xmlrtl,
+  rtl,
+  vclactnband,
+  vcl,
+  vclimg,
+  bindengine,
+  Jcl,
+  JvCore,
+  JvDocking,
+  GR32_R,
+  JvRuntimeDesign,
+  dbrtl;
+
+contains
+  debug_except in 'debug_except.pas',
+  Container in 'Container.pas',
+  AbstractPlugin in '..\AbstractPlugin.pas',
+  DeviceIntf in '..\DeviceIntf.pas',
+  ExtendIntf in '..\ExtendIntf.pas',
+  LAS in '..\LAS.pas',
+  MathIntf in '..\MathIntf.pas',
+  PluginAPI in '..\PluginAPI.pas',
+  RootIntf in '..\RootIntf.pas',
+  tools in '..\tools.pas',
+  Actns in 'Actns.pas',
+  LasImpl in 'LasImpl.pas',
+  Parser in 'Parser.pas',
+  ImportExport in 'ImportExport.pas',
+  DockIForm in 'DockIForm.pas',
+  CoreReg in 'CoreReg.pas',
+  RootImpl in 'RootImpl.pas',
+  WlanClass in 'WlanClass.pas',
+  EditControl in 'EditControl.pas',
+  ExcelImpl in 'ExcelImpl.pas',
+  UakiIntf in '..\UakiIntf.pas',
+  Fibonach in '..\Fibonach.pas',
+  StolGKIntf in '..\StolGKIntf.pas',
+  Math.Telesistem in 'Math.Telesistem.pas',
+  FileCachImpl in 'FileCachImpl.pas',
+  OtklonitelPaintClass,
+  AVRtypes in 'AVRtypes.pas',
+  IDataSets in 'IDataSets.pas',
+  DataSetIntf in '..\DataSetIntf.pas',
+  CustomPlot in 'CustomPlot.pas',
+  Plot.GR32 in 'Plot.GR32.pas',
+  DataImportIntf in '..\DataImportIntf.pas',
+  DataImportImpl in 'DataImportImpl.pas',
+  Vector in '..\Vector.pas',
+  Plot.Controls in 'Plot.Controls.pas',
+  JDtools in 'JDtools.pas',
+  LasDataSet in 'LasDataSet.pas',
+  FileDataSet in 'FileDataSet.pas',
+  Plot.DataLink in 'Plot.DataLink.pas',
+  Plot.GR32.Buffer in 'Plot.GR32.Buffer.pas',
+  StolBKIntf in '..\StolBKIntf.pas',
+  Fifo in 'Fifo.pas',
+  Fifo.FFT in 'Fifo.FFT.pas',
+  Math.Telesistem.Custom in 'Math.Telesistem.Custom.pas',
+  Fifo.Decoder in 'Fifo.Decoder.pas',
+  IndexBuffer in '..\IndexBuffer.pas',
+  CFifo in 'CFifo.pas',
+  VerySimple.Lua.Lib in 'VerySimpleLua\VerySimple.Lua.Lib.pas',
+  VerySimple.Lua in 'VerySimpleLua\VerySimple.Lua.pas',
+  DScintilla in 'Scintilla\DScintilla.pas',
+  DScintillaCustom in 'Scintilla\DScintillaCustom.pas',
+  DScintillaTypes in 'Scintilla\DScintillaTypes.pas',
+  DScintillaUtils in 'Scintilla\DScintillaUtils.pas',
+  ScinLua in 'ScinLua.pas',
+  XMLLua.IKN in 'XMLLua.IKN.pas',
+  XMLLua.Math in 'XMLLua.Math.pas',
+  XMLLua in 'XMLLua.pas',
+  XMLLua.Report in 'XMLLua.Report.pas',
+  XMLDataSet in 'XMLDataSet.pas',
+  RangeSelector in 'RangeSelector.pas',
+  XMLLua.EEPROM in 'XMLLua.EEPROM.pas',
+  nduCType in 'WlanAPI\nduCType.pas',
+  nduEapTypes in 'WlanAPI\nduEapTypes.pas',
+  nduL2cmn in 'WlanAPI\nduL2cmn.pas',
+  nduNtDDNdis in 'WlanAPI\nduNtDDNdis.pas',
+  nduWinDot11 in 'WlanAPI\nduWinDot11.pas',
+  nduWinNT in 'WlanAPI\nduWinNT.pas',
+  nduWlanAPI in 'WlanAPI\nduWlanAPI.pas',
+  nduWlanTypes in 'WlanAPI\nduWlanTypes.pas',
+  SDcardToolsAsync in '..\SDcardToolsAsync.pas',
+  MagniProTool in '..\MagniProTool.pas',
+  ExportMetaData in 'ExportMetaData.pas',
+  TrrInclin.Temp.PolyModel in 'TrrInclin.Temp.PolyModel.pas';
+
+end.
+

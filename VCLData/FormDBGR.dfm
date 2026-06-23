@@ -1,0 +1,30 @@
+object FormGraph: TFormGraph
+  Left = 0
+  Top = 0
+  ActiveControl = Plt
+  Caption = 'FormGraph'
+  ClientHeight = 363
+  ClientWidth = 633
+  Color = clWhite
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Plt: TPlotDB
+    Left = 0
+    Top = 0
+    Width = 633
+    Height = 363
+    ScaleY = 1.000000000000000000
+    YOffset = 0
+    CursorY = -987.654296875000100000
+    Align = alClient
+    OnContextPopup = PltContextPopup
+    OnParamXAxisChanged = PltParamXAxisChanged
+    PlotColumns = <>
+  end
+end

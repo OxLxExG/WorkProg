@@ -1,0 +1,168 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{42FB8885-56B1-4201-9930-78DFAE2ABDE5}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="Core\Core.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="MainExe\WorkProg.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="ProjectManager\ProjectManager3.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="ComDll\ComDev.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="BootLoader\bootLoader.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="VCLControl\VCLControl3.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="VCLDialogs\VCLDialogs.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="VCLEEPROM\VCLeeprom.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="VCLData\VCLData.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Monitor\Monitor.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="CreatePSK\CreateData.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Metrol\Metrol.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="Core">
+        <MSBuild Projects="Core\Core.dproj"/>
+    </Target>
+    <Target Name="Core:Clean">
+        <MSBuild Projects="Core\Core.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Core:Make">
+        <MSBuild Projects="Core\Core.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="WorkProg">
+        <MSBuild Projects="MainExe\WorkProg.dproj"/>
+    </Target>
+    <Target Name="WorkProg:Clean">
+        <MSBuild Projects="MainExe\WorkProg.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="WorkProg:Make">
+        <MSBuild Projects="MainExe\WorkProg.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="ProjectManager3">
+        <MSBuild Projects="ProjectManager\ProjectManager3.dproj"/>
+    </Target>
+    <Target Name="ProjectManager3:Clean">
+        <MSBuild Projects="ProjectManager\ProjectManager3.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="ProjectManager3:Make">
+        <MSBuild Projects="ProjectManager\ProjectManager3.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="ComDev">
+        <MSBuild Projects="ComDll\ComDev.dproj"/>
+    </Target>
+    <Target Name="ComDev:Clean">
+        <MSBuild Projects="ComDll\ComDev.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="ComDev:Make">
+        <MSBuild Projects="ComDll\ComDev.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="bootLoader">
+        <MSBuild Projects="BootLoader\bootLoader.dproj"/>
+    </Target>
+    <Target Name="bootLoader:Clean">
+        <MSBuild Projects="BootLoader\bootLoader.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="bootLoader:Make">
+        <MSBuild Projects="BootLoader\bootLoader.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="VCLControl3">
+        <MSBuild Projects="VCLControl\VCLControl3.dproj"/>
+    </Target>
+    <Target Name="VCLControl3:Clean">
+        <MSBuild Projects="VCLControl\VCLControl3.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="VCLControl3:Make">
+        <MSBuild Projects="VCLControl\VCLControl3.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="VCLDialogs">
+        <MSBuild Projects="VCLDialogs\VCLDialogs.dproj"/>
+    </Target>
+    <Target Name="VCLDialogs:Clean">
+        <MSBuild Projects="VCLDialogs\VCLDialogs.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="VCLDialogs:Make">
+        <MSBuild Projects="VCLDialogs\VCLDialogs.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="VCLeeprom">
+        <MSBuild Projects="VCLEEPROM\VCLeeprom.dproj"/>
+    </Target>
+    <Target Name="VCLeeprom:Clean">
+        <MSBuild Projects="VCLEEPROM\VCLeeprom.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="VCLeeprom:Make">
+        <MSBuild Projects="VCLEEPROM\VCLeeprom.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="VCLData">
+        <MSBuild Projects="VCLData\VCLData.dproj"/>
+    </Target>
+    <Target Name="VCLData:Clean">
+        <MSBuild Projects="VCLData\VCLData.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="VCLData:Make">
+        <MSBuild Projects="VCLData\VCLData.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Monitor">
+        <MSBuild Projects="Monitor\Monitor.dproj"/>
+    </Target>
+    <Target Name="Monitor:Clean">
+        <MSBuild Projects="Monitor\Monitor.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Monitor:Make">
+        <MSBuild Projects="Monitor\Monitor.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="CreateData">
+        <MSBuild Projects="CreatePSK\CreateData.dproj"/>
+    </Target>
+    <Target Name="CreateData:Clean">
+        <MSBuild Projects="CreatePSK\CreateData.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="CreateData:Make">
+        <MSBuild Projects="CreatePSK\CreateData.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Metrol">
+        <MSBuild Projects="Metrol\Metrol.dproj"/>
+    </Target>
+    <Target Name="Metrol:Clean">
+        <MSBuild Projects="Metrol\Metrol.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Metrol:Make">
+        <MSBuild Projects="Metrol\Metrol.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="Core;WorkProg;ProjectManager3;ComDev;bootLoader;VCLControl3;VCLDialogs;VCLeeprom;VCLData;Monitor;CreateData;Metrol"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="Core:Clean;WorkProg:Clean;ProjectManager3:Clean;ComDev:Clean;bootLoader:Clean;VCLControl3:Clean;VCLDialogs:Clean;VCLeeprom:Clean;VCLData:Clean;Monitor:Clean;CreateData:Clean;Metrol:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="Core:Make;WorkProg:Make;ProjectManager3:Make;ComDev:Make;bootLoader:Make;VCLControl3:Make;VCLDialogs:Make;VCLeeprom:Make;VCLData:Make;Monitor:Make;CreateData:Make;Metrol:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>

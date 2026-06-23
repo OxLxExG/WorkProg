@@ -1,0 +1,403 @@
+unit VCLDlgLoggDevice;
+
+interface
+
+uses Container, tools, RootIntf, DeviceIntf, PluginAPI, DockIForm, ExtendIntf, RootImpl, debug_except, FileCachImpl,
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, Xml.XMLIntf, System.TypInfo,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, Data.DB, Vcl.Grids, Vcl.DBGrids, JvMemoryDataset;
+
+const
+  FLD_id = 'номер рейса';
+  FLD_start = 'задержка';
+  FLD_work = 'начало работы';
+  FLD_stop = 'выключение';
+  FLD_read = 'чтение';
+  FLD_dur_all ='в скважине';
+  FLD_dur_wrk ='работа';
+
+type
+  EReadLogException = class(ENeedDialogException);
+
+  PReportRes = ^TReportRes;
+  TReportRes = packed record
+   id: Dword;
+   start: Dword;
+   work: Dword;
+   stop: Dword;
+   read: Dword;
+   pading: array[0..2] of Dword;
+  end;
+
+  TFormLogg = class(TDialogIForm, IDialog, IDialog<IXMLNode, TDialogResult>)
+    Panel1: TPanel;
+    BtReadLogg: TButton;
+    grid: TDBGrid;
+    ds: TDataSource;
+    btClose: TButton;
+    md: TJvMemoryData;
+    LabelTotal: TLabel;
+    LabelWork: TLabel;
+    procedure BtReadLoggClick(Sender: TObject);
+    procedure mdCalcFields(DataSet: TDataSet);
+    procedure btCloseClick(Sender: TObject);
+  private
+    TotalDurationSum: Double; // Сумма для stop - start
+    WorkDurationSum: Double;  // Сумма для stop - work
+    FDev: IxmlNode;
+    FAddr: Integer;
+    FRes: TDialogResult;
+   // FBuff: array[0..896-1] of TReportRes;
+    FBuff: array[0..$7000-1] of byte;
+    function GetDevice: ILowLevelDeviceIO;
+    procedure DoLogReaded(LastPage: Integer);
+    procedure GenerateDummyData;
+    procedure FillMemoryDataFromBuffer;
+    procedure DurationFieldGetText(Sender: TField; var Text: string; DisplayText: Boolean);
+    procedure ShowTotals;
+  protected
+    function GetInfo: PTypeInfo; override;
+    function Execute(Dev: IXMLNode; Res: TDialogResult): Boolean;
+
+  public
+    property Dev: ILowLevelDeviceIO read GetDevice;
+  end;
+
+var
+  FormLogg: TFormLogg;
+
+implementation
+
+{$R *.dfm}
+
+{ TForm1 }
+
+procedure TFormLogg.btCloseClick(Sender: TObject);
+begin
+RegisterDialog.UnInitialize<Dialog_Logg>
+end;
+
+procedure TFormLogg.BtReadLoggClick(Sender: TObject);
+const
+  PG = $200;
+  NP = $7000 div PG;
+begin
+  // 1. ЗАЩИТА ИНТЕРФЕЙСА: отключаем кнопку, чтобы избежать повторного клика
+  BtReadLogg.Enabled := False;
+
+  ZeroMemory(@FBuff, $7000);
+//  Fillchar(FBuff, $7000,$FF);
+
+  var Page := 0;
+  var Err := 0;
+  var D := TStdRec.Create(Faddr, 3, 2);
+
+  var ReadCurrentPage: TProc;
+
+  ReadCurrentPage := procedure
+  begin
+    D.AssignWord(Page*PG);
+
+    var StepProcessed := false;
+
+    Dev.SendROW(D.pBuf, D.SizeOf, procedure(pr: Pointer; nr: integer)
+  begin
+      // Защита от дребезга событий (таймер vs порт)
+      if StepProcessed then Exit;
+
+      if Assigned(pr) and (nr > PG) then
+      begin
+        StepProcessed := true;
+
+        var ld: PByte := pr;
+        Inc(ld);
+
+        // 1. Копируем в физический буфер
+        var CurrentOffset := Page * PG;
+        Move(ld^, FBuff[CurrentOffset], PG);
+        // 2. СРАЗУ проверяем только что считанные байты в FBuff
+        var IsEmpty := true;
+        for var i := 0 to PG - 1 do
+        begin
+          if FBuff[CurrentOffset + i] <> $FF then
+          begin
+            IsEmpty := false;
+            break; // Нашли не FF, страница НЕ пустая
+          end;
+        end;
+
+      // TDebug.Log('Page: %d, IsEmpty: %s, FirstByte: %2x', [Page, BoolToStr(IsEmpty, True), FBuff[CurrentOffset]]);
+      // TDebug.Log('RAW BYTES: %02x %02x %02x %02x %02x %02x', [P[0], P[1], P[2], P[3], P[4], P[5]]);
+
+        // 3. Только теперь инкрементируем страницу
+        Inc(Page);
+        Err := 0;
+        // 4. Проверяем флаг останова
+        if (Page >= NP) or IsEmpty then
+        begin
+          BtReadLogg.Enabled := True;
+          DoLogReaded(Page);
+          Exit;
+        end;
+      end
+      else
+      begin
+        StepProcessed := true;
+
+        Inc(Err);
+        if Err > 3 then
+        begin
+          // Финал по ошибке: возвращаем кнопку в исходное состояние
+          BtReadLogg.Enabled := True;
+          raise EReadLogException.CreateFmt('Ошибка чтения отчета, страница %d. Превышено число попыток.', [Page]);
+        end;
+      end;
+
+      // Так как Fcom использует smWindowSync, вызовы происходят в главном потоке.
+      // ForceQueue жизненно необходим: он отправляет запрос на следующую страницу
+      // в очередь сообщений, полностью очищая стек текущего callback-а и давая
+      // форме Windows возможность плавно перерисоваться.
+      TThread.ForceQueue(nil, procedure
+      begin
+        ReadCurrentPage();
+      end);
+    end);
+  end;
+
+  // Физический старт первой страницы
+  ReadCurrentPage();
+end;
+
+procedure TFormLogg.DoLogReaded(LastPage: Integer);
+begin
+  FillMemoryDataFromBuffer;
+end;
+
+function TFormLogg.Execute(Dev: IXMLNode; Res: TDialogResult): Boolean;
+begin
+  FDev := Dev;
+  FAddr := FDev.Attributes[AT_ADDR];
+  Caption := Format('чтение журнала наработки. прибор %s: (%s) ',[FDev.NodeName, Fdev.Attributes[AT_INFO]]);
+  Fres := Res;
+  IShow;
+end;
+
+function FormatDuration(DaysCount: Double): string;
+var
+  TotalSeconds, Days, Hours, Minutes, Secs: Int64;
+begin
+  if DaysCount <= 0 then
+  begin
+    Result := '00:00:00';
+    Exit;
+  end;
+
+  // Переводим дробное количество дней в полные секунды (1 день = 86400 секунд)
+  TotalSeconds := Round(DaysCount * 86400);
+
+  Days := TotalSeconds div 86400;
+  TotalSeconds := TotalSeconds mod 86400;
+
+  Hours := TotalSeconds div 3600;
+  TotalSeconds := TotalSeconds mod 3600;
+
+  Minutes := TotalSeconds div 60;
+  Secs := TotalSeconds mod 60;
+
+  // Базовый формат времени чч:мм:сс
+  Result := Format('%.2d:%.2d:%.2d', [Hours, Minutes, Secs]);
+
+  // Если есть целые дни, добавляем их число и пробел перед временем
+  if Days > 0 then
+    Result := IntToStr(Days) + ' ' + Result;
+end;
+
+procedure TFormLogg.DurationFieldGetText(Sender: TField; var Text: string; DisplayText: Boolean);
+begin
+  if Sender.IsNull then
+    Text := '' // Если данных нет — клетка останется пустой
+  else
+    Text := FormatDuration(Sender.AsDateTime);
+end;
+
+procedure TFormLogg.FillMemoryDataFromBuffer;
+var
+  CurrentReport: PReportRes;
+  MaxRecords: Integer;
+  I: Integer;
+  VStart, VWork, VStop, VRead: TDateTime;
+
+  procedure SetDateField(const FieldName: string; Value: LongWord; var TargetVar: TDateTime);
+  var
+    Field: TField;
+  begin
+    Field := md.FieldByName(FieldName);
+    if Value = $FFFFFFFF then
+    begin
+      Field.Clear;
+      TargetVar := 0;
+    end
+    else
+    begin
+      TargetVar := CTimeNew.UInt32RTCToDateTime(Value);
+      Field.AsDateTime := TargetVar;
+    end;
+  end;
+
+begin
+  md.OnCalcFields := mdCalcFields;
+
+  // 1. Полностью закрываем и очищаем датасет
+  md.Close;
+  md.Fields.Clear;
+  md.FieldDefs.Clear;
+
+  TotalDurationSum := 0;
+  WorkDurationSum := 0;
+
+  // 2. Создаем физические поля с ЯВНЫМ указанием Name и FieldName
+  with TLongWordField.Create(md) do
+  begin
+    FieldName := FLD_id;
+    //Name      := md.Name + FieldName;
+    DataSet   := md;
+  end;
+
+  with TDateTimeField.Create(md) do
+  begin
+    FieldName := FLD_start;
+    //Name      := md.Name + FieldName;
+    DataSet   := md;
+  end;
+
+  with TDateTimeField.Create(md) do
+  begin
+    FieldName := FLD_work;
+    //Name      := md.Name + FieldName;
+    DataSet   := md;
+  end;
+
+  with TDateTimeField.Create(md) do
+  begin
+    FieldName := FLD_stop;
+   // Name      := md.Name + FieldName;
+    DataSet   := md;
+  end;
+
+  with TDateTimeField.Create(md) do
+  begin
+    FieldName := FLD_read;
+    //Name      := md.Name + FieldName;
+    DataSet   := md;
+  end;
+
+  // 3. Создаем расчетные поля
+  with TDateTimeField.Create(md) do
+  begin
+    FieldName := FLD_dur_all;
+    //Name      := md.Name + FieldName;
+    FieldKind := fkCalculated;
+    DataSet   := md;
+    OnGetText := DurationFieldGetText;
+  end;
+
+  with TDateTimeField.Create(md) do
+  begin
+    FieldName := FLD_dur_wrk;
+    //Name      := md.Name + FieldName;
+    FieldKind := fkCalculated;
+    DataSet   := md;
+    OnGetText := DurationFieldGetText;
+  end;
+
+  // 4. Теперь открываем — структура полей гарантированно зафиксирована
+  md.Open;
+
+  // 5. Наполнение данными
+  MaxRecords := SizeOf(FBuff) div SizeOf(TReportRes);
+  md.DisableControls;
+  try
+    for I := 0 to MaxRecords - 1 do
+    begin
+      CurrentReport := PReportRes(@FBuff[I * SizeOf(TReportRes)]);
+
+      if CurrentReport^.id = $FFFFFFFF then
+        Break;
+
+      md.Append;
+      md.FieldByName(FLD_id).AsLongWord := CurrentReport^.id;
+
+      SetDateField(FLD_start, CurrentReport^.start, VStart);
+      SetDateField(FLD_work,  CurrentReport^.work,  VWork);
+      SetDateField(FLD_stop,  CurrentReport^.stop,  VStop);
+      SetDateField(FLD_read,  CurrentReport^.read,  VRead);
+
+      if (VStop > 0) and (VStart > 0) then
+        TotalDurationSum := TotalDurationSum + (VStop - VStart);
+
+      if (VStop > 0) and (VWork > 0) then
+        WorkDurationSum := WorkDurationSum + (VStop - VWork);
+
+      md.Post;
+    end;
+  finally
+    md.EnableControls;
+  end;
+
+  md.First;
+  ShowTotals;
+end;
+
+
+procedure TFormLogg.ShowTotals;
+begin
+  // Выводим в любые TLabel на форме, используя созданную ранее FormatDuration
+  LabelTotal.Caption := 'Всего в скважине: ' + FormatDuration(TotalDurationSum);
+  LabelWork.Caption  := 'Всего наработка: ' + FormatDuration(WorkDurationSum);
+end;
+
+procedure TFormLogg.GenerateDummyData;
+begin
+
+end;
+
+function TFormLogg.GetDevice: ILowLevelDeviceIO;
+ var
+  d: IDevice;
+begin
+  Result := nil;
+  d := (GlobalCore as IDeviceEnum).Get(Fdev.ParentNode.NodeName);
+  if not Assigned(d) then raise ENeedDialogException.CreateFmt('Устройство %s не найдено', [Fdev.NodeName]);
+  if not Supports(d, ILowLevelDeviceIO, Result) then raise ENeedDialogException.CreateFmt('Устройство %s без RTC', [FDEv.NodeName]);
+end;
+
+function TFormLogg.GetInfo: PTypeInfo;
+begin
+  Result := TypeInfo(Dialog_Logg);
+end;
+
+procedure TFormLogg.mdCalcFields(DataSet: TDataSet);
+var
+  FStart, FWork, FStop: TField;
+begin
+  FStart := DataSet.FieldByName(FLD_start);
+  FWork  := DataSet.FieldByName(FLD_work);
+  FStop  := DataSet.FieldByName(FLD_stop);
+
+  // 1. Расчет для duration_total (stop - start)
+  if FStop.IsNull or FStart.IsNull then
+    DataSet.FieldByName(FLD_dur_all).Clear
+  else
+    DataSet.FieldByName(FLD_dur_all).AsDateTime := FStop.AsDateTime - FStart.AsDateTime;
+
+  // 2. Расчет для duration_work (stop - work)
+  if FStop.IsNull or FWork.IsNull then
+    DataSet.FieldByName(FLD_dur_wrk).Clear
+  else
+    DataSet.FieldByName(FLD_dur_wrk).AsDateTime := FStop.AsDateTime - FWork.AsDateTime;
+end;
+
+initialization
+  RegisterDialog.Add<TFormLogg, Dialog_Logg>;
+finalization
+  RegisterDialog.Remove<TFormLogg>;
+end.

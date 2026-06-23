@@ -1,0 +1,56 @@
+object FormTableGraph: TFormTableGraph
+  Left = 0
+  Top = 0
+  Caption = 'FormTableGraph'
+  ClientHeight = 441
+  ClientWidth = 624
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
+  TextHeight = 15
+  object Chart: TJvChart
+    Left = 0
+    Top = 0
+    Width = 624
+    Height = 441
+    Align = alClient
+    Options.XAxisValuesPerDivision = 0
+    Options.XAxisLabelAlignment = taLeftJustify
+    Options.XAxisDateTimeMode = False
+    Options.XOrigin = 0
+    Options.YOrigin = 0
+    Options.PrimaryYAxis.YMax = 10.000000000000000000
+    Options.PrimaryYAxis.YLegendDecimalPlaces = 0
+    Options.SecondaryYAxis.YMax = 10.000000000000000000
+    Options.SecondaryYAxis.YLegendDecimalPlaces = 0
+    Options.MouseDragObjects = False
+    Options.LegendRowCount = 0
+    Options.AxisLineWidth = 3
+    Options.HeaderFont.Charset = DEFAULT_CHARSET
+    Options.HeaderFont.Color = clWindowText
+    Options.HeaderFont.Height = -12
+    Options.HeaderFont.Name = 'Segoe UI'
+    Options.HeaderFont.Style = []
+    Options.LegendFont.Charset = DEFAULT_CHARSET
+    Options.LegendFont.Color = clWindowText
+    Options.LegendFont.Height = -12
+    Options.LegendFont.Name = 'Segoe UI'
+    Options.LegendFont.Style = []
+    Options.AxisFont.Charset = DEFAULT_CHARSET
+    Options.AxisFont.Color = clWindowText
+    Options.AxisFont.Height = -12
+    Options.AxisFont.Name = 'Segoe UI'
+    Options.AxisFont.Style = []
+    Options.PaperColor = clBackground
+    Options.AxisLineColor = clBlack
+    Options.CursorColor = clBlack
+    Options.CursorStyle = psSolid
+    ExplicitLeft = 80
+    ExplicitTop = 56
+    ExplicitWidth = 497
+    ExplicitHeight = 300
+  end
+end

@@ -1,0 +1,1797 @@
+﻿<html xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:array="http://www.w3.org/2005/xpath-functions/array" xmlns:map="http://www.w3.org/2005/xpath-functions/map" xmlns:math="http://www.w3.org/2005/xpath-functions/math">
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+  </head>
+  <body>
+    <div>        
+      device: <b style="color:teal">Cart</b><div style="margin-left: 16px"><small style="color:#923800">size=3321</small></div>
+      <div style="margin-left: 16px"><small style="color:#923800">profile=0</small></div>
+      <div style="margin-left: 16px"><small style="color:#923800">offset=0</small></div>
+      <div style="margin-left: 16px"><small style="color:#923800">global=-1</small></div>
+      <ul style="margin-top: 4px"><b style="color:blue" class="caret">Режим информации</b><small style="color:gray"><sub>     
+          sz: 1569</sub></small><small style="color:#6CA2BB">
+          : offset=0
+          : global=0</small><ul class="nested">
+          <li>uint8_t<small style="color:gray"><sub>10</sub></small>
+          : <b style="color:green">автомат</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=0
+          : global=0</small></li>
+          <li>int32_t<small style="color:gray"><sub>32</sub></small>
+          : <b style="color:green">время</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=1
+          : global=1</small></li>
+          <li><b style="color:blue" class="caret">accel</b><small style="color:gray"><sub>     
+          sz: 7</sub></small><small style="color:#6CA2BB">
+          : offset=5
+          : global=5</small><ul class="nested">
+              <li>int16_t<small style="color:gray"><sub>22</sub></small>
+          : <b style="color:green">X</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=0
+          : global=5</small></li>
+              <li>int16_t<small style="color:gray"><sub>22</sub></small>
+          : <b style="color:green">Y</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=2
+          : global=7</small></li>
+              <li>int16_t<small style="color:gray"><sub>22</sub></small>
+          : <b style="color:green">Z</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=4
+          : global=9</small></li>
+              <li>int8_t<small style="color:gray"><sub>12</sub></small>
+          : <b style="color:green">T</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=6
+          : global=11</small></li>
+            </ul>
+          </li>
+          <li><b style="color:blue" class="caret">картограф</b><small style="color:gray"><sub>     
+          sz: 1536</sub></small><small style="color:#6CA2BB">
+          : offset=12
+          : global=12</small><ul class="nested">
+              <li><b style="color:blue" class="caret">data</b><small style="color:gray"><sub>     
+          sz: 512</sub></small><small style="color:#6CA2BB">
+          : offset=0
+          : global=12</small><ul class="nested">
+                  <li>uint32_t<small style="color:gray"><sub>30</sub></small>
+          : <b style="color:green">информация</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=0
+          : global=12</small></li>
+                  <li>uint32_t<small style="color:gray"><sub>30</sub></small>
+          : <b style="color:green">кадр</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=4
+          : global=16</small></li>
+                  <li>uint32_t<small style="color:gray"><sub>30</sub></small>
+          : <b style="color:green">частота</b>
+      = <b>0kHz</b><small style="color:#6CA2BB">
+          : offset=8
+          : global=20</small></li>
+                  <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">направленные_затухание</b>
+        [4]
+      
+      = <b>0dB</b><small style="color:#6CA2BB">
+          : offset=12
+          : global=24</small></li>
+                  <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">направленные_фаза</b>
+        [4]
+      
+      = <b>0°</b><small style="color:#6CA2BB">
+          : offset=28
+          : global=40</small></li>
+                  <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">УЭС</b>
+        [4]
+      
+      = <b>0Om*m</b><small style="color:#6CA2BB">
+          : offset=44
+          : global=56</small></li>
+                  <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">фаза</b>
+        [4]
+      
+      = <b>0°</b><small style="color:#6CA2BB">
+          : offset=60
+          : global=72</small></li>
+                  <li>uint8_t<small style="color:gray"><sub>10</sub></small>
+          : <b style="color:green">побитово_упакованне_данне</b>
+        [32]
+      
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=76
+          : global=88</small></li>
+                  <li>uint32_t<small style="color:gray"><sub>30</sub></small>
+          : <b style="color:green">количество_значащих_бит</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=108
+          : global=120</small></li>
+                  <li>uint32_t<small style="color:gray"><sub>30</sub></small>
+          : <b style="color:green">глубина</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=112
+          : global=124</small></li>
+                  <li><b style="color:blue" class="caret">направленный_приемник_верхний</b><small style="color:gray"><sub>     
+          sz: 128</sub></small><small style="color:#6CA2BB">
+          : offset=116
+          : global=128</small><ul class="nested">
+                      <li><b style="color:blue" class="caret">Tx_0</b><small style="color:gray"><sub>     
+          sz: 8</sub></small><small style="color:#6CA2BB">
+          : offset=0
+          : global=128</small><ul class="nested">
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Re</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=0
+          : global=128</small></li>
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Im</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=4
+          : global=132</small></li>
+                        </ul>
+                      </li>
+                      <li><b style="color:blue" class="caret">Geo</b>
+        [1]
+      <small style="color:gray"><sub>     
+          sz: 8</sub></small><small style="color:#6CA2BB">
+          : offset=8
+          : global=136</small><ul class="nested">
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Re</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=0
+          : global=136</small></li>
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Im</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=4
+          : global=140</small></li>
+                        </ul>
+                      </li>
+                      <li><b style="color:blue" class="caret">Geo</b>
+        [2]
+      <small style="color:gray"><sub>     
+          sz: 8</sub></small><small style="color:#6CA2BB">
+          : offset=16
+          : global=144</small><ul class="nested">
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Re</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=0
+          : global=144</small></li>
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Im</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=4
+          : global=148</small></li>
+                        </ul>
+                      </li>
+                      <li><b style="color:blue" class="caret">Geo</b>
+        [3]
+      <small style="color:gray"><sub>     
+          sz: 8</sub></small><small style="color:#6CA2BB">
+          : offset=24
+          : global=152</small><ul class="nested">
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Re</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=0
+          : global=152</small></li>
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Im</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=4
+          : global=156</small></li>
+                        </ul>
+                      </li>
+                      <li><b style="color:blue" class="caret">Geo</b>
+        [4]
+      <small style="color:gray"><sub>     
+          sz: 8</sub></small><small style="color:#6CA2BB">
+          : offset=32
+          : global=160</small><ul class="nested">
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Re</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=0
+          : global=160</small></li>
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Im</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=4
+          : global=164</small></li>
+                        </ul>
+                      </li>
+                      <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">amp_Vzz</b>
+        [4]
+      
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=40
+          : global=168</small></li>
+                      <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">amp_Vzx</b>
+        [4]
+      
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=56
+          : global=184</small></li>
+                      <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">ph_Vzx_Vzz</b>
+        [4]
+      
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=72
+          : global=200</small></li>
+                      <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">dv</b>
+        [4]
+      
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=88
+          : global=216</small></li>
+                      <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">border_angle</b>
+        [4]
+      
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=104
+          : global=232</small></li>
+                      <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">temperature</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=120
+          : global=248</small></li>
+                      <li>uint32_t<small style="color:gray"><sub>30</sub></small>
+          : <b style="color:green">condition</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=124
+          : global=252</small></li>
+                    </ul>
+                  </li>
+                  <li><b style="color:blue" class="caret">направленный_приемник_нижний</b><small style="color:gray"><sub>     
+          sz: 128</sub></small><small style="color:#6CA2BB">
+          : offset=244
+          : global=256</small><ul class="nested">
+                      <li><b style="color:blue" class="caret">Tx_0</b><small style="color:gray"><sub>     
+          sz: 8</sub></small><small style="color:#6CA2BB">
+          : offset=0
+          : global=256</small><ul class="nested">
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Re</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=0
+          : global=256</small></li>
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Im</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=4
+          : global=260</small></li>
+                        </ul>
+                      </li>
+                      <li><b style="color:blue" class="caret">Geo</b>
+        [1]
+      <small style="color:gray"><sub>     
+          sz: 8</sub></small><small style="color:#6CA2BB">
+          : offset=8
+          : global=264</small><ul class="nested">
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Re</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=0
+          : global=264</small></li>
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Im</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=4
+          : global=268</small></li>
+                        </ul>
+                      </li>
+                      <li><b style="color:blue" class="caret">Geo</b>
+        [2]
+      <small style="color:gray"><sub>     
+          sz: 8</sub></small><small style="color:#6CA2BB">
+          : offset=16
+          : global=272</small><ul class="nested">
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Re</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=0
+          : global=272</small></li>
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Im</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=4
+          : global=276</small></li>
+                        </ul>
+                      </li>
+                      <li><b style="color:blue" class="caret">Geo</b>
+        [3]
+      <small style="color:gray"><sub>     
+          sz: 8</sub></small><small style="color:#6CA2BB">
+          : offset=24
+          : global=280</small><ul class="nested">
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Re</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=0
+          : global=280</small></li>
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Im</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=4
+          : global=284</small></li>
+                        </ul>
+                      </li>
+                      <li><b style="color:blue" class="caret">Geo</b>
+        [4]
+      <small style="color:gray"><sub>     
+          sz: 8</sub></small><small style="color:#6CA2BB">
+          : offset=32
+          : global=288</small><ul class="nested">
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Re</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=0
+          : global=288</small></li>
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Im</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=4
+          : global=292</small></li>
+                        </ul>
+                      </li>
+                      <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">amp_Vzz</b>
+        [4]
+      
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=40
+          : global=296</small></li>
+                      <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">amp_Vzx</b>
+        [4]
+      
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=56
+          : global=312</small></li>
+                      <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">ph_Vzx_Vzz</b>
+        [4]
+      
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=72
+          : global=328</small></li>
+                      <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">dv</b>
+        [4]
+      
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=88
+          : global=344</small></li>
+                      <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">border_angle</b>
+        [4]
+      
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=104
+          : global=360</small></li>
+                      <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">temperature</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=120
+          : global=376</small></li>
+                      <li>uint32_t<small style="color:gray"><sub>30</sub></small>
+          : <b style="color:green">condition</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=124
+          : global=380</small></li>
+                    </ul>
+                  </li>
+                  <li><b style="color:blue" class="caret">приемник_центральный</b><small style="color:gray"><sub>     
+          sz: 88</sub></small><small style="color:#6CA2BB">
+          : offset=372
+          : global=384</small><ul class="nested">
+                      <li><b style="color:blue" class="caret">Tx_0</b>
+        [1]
+      <small style="color:gray"><sub>     
+          sz: 8</sub></small><small style="color:#6CA2BB">
+          : offset=0
+          : global=384</small><ul class="nested">
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Re</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=0
+          : global=384</small></li>
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Im</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=4
+          : global=388</small></li>
+                        </ul>
+                      </li>
+                      <li><b style="color:blue" class="caret">Tx_0</b>
+        [2]
+      <small style="color:gray"><sub>     
+          sz: 8</sub></small><small style="color:#6CA2BB">
+          : offset=8
+          : global=392</small><ul class="nested">
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Re</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=0
+          : global=392</small></li>
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Im</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=4
+          : global=396</small></li>
+                        </ul>
+                      </li>
+                      <li><b style="color:blue" class="caret">Rzz1</b>
+        [1]
+      <small style="color:gray"><sub>     
+          sz: 8</sub></small><small style="color:#6CA2BB">
+          : offset=16
+          : global=400</small><ul class="nested">
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Re</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=0
+          : global=400</small></li>
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Im</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=4
+          : global=404</small></li>
+                        </ul>
+                      </li>
+                      <li><b style="color:blue" class="caret">Rzz1</b>
+        [2]
+      <small style="color:gray"><sub>     
+          sz: 8</sub></small><small style="color:#6CA2BB">
+          : offset=24
+          : global=408</small><ul class="nested">
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Re</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=0
+          : global=408</small></li>
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Im</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=4
+          : global=412</small></li>
+                        </ul>
+                      </li>
+                      <li><b style="color:blue" class="caret">Rzz1</b>
+        [3]
+      <small style="color:gray"><sub>     
+          sz: 8</sub></small><small style="color:#6CA2BB">
+          : offset=32
+          : global=416</small><ul class="nested">
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Re</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=0
+          : global=416</small></li>
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Im</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=4
+          : global=420</small></li>
+                        </ul>
+                      </li>
+                      <li><b style="color:blue" class="caret">Rzz1</b>
+        [4]
+      <small style="color:gray"><sub>     
+          sz: 8</sub></small><small style="color:#6CA2BB">
+          : offset=40
+          : global=424</small><ul class="nested">
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Re</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=0
+          : global=424</small></li>
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Im</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=4
+          : global=428</small></li>
+                        </ul>
+                      </li>
+                      <li><b style="color:blue" class="caret">Rzz2</b>
+        [1]
+      <small style="color:gray"><sub>     
+          sz: 8</sub></small><small style="color:#6CA2BB">
+          : offset=48
+          : global=432</small><ul class="nested">
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Re</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=0
+          : global=432</small></li>
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Im</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=4
+          : global=436</small></li>
+                        </ul>
+                      </li>
+                      <li><b style="color:blue" class="caret">Rzz2</b>
+        [2]
+      <small style="color:gray"><sub>     
+          sz: 8</sub></small><small style="color:#6CA2BB">
+          : offset=56
+          : global=440</small><ul class="nested">
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Re</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=0
+          : global=440</small></li>
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Im</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=4
+          : global=444</small></li>
+                        </ul>
+                      </li>
+                      <li><b style="color:blue" class="caret">Rzz2</b>
+        [3]
+      <small style="color:gray"><sub>     
+          sz: 8</sub></small><small style="color:#6CA2BB">
+          : offset=64
+          : global=448</small><ul class="nested">
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Re</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=0
+          : global=448</small></li>
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Im</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=4
+          : global=452</small></li>
+                        </ul>
+                      </li>
+                      <li><b style="color:blue" class="caret">Rzz2</b>
+        [4]
+      <small style="color:gray"><sub>     
+          sz: 8</sub></small><small style="color:#6CA2BB">
+          : offset=72
+          : global=456</small><ul class="nested">
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Re</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=0
+          : global=456</small></li>
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Im</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=4
+          : global=460</small></li>
+                        </ul>
+                      </li>
+                      <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">temperature</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=80
+          : global=464</small></li>
+                      <li>uint32_t<small style="color:gray"><sub>30</sub></small>
+          : <b style="color:green">condition</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=84
+          : global=468</small></li>
+                    </ul>
+                  </li>
+                  <li><b style="color:blue" class="caret">инклинометр</b><small style="color:gray"><sub>     
+          sz: 12</sub></small><small style="color:#6CA2BB">
+          : offset=460
+          : global=472</small><ul class="nested">
+                      <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Azm</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=0
+          : global=472</small></li>
+                      <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Zen</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=4
+          : global=476</small></li>
+                      <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Aps</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=8
+          : global=480</small></li>
+                    </ul>
+                  </li>
+                  <li>int32_t<small style="color:gray"><sub>32</sub></small>
+          : <b style="color:green">начальный_сектор_направленных_измерений</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=472
+          : global=484</small></li>
+                  <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">угловая_скорость</b>
+      = <b>0об.мин</b><small style="color:#6CA2BB">
+          : offset=476
+          : global=488</small></li>
+                  <li>uint32_t<small style="color:gray"><sub>30</sub></small>
+          : <b style="color:green">пропущенные_сектора</b>
+        [8]
+      
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=480
+          : global=492</small></li>
+                </ul>
+              </li>
+              <li><b style="color:blue" class="caret">rx_raw_data</b><small style="color:gray"><sub>     
+          sz: 1024</sub></small><small style="color:#6CA2BB">
+          : offset=512
+          : global=524</small><ul class="nested">
+                  <li><b style="color:blue" class="caret">Left</b>
+        [1]
+      <small style="color:gray"><sub>     
+          sz: 128</sub></small><small style="color:#6CA2BB">
+          : offset=0
+          : global=524</small><ul class="nested">
+                      <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Re</b>
+        [16]
+      
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=0
+          : global=524</small></li>
+                      <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Im</b>
+        [16]
+      
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=64
+          : global=588</small></li>
+                    </ul>
+                  </li>
+                  <li><b style="color:blue" class="caret">Left</b>
+        [2]
+      <small style="color:gray"><sub>     
+          sz: 128</sub></small><small style="color:#6CA2BB">
+          : offset=128
+          : global=652</small><ul class="nested">
+                      <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Re</b>
+        [16]
+      
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=0
+          : global=652</small></li>
+                      <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Im</b>
+        [16]
+      
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=64
+          : global=716</small></li>
+                    </ul>
+                  </li>
+                  <li><b style="color:blue" class="caret">Left</b>
+        [3]
+      <small style="color:gray"><sub>     
+          sz: 128</sub></small><small style="color:#6CA2BB">
+          : offset=256
+          : global=780</small><ul class="nested">
+                      <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Re</b>
+        [16]
+      
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=0
+          : global=780</small></li>
+                      <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Im</b>
+        [16]
+      
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=64
+          : global=844</small></li>
+                    </ul>
+                  </li>
+                  <li><b style="color:blue" class="caret">Left</b>
+        [4]
+      <small style="color:gray"><sub>     
+          sz: 128</sub></small><small style="color:#6CA2BB">
+          : offset=384
+          : global=908</small><ul class="nested">
+                      <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Re</b>
+        [16]
+      
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=0
+          : global=908</small></li>
+                      <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Im</b>
+        [16]
+      
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=64
+          : global=972</small></li>
+                    </ul>
+                  </li>
+                  <li><b style="color:blue" class="caret">Right</b>
+        [1]
+      <small style="color:gray"><sub>     
+          sz: 128</sub></small><small style="color:#6CA2BB">
+          : offset=512
+          : global=1036</small><ul class="nested">
+                      <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Re</b>
+        [16]
+      
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=0
+          : global=1036</small></li>
+                      <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Im</b>
+        [16]
+      
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=64
+          : global=1100</small></li>
+                    </ul>
+                  </li>
+                  <li><b style="color:blue" class="caret">Right</b>
+        [2]
+      <small style="color:gray"><sub>     
+          sz: 128</sub></small><small style="color:#6CA2BB">
+          : offset=640
+          : global=1164</small><ul class="nested">
+                      <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Re</b>
+        [16]
+      
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=0
+          : global=1164</small></li>
+                      <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Im</b>
+        [16]
+      
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=64
+          : global=1228</small></li>
+                    </ul>
+                  </li>
+                  <li><b style="color:blue" class="caret">Right</b>
+        [3]
+      <small style="color:gray"><sub>     
+          sz: 128</sub></small><small style="color:#6CA2BB">
+          : offset=768
+          : global=1292</small><ul class="nested">
+                      <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Re</b>
+        [16]
+      
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=0
+          : global=1292</small></li>
+                      <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Im</b>
+        [16]
+      
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=64
+          : global=1356</small></li>
+                    </ul>
+                  </li>
+                  <li><b style="color:blue" class="caret">Right</b>
+        [4]
+      <small style="color:gray"><sub>     
+          sz: 128</sub></small><small style="color:#6CA2BB">
+          : offset=896
+          : global=1420</small><ul class="nested">
+                      <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Re</b>
+        [16]
+      
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=0
+          : global=1420</small></li>
+                      <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Im</b>
+        [16]
+      
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=64
+          : global=1484</small></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+          <li><b style="color:blue" class="caret">tstram</b><small style="color:gray"><sub>     
+          sz: 21</sub></small><small style="color:#6CA2BB">
+          : offset=1548
+          : global=1548</small><ul class="nested">
+              <li><b style="color:blue" class="caret">waddr</b><small style="color:gray"><sub>     
+          sz: 4</sub></small><small style="color:#6CA2BB">
+          : offset=0
+          : global=1548</small><ul class="nested">
+                  <li>uint16_t<small style="color:gray"><sub>20</sub></small>
+          : <b style="color:green">page</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=0
+          : global=1548</small></li>
+                  <li>uint16_t<small style="color:gray"><sub>20</sub></small>
+          : <b style="color:green">block</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=2
+          : global=1550</small></li>
+                </ul>
+              </li>
+              <li><b style="color:blue" class="caret">wreis</b><small style="color:gray"><sub>     
+          sz: 4</sub></small><small style="color:#6CA2BB">
+          : offset=4
+          : global=1552</small><ul class="nested">
+                  <li>uint16_t<small style="color:gray"><sub>20</sub></small>
+          : <b style="color:green">reis</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=0
+          : global=1552</small></li>
+                  <li>uint16_t<small style="color:gray"><sub>20</sub></small>
+          : <b style="color:green">block</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=2
+          : global=1554</small></li>
+                </ul>
+              </li>
+              <li>int8_t<small style="color:gray"><sub>12</sub></small>
+          : <b style="color:green">WCursorStatus</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=8
+          : global=1556</small></li>
+              <li>uint16_t<small style="color:gray"><sub>20</sub></small>
+          : <b style="color:green">pageCnt</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=9
+          : global=1557</small></li>
+              <li><b style="color:blue" class="caret">LastReis</b><small style="color:gray"><sub>     
+          sz: 8</sub></small><small style="color:#6CA2BB">
+          : offset=11
+          : global=1559</small><ul class="nested">
+                  <li>uint16_t<small style="color:gray"><sub>20</sub></small>
+          : <b style="color:green">рейс</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=0
+          : global=1559</small></li>
+                  <li>uint16_t<small style="color:gray"><sub>20</sub></small>
+          : <b style="color:green">число_блоков</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : readonly=
+          : offset=2
+          : global=1561</small></li>
+                  <li>uint16_t<small style="color:gray"><sub>20</sub></small>
+          : <b style="color:green">блок_памяти_начало</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : readonly=
+          : offset=4
+          : global=1563</small></li>
+                  <li>uint16_t<small style="color:gray"><sub>20</sub></small>
+          : <b style="color:green">блок_памяти_конец</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : readonly=
+          : offset=6
+          : global=1565</small></li>
+                </ul>
+              </li>
+              <li>uint16_t<small style="color:gray"><sub>20</sub></small>
+          : <b style="color:green">CurrReisStartBlock</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=19
+          : global=1567</small></li>
+            </ul>
+          </li>
+        </ul>
+      </ul>        
+      device: <b style="color:teal">Induc</b><div style="margin-left: 16px"><small style="color:#923800">size=3321</small></div>
+      <div style="margin-left: 16px"><small style="color:#923800">profile=1</small></div>
+      <div style="margin-left: 16px"><small style="color:#923800">offset=3321</small></div>
+      <div style="margin-left: 16px"><small style="color:#923800">global=184</small></div>
+      <ul style="margin-top: 4px"><b style="color:blue" class="caret">Режим информации</b><small style="color:gray"><sub>     
+          sz: 1569</sub></small><small style="color:#6CA2BB">
+          : offset=0
+          : global=0</small><ul class="nested">
+          <li>uint8_t<small style="color:gray"><sub>10</sub></small>
+          : <b style="color:green">автомат</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=0
+          : global=0</small></li>
+          <li>int32_t<small style="color:gray"><sub>32</sub></small>
+          : <b style="color:green">время</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=1
+          : global=1</small></li>
+          <li><b style="color:blue" class="caret">accel</b><small style="color:gray"><sub>     
+          sz: 7</sub></small><small style="color:#6CA2BB">
+          : offset=5
+          : global=5</small><ul class="nested">
+              <li>int16_t<small style="color:gray"><sub>22</sub></small>
+          : <b style="color:green">X</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=0
+          : global=5</small></li>
+              <li>int16_t<small style="color:gray"><sub>22</sub></small>
+          : <b style="color:green">Y</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=2
+          : global=7</small></li>
+              <li>int16_t<small style="color:gray"><sub>22</sub></small>
+          : <b style="color:green">Z</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=4
+          : global=9</small></li>
+              <li>int8_t<small style="color:gray"><sub>12</sub></small>
+          : <b style="color:green">T</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=6
+          : global=11</small></li>
+            </ul>
+          </li>
+          <li><b style="color:blue" class="caret">картограф</b><small style="color:gray"><sub>     
+          sz: 1536</sub></small><small style="color:#6CA2BB">
+          : offset=12
+          : global=12</small><ul class="nested">
+              <li><b style="color:blue" class="caret">data</b><small style="color:gray"><sub>     
+          sz: 512</sub></small><small style="color:#6CA2BB">
+          : offset=0
+          : global=12</small><ul class="nested">
+                  <li>uint32_t<small style="color:gray"><sub>30</sub></small>
+          : <b style="color:green">информация</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=0
+          : global=12</small></li>
+                  <li>uint32_t<small style="color:gray"><sub>30</sub></small>
+          : <b style="color:green">кадр</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=4
+          : global=16</small></li>
+                  <li>uint32_t<small style="color:gray"><sub>30</sub></small>
+          : <b style="color:green">частота</b>
+      = <b>0kHz</b><small style="color:#6CA2BB">
+          : offset=8
+          : global=20</small></li>
+                  <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">направленные_затухание</b>
+        [4]
+      
+      = <b>0dB</b><small style="color:#6CA2BB">
+          : offset=12
+          : global=24</small></li>
+                  <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">направленные_фаза</b>
+        [4]
+      
+      = <b>0°</b><small style="color:#6CA2BB">
+          : offset=28
+          : global=40</small></li>
+                  <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">УЭС</b>
+        [4]
+      
+      = <b>0Om*m</b><small style="color:#6CA2BB">
+          : offset=44
+          : global=56</small></li>
+                  <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">фаза</b>
+        [4]
+      
+      = <b>0°</b><small style="color:#6CA2BB">
+          : offset=60
+          : global=72</small></li>
+                  <li>uint8_t<small style="color:gray"><sub>10</sub></small>
+          : <b style="color:green">побитово_упакованне_данне</b>
+        [32]
+      
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=76
+          : global=88</small></li>
+                  <li>uint32_t<small style="color:gray"><sub>30</sub></small>
+          : <b style="color:green">количество_значащих_бит</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=108
+          : global=120</small></li>
+                  <li>uint32_t<small style="color:gray"><sub>30</sub></small>
+          : <b style="color:green">глубина</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=112
+          : global=124</small></li>
+                  <li><b style="color:blue" class="caret">направленный_приемник_верхний</b><small style="color:gray"><sub>     
+          sz: 128</sub></small><small style="color:#6CA2BB">
+          : offset=116
+          : global=128</small><ul class="nested">
+                      <li><b style="color:blue" class="caret">Tx_0</b><small style="color:gray"><sub>     
+          sz: 8</sub></small><small style="color:#6CA2BB">
+          : offset=0
+          : global=128</small><ul class="nested">
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Re</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=0
+          : global=128</small></li>
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Im</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=4
+          : global=132</small></li>
+                        </ul>
+                      </li>
+                      <li><b style="color:blue" class="caret">Geo</b>
+        [1]
+      <small style="color:gray"><sub>     
+          sz: 8</sub></small><small style="color:#6CA2BB">
+          : offset=8
+          : global=136</small><ul class="nested">
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Re</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=0
+          : global=136</small></li>
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Im</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=4
+          : global=140</small></li>
+                        </ul>
+                      </li>
+                      <li><b style="color:blue" class="caret">Geo</b>
+        [2]
+      <small style="color:gray"><sub>     
+          sz: 8</sub></small><small style="color:#6CA2BB">
+          : offset=16
+          : global=144</small><ul class="nested">
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Re</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=0
+          : global=144</small></li>
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Im</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=4
+          : global=148</small></li>
+                        </ul>
+                      </li>
+                      <li><b style="color:blue" class="caret">Geo</b>
+        [3]
+      <small style="color:gray"><sub>     
+          sz: 8</sub></small><small style="color:#6CA2BB">
+          : offset=24
+          : global=152</small><ul class="nested">
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Re</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=0
+          : global=152</small></li>
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Im</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=4
+          : global=156</small></li>
+                        </ul>
+                      </li>
+                      <li><b style="color:blue" class="caret">Geo</b>
+        [4]
+      <small style="color:gray"><sub>     
+          sz: 8</sub></small><small style="color:#6CA2BB">
+          : offset=32
+          : global=160</small><ul class="nested">
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Re</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=0
+          : global=160</small></li>
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Im</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=4
+          : global=164</small></li>
+                        </ul>
+                      </li>
+                      <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">amp_Vzz</b>
+        [4]
+      
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=40
+          : global=168</small></li>
+                      <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">amp_Vzx</b>
+        [4]
+      
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=56
+          : global=184</small></li>
+                      <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">ph_Vzx_Vzz</b>
+        [4]
+      
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=72
+          : global=200</small></li>
+                      <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">dv</b>
+        [4]
+      
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=88
+          : global=216</small></li>
+                      <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">border_angle</b>
+        [4]
+      
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=104
+          : global=232</small></li>
+                      <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">temperature</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=120
+          : global=248</small></li>
+                      <li>uint32_t<small style="color:gray"><sub>30</sub></small>
+          : <b style="color:green">condition</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=124
+          : global=252</small></li>
+                    </ul>
+                  </li>
+                  <li><b style="color:blue" class="caret">направленный_приемник_нижний</b><small style="color:gray"><sub>     
+          sz: 128</sub></small><small style="color:#6CA2BB">
+          : offset=244
+          : global=256</small><ul class="nested">
+                      <li><b style="color:blue" class="caret">Tx_0</b><small style="color:gray"><sub>     
+          sz: 8</sub></small><small style="color:#6CA2BB">
+          : offset=0
+          : global=256</small><ul class="nested">
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Re</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=0
+          : global=256</small></li>
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Im</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=4
+          : global=260</small></li>
+                        </ul>
+                      </li>
+                      <li><b style="color:blue" class="caret">Geo</b>
+        [1]
+      <small style="color:gray"><sub>     
+          sz: 8</sub></small><small style="color:#6CA2BB">
+          : offset=8
+          : global=264</small><ul class="nested">
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Re</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=0
+          : global=264</small></li>
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Im</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=4
+          : global=268</small></li>
+                        </ul>
+                      </li>
+                      <li><b style="color:blue" class="caret">Geo</b>
+        [2]
+      <small style="color:gray"><sub>     
+          sz: 8</sub></small><small style="color:#6CA2BB">
+          : offset=16
+          : global=272</small><ul class="nested">
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Re</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=0
+          : global=272</small></li>
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Im</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=4
+          : global=276</small></li>
+                        </ul>
+                      </li>
+                      <li><b style="color:blue" class="caret">Geo</b>
+        [3]
+      <small style="color:gray"><sub>     
+          sz: 8</sub></small><small style="color:#6CA2BB">
+          : offset=24
+          : global=280</small><ul class="nested">
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Re</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=0
+          : global=280</small></li>
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Im</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=4
+          : global=284</small></li>
+                        </ul>
+                      </li>
+                      <li><b style="color:blue" class="caret">Geo</b>
+        [4]
+      <small style="color:gray"><sub>     
+          sz: 8</sub></small><small style="color:#6CA2BB">
+          : offset=32
+          : global=288</small><ul class="nested">
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Re</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=0
+          : global=288</small></li>
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Im</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=4
+          : global=292</small></li>
+                        </ul>
+                      </li>
+                      <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">amp_Vzz</b>
+        [4]
+      
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=40
+          : global=296</small></li>
+                      <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">amp_Vzx</b>
+        [4]
+      
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=56
+          : global=312</small></li>
+                      <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">ph_Vzx_Vzz</b>
+        [4]
+      
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=72
+          : global=328</small></li>
+                      <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">dv</b>
+        [4]
+      
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=88
+          : global=344</small></li>
+                      <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">border_angle</b>
+        [4]
+      
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=104
+          : global=360</small></li>
+                      <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">temperature</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=120
+          : global=376</small></li>
+                      <li>uint32_t<small style="color:gray"><sub>30</sub></small>
+          : <b style="color:green">condition</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=124
+          : global=380</small></li>
+                    </ul>
+                  </li>
+                  <li><b style="color:blue" class="caret">приемник_центральный</b><small style="color:gray"><sub>     
+          sz: 88</sub></small><small style="color:#6CA2BB">
+          : offset=372
+          : global=384</small><ul class="nested">
+                      <li><b style="color:blue" class="caret">Tx_0</b>
+        [1]
+      <small style="color:gray"><sub>     
+          sz: 8</sub></small><small style="color:#6CA2BB">
+          : offset=0
+          : global=384</small><ul class="nested">
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Re</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=0
+          : global=384</small></li>
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Im</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=4
+          : global=388</small></li>
+                        </ul>
+                      </li>
+                      <li><b style="color:blue" class="caret">Tx_0</b>
+        [2]
+      <small style="color:gray"><sub>     
+          sz: 8</sub></small><small style="color:#6CA2BB">
+          : offset=8
+          : global=392</small><ul class="nested">
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Re</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=0
+          : global=392</small></li>
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Im</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=4
+          : global=396</small></li>
+                        </ul>
+                      </li>
+                      <li><b style="color:blue" class="caret">Rzz1</b>
+        [1]
+      <small style="color:gray"><sub>     
+          sz: 8</sub></small><small style="color:#6CA2BB">
+          : offset=16
+          : global=400</small><ul class="nested">
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Re</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=0
+          : global=400</small></li>
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Im</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=4
+          : global=404</small></li>
+                        </ul>
+                      </li>
+                      <li><b style="color:blue" class="caret">Rzz1</b>
+        [2]
+      <small style="color:gray"><sub>     
+          sz: 8</sub></small><small style="color:#6CA2BB">
+          : offset=24
+          : global=408</small><ul class="nested">
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Re</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=0
+          : global=408</small></li>
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Im</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=4
+          : global=412</small></li>
+                        </ul>
+                      </li>
+                      <li><b style="color:blue" class="caret">Rzz1</b>
+        [3]
+      <small style="color:gray"><sub>     
+          sz: 8</sub></small><small style="color:#6CA2BB">
+          : offset=32
+          : global=416</small><ul class="nested">
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Re</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=0
+          : global=416</small></li>
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Im</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=4
+          : global=420</small></li>
+                        </ul>
+                      </li>
+                      <li><b style="color:blue" class="caret">Rzz1</b>
+        [4]
+      <small style="color:gray"><sub>     
+          sz: 8</sub></small><small style="color:#6CA2BB">
+          : offset=40
+          : global=424</small><ul class="nested">
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Re</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=0
+          : global=424</small></li>
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Im</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=4
+          : global=428</small></li>
+                        </ul>
+                      </li>
+                      <li><b style="color:blue" class="caret">Rzz2</b>
+        [1]
+      <small style="color:gray"><sub>     
+          sz: 8</sub></small><small style="color:#6CA2BB">
+          : offset=48
+          : global=432</small><ul class="nested">
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Re</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=0
+          : global=432</small></li>
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Im</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=4
+          : global=436</small></li>
+                        </ul>
+                      </li>
+                      <li><b style="color:blue" class="caret">Rzz2</b>
+        [2]
+      <small style="color:gray"><sub>     
+          sz: 8</sub></small><small style="color:#6CA2BB">
+          : offset=56
+          : global=440</small><ul class="nested">
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Re</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=0
+          : global=440</small></li>
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Im</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=4
+          : global=444</small></li>
+                        </ul>
+                      </li>
+                      <li><b style="color:blue" class="caret">Rzz2</b>
+        [3]
+      <small style="color:gray"><sub>     
+          sz: 8</sub></small><small style="color:#6CA2BB">
+          : offset=64
+          : global=448</small><ul class="nested">
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Re</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=0
+          : global=448</small></li>
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Im</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=4
+          : global=452</small></li>
+                        </ul>
+                      </li>
+                      <li><b style="color:blue" class="caret">Rzz2</b>
+        [4]
+      <small style="color:gray"><sub>     
+          sz: 8</sub></small><small style="color:#6CA2BB">
+          : offset=72
+          : global=456</small><ul class="nested">
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Re</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=0
+          : global=456</small></li>
+                          <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Im</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=4
+          : global=460</small></li>
+                        </ul>
+                      </li>
+                      <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">temperature</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=80
+          : global=464</small></li>
+                      <li>uint32_t<small style="color:gray"><sub>30</sub></small>
+          : <b style="color:green">condition</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=84
+          : global=468</small></li>
+                    </ul>
+                  </li>
+                  <li><b style="color:blue" class="caret">инклинометр</b><small style="color:gray"><sub>     
+          sz: 12</sub></small><small style="color:#6CA2BB">
+          : offset=460
+          : global=472</small><ul class="nested">
+                      <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Azm</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=0
+          : global=472</small></li>
+                      <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Zen</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=4
+          : global=476</small></li>
+                      <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Aps</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=8
+          : global=480</small></li>
+                    </ul>
+                  </li>
+                  <li>int32_t<small style="color:gray"><sub>32</sub></small>
+          : <b style="color:green">начальный_сектор_направленных_измерений</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=472
+          : global=484</small></li>
+                  <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">угловая_скорость</b>
+      = <b>0об.мин</b><small style="color:#6CA2BB">
+          : offset=476
+          : global=488</small></li>
+                  <li>uint32_t<small style="color:gray"><sub>30</sub></small>
+          : <b style="color:green">пропущенные_сектора</b>
+        [8]
+      
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=480
+          : global=492</small></li>
+                </ul>
+              </li>
+              <li><b style="color:blue" class="caret">rx_raw_data</b><small style="color:gray"><sub>     
+          sz: 1024</sub></small><small style="color:#6CA2BB">
+          : offset=512
+          : global=524</small><ul class="nested">
+                  <li><b style="color:blue" class="caret">Left</b>
+        [1]
+      <small style="color:gray"><sub>     
+          sz: 128</sub></small><small style="color:#6CA2BB">
+          : offset=0
+          : global=524</small><ul class="nested">
+                      <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Re</b>
+        [16]
+      
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=0
+          : global=524</small></li>
+                      <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Im</b>
+        [16]
+      
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=64
+          : global=588</small></li>
+                    </ul>
+                  </li>
+                  <li><b style="color:blue" class="caret">Left</b>
+        [2]
+      <small style="color:gray"><sub>     
+          sz: 128</sub></small><small style="color:#6CA2BB">
+          : offset=128
+          : global=652</small><ul class="nested">
+                      <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Re</b>
+        [16]
+      
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=0
+          : global=652</small></li>
+                      <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Im</b>
+        [16]
+      
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=64
+          : global=716</small></li>
+                    </ul>
+                  </li>
+                  <li><b style="color:blue" class="caret">Left</b>
+        [3]
+      <small style="color:gray"><sub>     
+          sz: 128</sub></small><small style="color:#6CA2BB">
+          : offset=256
+          : global=780</small><ul class="nested">
+                      <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Re</b>
+        [16]
+      
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=0
+          : global=780</small></li>
+                      <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Im</b>
+        [16]
+      
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=64
+          : global=844</small></li>
+                    </ul>
+                  </li>
+                  <li><b style="color:blue" class="caret">Left</b>
+        [4]
+      <small style="color:gray"><sub>     
+          sz: 128</sub></small><small style="color:#6CA2BB">
+          : offset=384
+          : global=908</small><ul class="nested">
+                      <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Re</b>
+        [16]
+      
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=0
+          : global=908</small></li>
+                      <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Im</b>
+        [16]
+      
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=64
+          : global=972</small></li>
+                    </ul>
+                  </li>
+                  <li><b style="color:blue" class="caret">Right</b>
+        [1]
+      <small style="color:gray"><sub>     
+          sz: 128</sub></small><small style="color:#6CA2BB">
+          : offset=512
+          : global=1036</small><ul class="nested">
+                      <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Re</b>
+        [16]
+      
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=0
+          : global=1036</small></li>
+                      <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Im</b>
+        [16]
+      
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=64
+          : global=1100</small></li>
+                    </ul>
+                  </li>
+                  <li><b style="color:blue" class="caret">Right</b>
+        [2]
+      <small style="color:gray"><sub>     
+          sz: 128</sub></small><small style="color:#6CA2BB">
+          : offset=640
+          : global=1164</small><ul class="nested">
+                      <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Re</b>
+        [16]
+      
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=0
+          : global=1164</small></li>
+                      <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Im</b>
+        [16]
+      
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=64
+          : global=1228</small></li>
+                    </ul>
+                  </li>
+                  <li><b style="color:blue" class="caret">Right</b>
+        [3]
+      <small style="color:gray"><sub>     
+          sz: 128</sub></small><small style="color:#6CA2BB">
+          : offset=768
+          : global=1292</small><ul class="nested">
+                      <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Re</b>
+        [16]
+      
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=0
+          : global=1292</small></li>
+                      <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Im</b>
+        [16]
+      
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=64
+          : global=1356</small></li>
+                    </ul>
+                  </li>
+                  <li><b style="color:blue" class="caret">Right</b>
+        [4]
+      <small style="color:gray"><sub>     
+          sz: 128</sub></small><small style="color:#6CA2BB">
+          : offset=896
+          : global=1420</small><ul class="nested">
+                      <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Re</b>
+        [16]
+      
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=0
+          : global=1420</small></li>
+                      <li>float<small style="color:gray"><sub>34</sub></small>
+          : <b style="color:green">Im</b>
+        [16]
+      
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=64
+          : global=1484</small></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+          <li><b style="color:blue" class="caret">tstram</b><small style="color:gray"><sub>     
+          sz: 21</sub></small><small style="color:#6CA2BB">
+          : offset=1548
+          : global=1548</small><ul class="nested">
+              <li><b style="color:blue" class="caret">waddr</b><small style="color:gray"><sub>     
+          sz: 4</sub></small><small style="color:#6CA2BB">
+          : offset=0
+          : global=1548</small><ul class="nested">
+                  <li>uint16_t<small style="color:gray"><sub>20</sub></small>
+          : <b style="color:green">page</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=0
+          : global=1548</small></li>
+                  <li>uint16_t<small style="color:gray"><sub>20</sub></small>
+          : <b style="color:green">block</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=2
+          : global=1550</small></li>
+                </ul>
+              </li>
+              <li><b style="color:blue" class="caret">wreis</b><small style="color:gray"><sub>     
+          sz: 4</sub></small><small style="color:#6CA2BB">
+          : offset=4
+          : global=1552</small><ul class="nested">
+                  <li>uint16_t<small style="color:gray"><sub>20</sub></small>
+          : <b style="color:green">reis</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=0
+          : global=1552</small></li>
+                  <li>uint16_t<small style="color:gray"><sub>20</sub></small>
+          : <b style="color:green">block</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=2
+          : global=1554</small></li>
+                </ul>
+              </li>
+              <li>int8_t<small style="color:gray"><sub>12</sub></small>
+          : <b style="color:green">WCursorStatus</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=8
+          : global=1556</small></li>
+              <li>uint16_t<small style="color:gray"><sub>20</sub></small>
+          : <b style="color:green">pageCnt</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=9
+          : global=1557</small></li>
+              <li><b style="color:blue" class="caret">LastReis</b><small style="color:gray"><sub>     
+          sz: 8</sub></small><small style="color:#6CA2BB">
+          : offset=11
+          : global=1559</small><ul class="nested">
+                  <li>uint16_t<small style="color:gray"><sub>20</sub></small>
+          : <b style="color:green">рейс</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=0
+          : global=1559</small></li>
+                  <li>uint16_t<small style="color:gray"><sub>20</sub></small>
+          : <b style="color:green">число_блоков</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : readonly=
+          : offset=2
+          : global=1561</small></li>
+                  <li>uint16_t<small style="color:gray"><sub>20</sub></small>
+          : <b style="color:green">блок_памяти_начало</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : readonly=
+          : offset=4
+          : global=1563</small></li>
+                  <li>uint16_t<small style="color:gray"><sub>20</sub></small>
+          : <b style="color:green">блок_памяти_конец</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : readonly=
+          : offset=6
+          : global=1565</small></li>
+                </ul>
+              </li>
+              <li>uint16_t<small style="color:gray"><sub>20</sub></small>
+          : <b style="color:green">CurrReisStartBlock</b>
+      = <b>0</b><small style="color:#6CA2BB">
+          : offset=19
+          : global=1567</small></li>
+            </ul>
+          </li>
+        </ul>
+      </ul>
+    </div>
+  </body>
+</html>
