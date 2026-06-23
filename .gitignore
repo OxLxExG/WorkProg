@@ -73,6 +73,7 @@
 # Delphi history and backups
 __history/
 __recovery/
+_*
 *.~*
 
 # Castalia statistics file (since XE7 Castalia is distributed with Delphi)
