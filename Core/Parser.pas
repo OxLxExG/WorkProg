@@ -519,6 +519,7 @@ begin
     varLongWord: Result := function (var Data: Pointer): integer begin Result := PLongWord(Data)^; Inc(Pbyte(Data), SizeOf(LongWord)) end;
     varInt64   : Result := function (var Data: Pointer): integer begin Result := PInt64(Data)^; Inc(Pbyte(Data), SizeOf(Int64)) end;
     varUInt64  : Result := function (var Data: Pointer): integer begin Result := PUInt64(Data)^; Inc(Pbyte(Data), SizeOf(UInt64)) end;
+    varSingle  : Result := function (var Data: Pointer): integer begin Result := Round(PSingle(Data)^); Inc(Pbyte(Data), SizeOf(UInt64)) end;
     else  raise Exception.Create('мебнглнфмн опенапюгнбюрэ б AsTypeFunction<integer>');
   end;
 end;

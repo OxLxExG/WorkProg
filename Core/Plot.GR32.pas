@@ -878,7 +878,8 @@ begin
             for i := 0 to Length(pntrs) - 1 do
             begin
               pntrs[i].X := (i - p.DeltaX) * pp2mm * p.ScaleX;
-              pntrs[i].Y := Ye - X[i];
+//              pntrs[i].Y := Ye - X[i];
+              pntrs[i].Y := Ye + X[i];
             end;
           end;
         end);

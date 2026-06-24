@@ -57,12 +57,11 @@ object JDTypeFormGamma: TJDTypeFormGamma
     Width = 75
     Height = 75
     Hue = 0.017156863585114480
-    ParentBackground = False
     Saturation = 0.544000029563903800
     SelectedColor = -360334
-    TabOrder = 2
     Value = 0.980392158031463600
     OnChanged = AllChange
+    TabOrder = 2
   end
   object clBot: TColorPickerGTK
     Left = 111
@@ -70,12 +69,11 @@ object JDTypeFormGamma: TJDTypeFormGamma
     Width = 75
     Height = 75
     Hue = 0.017156863585114480
-    ParentBackground = False
     Saturation = 0.544000029563903800
     SelectedColor = -360334
-    TabOrder = 3
     Value = 0.980392158031463600
     OnChanged = AllChange
+    TabOrder = 3
   end
   object pb: TPaintBox32
     Left = 0

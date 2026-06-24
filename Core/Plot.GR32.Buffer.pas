@@ -1,8 +1,8 @@
-unit Plot.GR32.Buffer;
+п»їunit Plot.GR32.Buffer;
 
 interface
 
-uses System.SysUtils, GR32, GR32_Backends_VCL, CustomPlot, Vcl.Forms, GR32_ExtImage;
+uses System.SysUtils, System.SyncObjs, GR32, GR32_Backends_VCL, CustomPlot, Vcl.Forms, GR32_ExtImage;
 
 type
   TRenderReadyEvent = TProc;
@@ -17,6 +17,7 @@ type
    var
     FRegion: TGraphRegion;
     FReadyRegion: TArray<TDataRegion>;
+    FRegionLock: TCriticalSection;
     procedure JoinDataRegion;
     procedure SplitDataRegion(DownDir: Boolean);
     function YtoBitmap(Ypos: Double): Integer;
@@ -24,6 +25,8 @@ type
     class function GetPlatformBackendClass: TCustomBackendClass; override;
 
     procedure Draw(Y0, Y1: Double; Dst: TBitmap32; ReadyEvent: TRenderReadyEvent);
+    constructor Create;
+    destructor Destroy; override;
 //    property Mirror: Boolean;
 //    property YFirst: Double;
 //    property YFirstPixel: Integer;
@@ -40,6 +43,18 @@ implementation
 
 { TGR32Buffer }
 
+constructor TGR32DataBuffer.Create;
+begin
+  inherited;
+  FRegionLock := TCriticalSection.Create;
+end;
+
+destructor TGR32DataBuffer.Destroy;
+begin
+  FRegionLock.Free;
+  inherited;
+end;
+
 function TGR32DataBuffer.YtoBitmap(Ypos: Double): Integer;
 var
   pos: Double;
@@ -51,8 +66,12 @@ end;
 
 procedure TGR32DataBuffer.Draw(Y0, Y1: Double; Dst: TBitmap32; ReadyEvent: TRenderReadyEvent);
 begin
-  JoinDataRegion;
-
+  FRegionLock.Enter;
+  try
+    JoinDataRegion;
+  finally
+    FRegionLock.Leave;
+  end;
 end;
 
 class function TGR32DataBuffer.GetPlatformBackendClass: TCustomBackendClass;
@@ -76,12 +95,17 @@ procedure TGR32DataBuffer.JoinDataRegion;
  var
   i: Integer;
 begin
-  i := 0;
-  while i < Length(FReadyRegion) do
-   begin
-    while ChekJoin(i, i+1) do;
-    inc(i);
-   end;
+  FRegionLock.Enter;
+  try
+    i := 0;
+    while i < Length(FReadyRegion) do
+     begin
+      while ChekJoin(i, i+1) do;
+      inc(i);
+     end;
+  finally
+    FRegionLock.Leave;
+  end;
 end;
 
 procedure TGR32DataBuffer.SplitDataRegion(DownDir: Boolean);
@@ -90,7 +114,9 @@ procedure TGR32DataBuffer.SplitDataRegion(DownDir: Boolean);
   s, y0, y1: Double;
   ys0, ys1: Double;
 begin
-  hs := FRegion.ClientRect.Height;
+  FRegionLock.Enter;
+  try
+    hs := FRegion.ClientRect.Height;
   s := (Screen.PixelsPerInch / 2.54 * 2) * FRegion.Graph.YScale;
   y0 := FRegion.Graph.YFromData;
   y1 := FRegion.Graph.YLast;
@@ -100,7 +126,7 @@ begin
   hy := Round(Abs(y1-y0)*s);
   if hy <= h then
    begin
-   // буфер больше
+   // пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
     SetLength(FReadyRegion, hy div 100 + 1);
     for i := 0 to hy div 100 do
      begin
@@ -121,6 +147,9 @@ begin
 
 
    end;
+  finally
+    FRegionLock.Leave;
+  end;
 end;
 
 end.

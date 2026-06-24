@@ -1,12 +1,14 @@
-unit VCLGraphDataForm;
+п»їunit VCLGraphDataForm;
 
 interface
+//git remote set-url origin https://oLeg-Claud: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@://github.com
+
 
 {$INCLUDE global.inc}
 
 uses  VCL.CustomDataForm, Container, ExtendIntf, Actns, plot.GR32, plot.Controls, Data.DB, XMLDataSet, RootIntf,  FileCachImpl,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, RootImpl, CustomPlot;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, RootImpl, CustomPlot, System.SyncObjs;
 
 {$IFDEF ENG_VERSION}
   const
@@ -15,9 +17,9 @@ uses  VCL.CustomDataForm, Container, ExtendIntf, Actns, plot.GR32, plot.Controls
    C_Memu_Show='Show';
 {$ELSE}
   const
-   C_CaptGrForm ='Новый график';
-   C_MenuView ='Окна визуализации';
-   C_Memu_Show='Показать';
+      C_CaptGrForm ='РќРѕРІС‹Р№ РіСЂР°С„РёРє';
+      C_MenuView ='РћРєРЅР° РІРёР·СѓР°Р»РёР·Р°С†РёРё';
+      C_Memu_Show='РџРѕРєР°Р·Р°С‚СЊ';
 {$ENDIF}
 
 type
@@ -27,6 +29,7 @@ type
     procedure FormShow(Sender: TObject);
   private
     FActiveDataSetBinds: Tarray<string>;
+    FBindLock: TCriticalSection;
     FC_Write: Integer;
     function IsBinded(ds: TXMLDataSet): boolean;
     procedure SetC_Write(const Value: Integer);
@@ -39,6 +42,7 @@ type
     procedure CanClose(var CanClose: Boolean);
     procedure ClientBeforeRemove(Service: ServiceType; ClientName: string);
   public
+    destructor Destroy; override;
     [StaticAction(C_CaptGrForm, C_MenuView, NICON, '0:'+C_Memu_Show+'.'+C_MenuView)]
     class procedure DoCreateForm(Sender: IAction); override;
     property C_Write: Integer read FC_Write write SetC_Write;
@@ -49,6 +53,12 @@ implementation
 {$R *.dfm}
 
 { TGraphDataForm }
+
+destructor TGraphDataForm.Destroy;
+begin
+  FBindLock.Free;
+  inherited;
+end;
 
 procedure TGraphDataForm.CanClose(var CanClose: Boolean);
 begin
@@ -109,20 +119,44 @@ begin
 end;
 
 procedure TGraphDataForm.GraphParamsAdded(d: TDataSet);
+var
+  s: string;
+  needBind: Boolean;
 begin
-  if (d is TXMLDataSet) and TXMLDataSet(d).IsActive and not IsBinded(TXMLDataSet(d)) then
-   begin
-    Bind('C_Write', TXMLDataSet(d).FileData, ['S_Write']);
-    FActiveDataSetBinds := FActiveDataSetBinds +[TXMLDataSet(d).BinFileName];
-   end;
+  if (d is TXMLDataSet) and TXMLDataSet(d).IsActive then
+  begin
+    FBindLock.Enter;
+    try
+      needBind := not IsBinded(TXMLDataSet(d));
+      if needBind then
+        s := TXMLDataSet(d).BinFileName;
+    finally
+      FBindLock.Leave;
+    end;
+    if needBind then
+    begin
+      Bind('C_Write', TXMLDataSet(d).FileData, ['S_Write']);
+      FBindLock.Enter;
+      try
+        FActiveDataSetBinds := FActiveDataSetBinds + [s];
+      finally
+        FBindLock.Leave;
+      end;
+    end;
+  end;
 end;
 
 function TGraphDataForm.IsBinded(ds: TXMLDataSet): boolean;
  var
   s: string;
 begin
-  for s in FActiveDataSetBinds do if SameText(s, ds.BinFileName) then Exit(True);
   Result := False;
+  FBindLock.Enter;
+  try
+    for s in FActiveDataSetBinds do if SameText(s, ds.BinFileName) then Exit(True);
+  finally
+    FBindLock.Leave;
+  end;
 end;
 
 procedure TGraphDataForm.Loaded;
@@ -131,7 +165,8 @@ var
   p: TGraphPar;
 begin
   inherited;
-  //AddToNCMenu('Долбавить данные текущего проекта...', NAddDataClick);
+  FBindLock := TCriticalSection.Create;
+  //AddToNCMenu('Р”РѕР»Р±Р°РІРёС‚СЊ РґР°РЅРЅС‹Рµ С‚РµРєСѓС‰РµРіРѕ РїСЂРѕРµРєС‚Р°...', NAddDataClick);
   Graph.PopupMenu := CreateUnLoad<TPlotMenu>;
   for c in Graph.Columns do
     for p in c.Params do GraphParamsAdded(p.Link.DataSet);

@@ -9,7 +9,7 @@ uses
   Data.DB, DataSetIntf, IDataSets, System.Bindings.Helper, System.IOUtils,
   System.TypInfo, System.UITypes, Vcl.Grids, SysUtils, Controls, Messages,
   Winapi.Windows, Classes, System.Rtti, types, Vcl.Graphics, Vcl.Forms, Vcl.ExtCtrls,
-  Vcl.Menus, Vcl.Themes, Vcl.GraphUtil;
+  Vcl.Menus, Vcl.Themes, Vcl.GraphUtil, System.SyncObjs;
 
 const     // X
   SCALE_PRESET_MOUSE: array[-12..14] of Double = (0.0001, 0.0002, 0.0005, 0.001, 0.002, 0.005, 0.01, 0.02, 0.05, 0.1, 0.25, 0.5, 1, 2, 5, 10, 20, 25, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000);
@@ -873,6 +873,7 @@ type
     FYTopScreen: Double;
     FYButtomScreen: Double;
     FFrostCount: Integer;
+    FFrostLock: TCriticalSection;
     FOnParamsAdded: TParamsAddedEvent;
  //   FYDataLink: TCustomYDataLink;
 
@@ -2587,6 +2588,7 @@ end;
 constructor TCustomGraph.Create(AOwner: TComponent);
 begin
   inherited;
+  FFrostLock := TCriticalSection.Create;
   FFrostCount := 1;
   FYFirstAvail := 0;
   FYLastAvail := 1000;
@@ -2602,6 +2604,7 @@ begin
   FYScrollBar.Free;
   FColumns.Free;
   FRows.Free;
+  FFrostLock.Free;
   inherited;
 end;
 
@@ -3025,21 +3028,41 @@ end;
 
 procedure TCustomGraph.Frost;
 begin
-  Inc(FFrostCount);
+  FFrostLock.Enter;
+  try
+    Inc(FFrostCount);
+  finally
+    FFrostLock.Leave;
+  end;
 end;
 
 function TCustomGraph.Frosted: Boolean;
 begin
-  Result := FFrostCount > 0;
+  FFrostLock.Enter;
+  try
+    Result := FFrostCount > 0;
+  finally
+    FFrostLock.Leave;
+  end;
 end;
 
 procedure TCustomGraph.DeFrost;
+var
+  doPaint: Boolean;
 begin
-  Dec(FFrostCount);
-  if FFrostCount = 0 then
+  doPaint := False;
+  FFrostLock.Enter;
+  try
+    Dec(FFrostCount);
+    if FFrostCount = 0 then
+      doPaint := True;
+    if FFrostCount < 0 then
+      FFrostCount := 0;
+  finally
+    FFrostLock.Leave;
+  end;
+  if doPaint then
     Paint;
-  if FFrostCount < 0 then
-    FFrostCount := 0;
 end;
 
 procedure TCustomGraph.DrowRegionsBounds;

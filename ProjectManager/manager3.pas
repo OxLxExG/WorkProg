@@ -626,7 +626,10 @@ procedure TManager.ClearItems(ClearItems: EClearItems);
 begin
   if ecIO in ClearItems then (GlobalCore as IConnectIOEnum).Clear;
   if ecDevice in ClearItems then (GlobalCore as IDeviceEnum).Clear;
+  var daa := TIform.DoDestroyApp;
+  TIform.DoDestroyApp := true;
   if ecForm in ClearItems then (GlobalCore as IFormEnum).Clear;
+  TIform.DoDestroyApp := daa;
  // if ecFile in ClearItems then (GlobalCore as IFileEnum).Clear;
 end;
 

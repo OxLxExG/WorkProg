@@ -1,10 +1,10 @@
-unit Plot.DataLink;
+п»їunit Plot.DataLink;
 
 interface
 
 uses IDataSets, Container,
      System.SysUtils, ExtendIntf, System.Rtti, System.TypInfo, Data.DB, System.Classes,  debug_except, DataSetIntf, FileDataSet,
-     CustomPlot, LasDataSet, XMLDataSet, FileCachImpl, Parser, Winapi.ActiveX;
+     CustomPlot, LasDataSet, XMLDataSet, FileCachImpl, Parser, Winapi.ActiveX, System.SyncObjs;
 
 type
    TReadDataThread = class(TThread)
@@ -43,6 +43,7 @@ type
      FYFrom, FYto: Single;
      Fbuff: TArray<TBufferPoint>;
      FInitBufThread: TThread;
+     FBufferLock: TCriticalSection;
      procedure ReadFromDB;
      procedure ReadFromMemBuffer;
      procedure InitMemBuffer(d: TDataSet; NeedInitFromFile: boolean = True);
@@ -55,6 +56,8 @@ type
      function GetXValue(Fx: TField): T; virtual; abstract;
      procedure ResetBuffer; override;
    public
+    constructor Create(AOwner: TGraphPar); override;
+    destructor Destroy; override;
      property YValue: Single read GetFieldY;
      property XFieldDef: TFileFieldDef read GetXFieldDef;
    published
@@ -141,6 +144,18 @@ end;
 
 { TDataLink<T> }
 
+constructor TDataLink<T>.Create(AOwner: TGraphPar);
+begin
+  inherited;
+  FBufferLock := TCriticalSection.Create;
+end;
+
+destructor TDataLink<T>.Destroy;
+begin
+  FBufferLock.Free;
+  inherited;
+end;
+
 function TDataLink<T>.FileRecLen: Integer;
 begin
   Result := SizeOf(TBufferPoint);
@@ -168,7 +183,7 @@ begin
    begin
     if SameText(DataSet.FieldList[i].FullName, Fullname) then Exit(DataSet.FieldList[i]);
    end;
-  raise Exception.CreateFmt('Поле %s ненайдено в %s', [Fullname, DataSet.Name]);
+  raise Exception.CreateFmt('пїЅпїЅпїЅпїЅ %s пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ %s', [Fullname, DataSet.Name]);
 end;
 
 function TDataLink<T>.GetBufferFileName: string;
@@ -198,47 +213,57 @@ procedure TDataLink<T>.InitMemBuffer(d: TDataSet; NeedInitFromFile: boolean = Tr
  var
   i, Size: Integer;
   fx,fy: TField;
+  localReady: Boolean;
 begin
   d.Active := True;
   fx := d.FieldByName(XParamPath);
   fy := d.FieldByName(YParamPath);
-  Size := (d.RecordCount{+1}) * FileRecLen;  //  (d.RecordCount+1) ?????  надо разобраться!!!
-  FFileData.Lock;
+  Size := (d.RecordCount{+1}) * FileRecLen;  //  (d.RecordCount+1) ?????  !!!
+  localReady := False;
+  FBufferLock.Enter;
   try
     if FbuffReady then Exit;
-    if FFileData.Size > Size then raise Exception.Create('Error Message FFileData.Size > d.RecordCount');
-    SetLength(Fbuff, d.RecordCount);
-    if FFileData.Size = 0 then
-     begin
-      d.First;
-      i := 0;
-     end
-    else
-     begin
-      if NeedInitFromFile then InitBuffFromFile;
-      if FFileData.Size = Size then
+    FFileData.Lock;
+    try
+      if FbuffReady then Exit;
+      if FFileData.Size > Size then raise Exception.Create('Error Message FFileData.Size > d.RecordCount');
+      SetLength(Fbuff, d.RecordCount);
+      if FFileData.Size = 0 then
        begin
-        FbuffReady := True;
-        Exit;
+        d.First;
+        i := 0;
+       end
+      else
+       begin
+        if NeedInitFromFile then InitBuffFromFile;
+        if FFileData.Size = Size then
+         begin
+          FbuffReady := True;
+          localReady := True;
+          Exit;
+         end;
+        i := FFileData.Size div FileRecLen;
+        d.RecNo := i+1;
        end;
-      i := FFileData.Size div FileRecLen;
-      d.RecNo := i+1;
-     end;
-     while (not d.Eof) do
-      begin
+       while (not d.Eof) do
+        begin
 //         Yield;
-       Fbuff[i].X := GetXValue(FX);
-       Fbuff[i].Y := FY.AsSingle;
-       IniTmpFileBuffer(Fbuff[i].Y, fx);
-       FFileData.Write(FileRecLen, @FfileTmpBuffer[0], -1, False);
-       inc(i);
-       d.Next;
-      end;
-    //TDebug.Log('FbuffReady := True;   %d   ',[FFileData.Size]);
-    FbuffReady := True;
+         Fbuff[i].X := GetXValue(FX);
+         Fbuff[i].Y := FY.AsSingle;
+         IniTmpFileBuffer(Fbuff[i].Y, fx);
+         FFileData.Write(FileRecLen, @FfileTmpBuffer[0], -1, False);
+         inc(i);
+         d.Next;
+        end;
+      //TDebug.Log('FbuffReady := True;   %d   ',[FFileData.Size]);
+      FbuffReady := True;
+      localReady := True;
+    finally
+      FFileData.UnLock;
+    end;
    finally
-    d.Active := False;
-    FFileData.UnLock;
+    FBufferLock.Leave;
+    if localReady then d.Active := False;
    end;
 end;
 
@@ -246,26 +271,39 @@ procedure TDataLink<T>.ReadFromMemBuffer;
  var
   y, Yfirst, dy: Single;
   RecNo: integer;
+  localBuff: TArray<TBufferPoint>;
 begin
-  Yfirst := Fbuff[0].Y;
-  dy := Fbuff[1].y - Fbuff[0].Y;
+  FBufferLock.Enter;
+  try
+    if not FbuffReady or (Length(Fbuff) = 0) then Exit;
+    localBuff := Copy(Fbuff, 0, Length(Fbuff));
+  finally
+    FBufferLock.Leave;
+  end;
+  Yfirst := localBuff[0].Y;
+  dy := localBuff[1].y - localBuff[0].Y;
   if dy = 0 then dy := 1;
   RecNo := Round((FYFrom-Yfirst)/dy)-2;
   if RecNo < 0 then RecNo := 0;
-  while (RecNo < Length(Fbuff)) and (Fbuff[RecNo].Y < FYFrom) do Inc(RecNo);
+  while (RecNo < Length(localBuff)) and (localBuff[RecNo].Y < FYFrom) do Inc(RecNo);
   if RecNo > 0 then Dec(RecNo);
   y := FYTo-1;
-  while (RecNo < Length(Fbuff)) and (y < FYto) do
+  while (RecNo < Length(localBuff)) and (y < FYto) do
    begin
-    Y:= Fbuff[RecNo].Y;
-    Fevent(y, Fbuff[RecNo].X);
+    Y:= localBuff[RecNo].Y;
+    Fevent(y, localBuff[RecNo].X);
     Inc(RecNo);
    end;
 end;
 
 procedure TDataLink<T>.ResetBuffer;
 begin
-  FbuffReady := False;
+  FBufferLock.Enter;
+  try
+    FbuffReady := False;
+  finally
+    FBufferLock.Leave;
+  end;
 end;
 
 procedure TDataLink<T>.ReadFromDB;
@@ -290,11 +328,11 @@ begin
 //     raise EBaseException.CreateFmt('Error Message dy = 0 %f %s %s', [Yfirst, FieldY.FullName, FieldX.FullName]);
 
    d.RecNo := Round((FYFrom-Yfirst)/dy)-2;
-   // доходим до начала экрана
+   // пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
    while (not d.Eof) and (YValue < FYFrom) do d.Next;
-   // точка перед экраном
+   // пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
    d.prior;
-   // доходим до конца экрана + точка
+   // пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ + пїЅпїЅпїЅпїЅпїЅ
    y := FYTo-1;
    while (not d.Eof) and (y < FYto) do
     begin
@@ -323,9 +361,9 @@ begin
   FYto := Yto;
   tick := TThread.GetTickCount;
  // ReadFromDB;
-//  TDebug.Log('ReadFromDB %s %f, %f время счит %1.2f',[XFieldDef.FullName, YFrom, Yto, (TThread.GetTickCount- tick)/1000]);
+//  TDebug.Log('ReadFromDB %s %f, %f пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ %1.2f',[XFieldDef.FullName, YFrom, Yto, (TThread.GetTickCount- tick)/1000]);
 //  Exit;
- //неработает если выбираешь несколько данных LAS проблемма с синхронизацией потоков появляются нулевые У в файле
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ LAS пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅ пїЅпїЅпїЅпїЅпїЅ
   if not FbuffReady then
    begin
     if not Assigned(FFileData) then FFileData := GFileDataFactory.Factory(TFileData, BufferFileName);
@@ -333,22 +371,27 @@ begin
      begin
       th := TReadDataThread.Create(procedure
       begin
-        FFileData.Lock;
+        FBufferLock.Enter;
         try
-         try
-         //Tdebug.Log('TmpBuff: %d, Rec*Len: %d', [FFileData.Size, DataSet.RecordCount*FileRecLen]);
-         if FFileData.Size = DataSet.RecordCount*FileRecLen then
-          begin
-           SetLength(Fbuff, FFileData.Size div FileRecLen);
-           InitBuffFromFile;
-           FbuffReady := True;
-           NillDataSet;
-          end;
-          except
-           on E: Exception do TDebug.DoException(E);
+          FFileData.Lock;
+          try
+           try
+           //Tdebug.Log('TmpBuff: %d, Rec*Len: %d', [FFileData.Size, DataSet.RecordCount*FileRecLen]);
+           if FFileData.Size = DataSet.RecordCount*FileRecLen then
+            begin
+             SetLength(Fbuff, FFileData.Size div FileRecLen);
+             InitBuffFromFile;
+             FbuffReady := True;
+             NillDataSet;
+            end;
+            except
+             on E: Exception do TDebug.DoException(E);
+            end;
+          finally
+           FFileData.UnLock;
           end;
         finally
-         FFileData.UnLock;
+          FBufferLock.Leave;
         end;
       end);
       th.WaitFor;
@@ -384,28 +427,32 @@ begin
 //    Owner.Graph.Frost;
 //    th := TReadDataThread.Create(procedure
 //    begin
-      FFileData.Lock;
+      FBufferLock.Enter;
       try
+        FFileData.Lock;
         try
-          if not Assigned(Fids) and not DataSetDef.CreateNew(Fids{, False}) then Exit;
-          InitMemBuffer(Fids.DataSet, false);
-        finally
-         FFileData.UnLock;
+          try
+            if not Assigned(Fids) and not DataSetDef.CreateNew(Fids{, False}) then Exit;
+            InitMemBuffer(Fids.DataSet, false);
+          finally
+           FFileData.UnLock;
 //         TThread.Queue(TThread.CurrentThread, procedure
 //         begin
 //         end);
+          end;
+        except
+         on E: Exception do TDebug.DoException(E);
         end;
-      except
-       on E: Exception do TDebug.DoException(E);
+      finally
+        FBufferLock.Leave;
       end;
 //    end);
 //    th.WaitFor;
-//    th.Free;   // вызывается из  Render RenderLineparams Paint надо вс
+//    th.Free;   //  Render RenderLineparams Paint
 //    Owner.Graph.DeFrost;
     { TODO :
-// вызывается из  Render RenderLineparams Paint если убрать th.WaitFor то данные рисоваться не будут
-надо все переделывать в потоке готовить новые буферы данных
-а затем рисовать ?????}
+//  Render RenderLineparams Paint  th.WaitFor
+ ?????}
     if FbuffReady then ReadFromMemBuffer;
 //    Owner.Graph.DeFrost;
    end;
@@ -500,7 +547,12 @@ begin
     Fbuff[i].Y := p.Y;
     SetLength(Fbuff[i].X, ArrayCount);
     px := @p.X[0];
-    for j := 0 to ArrayCount-1 do Fbuff[i].X[j] := Round((EnumFunc(px)+ FDelta) * Fscale);
+    for j := 0 to ArrayCount-1 do
+     try
+      Fbuff[i].X[j] := Round((EnumFunc(px)+ FDelta) * Fscale);
+     except
+
+     end;
     inc(PByte(p), FileRecLen);
    end;
 end;

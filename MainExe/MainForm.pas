@@ -140,7 +140,7 @@ type
     procedure debug_log_dock;
     procedure clear_dock_zones;
     procedure SetColorsDockStyle(DarkTheme: Boolean);
-    procedure ClearProjectForms;
+//    procedure ClearProjectForms;
     procedure MenuUpdateMessage(var Msg: TMessage); message MENU_UPDATE_MESSAGE;
 //    procedure ShowInBarMessage1(var Msg: TMessage); message SHOW_IN_BAR_MESSAGE1;
 //    procedure ShowInBarMessage2(var Msg: TMessage); message SHOW_IN_BAR_MESSAGE2;
@@ -828,42 +828,40 @@ begin
   end;
 end;
 
-procedure TFormMain.ClearProjectForms;
- var
-  m: IManager;
-begin
-  if ChildFormsBusy or DeviceBusy then Exit;
-  BeginDockLoading;
-  try
-    (GlobalCore as IFormEnum).Clear;
-    ResetActions(True);
-  finally
-    EndDockLoading;
-  end;
-end;
+//procedure TFormMain.ClearProjectForms;
+// var
+//  m: IManager;
+//begin
+//  //if ChildFormsBusy or DeviceBusy then Exit;
+//  BeginDockLoading;
+//  try
+//    (GlobalCore as IFormEnum).Clear;
+//    ResetActions(True);
+//  finally
+//    EndDockLoading;
+//  end;
+//end;
 
 procedure TFormMain.ThemeDarkExecute(Sender: TObject);
 begin
-   ClearProjectForms;
-  TIForm.DoDestroyApp := True;
+  if FMainScreenChange then SaveScreenClick(nil);
+
+  LockWindowUpdate(Handle);
   try
-    LockWindowUpdate(Handle);
-    try
-      if ThemeDark.Checked then
-       begin
-        TStyleManager.TrySetStyle('Windows11 Polar Dark');
-       end
-      else
-       begin
-        TStyleManager.TrySetStyle('Windows');
-       end;
-      rini.WriteBoolean('isdark', ThemeDark.Checked);
-      SetColorsDockStyle(ThemeDark.Checked);
-    finally
-      LockWindowUpdate(0);
-    end;
+   ActiveControl := nil;
+   if ThemeDark.Checked then
+     begin
+      TStyleManager.TrySetStyle('Windows11 Polar Dark');
+     end
+    else
+     begin
+      TStyleManager.TrySetStyle('Windows');
+     end;
+    rini.WriteBoolean('isdark', ThemeDark.Checked);
+    SetColorsDockStyle(ThemeDark.Checked);
+
   finally
-    TIForm.DoDestroyApp := False;
+    LockWindowUpdate(0);
   end;
 end;
 
