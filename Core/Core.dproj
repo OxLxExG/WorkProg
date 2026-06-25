@@ -185,7 +185,6 @@
         <DCCReference Include="LasDataSet.pas"/>
         <DCCReference Include="FileDataSet.pas"/>
         <DCCReference Include="Plot.DataLink.pas"/>
-        <DCCReference Include="Plot.GR32.Buffer.pas"/>
         <DCCReference Include="..\StolBKIntf.pas"/>
         <DCCReference Include="Fifo.pas"/>
         <DCCReference Include="Fifo.FFT.pas"/>

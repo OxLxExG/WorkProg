@@ -1,7 +1,6 @@
 ﻿unit VCLGraphDataForm;
 
 interface
-//git remote set-url origin https://oLeg-Claud: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@://github.com
 
 
 {$INCLUDE global.inc}

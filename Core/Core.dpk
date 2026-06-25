@@ -17,23 +17,23 @@ package Core;
 {$EXTENDEDSYNTAX ON}
 {$IMPORTEDDATA ON}
 {$IOCHECKS ON}
-{$LOCALSYMBOLS OFF}
+{$LOCALSYMBOLS ON}
 {$LONGSTRINGS ON}
 {$OPENSTRINGS ON}
 {$OPTIMIZATION ON}
 {$OVERFLOWCHECKS OFF}
 {$RANGECHECKS OFF}
-{$REFERENCEINFO OFF}
+{$REFERENCEINFO ON}
 {$SAFEDIVIDE OFF}
-{$STACKFRAMES OFF}
+{$STACKFRAMES ON}
 {$TYPEDADDRESS OFF}
 {$VARSTRINGCHECKS ON}
 {$WRITEABLECONST OFF}
 {$MINENUMSIZE 1}
 {$IMAGEBASE $400000}
-{$DEFINE RELEASE}
+{$DEFINE DEBUG}
 {$ENDIF IMPLICITBUILDING}
-{$DESCRIPTION 'Core 2.0.0 Корневые классы и утилиты Плагинов '}
+{$DESCRIPTION 'Core 3.0.0 Корневые классы и утилиты'}
 {$IMPLICITBUILD ON}
 
 requires
@@ -90,7 +90,6 @@ contains
   LasDataSet in 'LasDataSet.pas',
   FileDataSet in 'FileDataSet.pas',
   Plot.DataLink in 'Plot.DataLink.pas',
-  Plot.GR32.Buffer in 'Plot.GR32.Buffer.pas',
   StolBKIntf in '..\StolBKIntf.pas',
   Fifo in 'Fifo.pas',
   Fifo.FFT in 'Fifo.FFT.pas',
