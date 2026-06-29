@@ -6,7 +6,8 @@ uses RootIntf, debug_except, ExtendIntf, DockIForm, PluginAPI, RootImpl, Contain
      DataSetIntf, IDataSets, LasDataSet, CustomPlot, LAS, LasImpl, Plot.DtLink,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, System.TypInfo, Xml.XMLIntf,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls,  Vcl.Graphics,
-  JvExComCtrls, JvComCtrls, JvDotNetControls, Plot.GR32, Data.DB, Vcl.Menus, JvComponentBase, JvInspector, Vcl.StdCtrls, Vcl.Grids,
+  JvExComCtrls, JvComCtrls, JvDotNetControls, Plot.GR32.Tools,
+  Data.DB, Vcl.Menus, JvComponentBase, JvInspector, Vcl.StdCtrls, Vcl.Grids,
   Vcl.DBGrids, Vcl.ExtCtrls, JvExControls, Vcl.FileCtrl, JvExStdCtrls, JvListBox, JvCombobox, JvDriveCtrls, JvMenus;
 
 type

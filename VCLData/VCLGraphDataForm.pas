@@ -5,9 +5,15 @@ interface
 
 {$INCLUDE global.inc}
 
-uses  VCL.CustomDataForm, Container, ExtendIntf, Actns, plot.GR32, plot.Controls, Data.DB, XMLDataSet, RootIntf,  FileCachImpl,
+uses  VCL.CustomDataForm, Container, ExtendIntf, Actns,
+  CustomPlot,
+  CustomPlot.DataLink,
+  plot.GR32.Data,
+  plot.GR32.Legend,
+  plot.GR32.Tools,
+  plot.Controls, Data.DB, XMLDataSet, RootIntf,  FileCachImpl,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, RootImpl, CustomPlot, System.SyncObjs, CustomPlot.DataLink;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, RootImpl,  System.SyncObjs;
 
 {$IFDEF ENG_VERSION}
   const

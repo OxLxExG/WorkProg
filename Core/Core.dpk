@@ -80,12 +80,9 @@ contains
   AVRtypes in 'AVRtypes.pas',
   IDataSets in 'IDataSets.pas',
   DataSetIntf in '..\DataSetIntf.pas',
-  CustomPlot in 'CustomPlot.pas',
-  Plot.GR32 in 'Plot.GR32.pas',
   DataImportIntf in '..\DataImportIntf.pas',
   DataImportImpl in 'DataImportImpl.pas',
   Vector in '..\Vector.pas',
-  Plot.Controls in 'Plot.Controls.pas',
   JDtools in 'JDtools.pas',
   LasDataSet in 'LasDataSet.pas',
   FileDataSet in 'FileDataSet.pas',
@@ -122,7 +119,13 @@ contains
   MagniProTool in '..\MagniProTool.pas',
   ExportMetaData in 'ExportMetaData.pas',
   TrrInclin.Temp.PolyModel in 'TrrInclin.Temp.PolyModel.pas',
-  CustomPlot.DataLink in 'CustomPlot.DataLink.pas';
+  CustomPlot.DataLink in 'Plot\CustomPlot.DataLink.pas',
+  CustomPlot in 'Plot\CustomPlot.pas',
+  Plot.Controls in 'Plot\Plot.Controls.pas',
+  Plot.DtLink in 'Plot\Plot.DtLink.pas',
+  Plot.GR32.Data in 'Plot\GR32\Plot.GR32.Data.pas',
+  Plot.GR32.Legend in 'Plot\GR32\Plot.GR32.Legend.pas',
+  Plot.GR32.Tools in 'Plot\GR32\Plot.GR32.Tools.pas';
 
 end.
 

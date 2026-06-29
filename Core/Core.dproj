@@ -175,12 +175,9 @@
         <DCCReference Include="AVRtypes.pas"/>
         <DCCReference Include="IDataSets.pas"/>
         <DCCReference Include="..\DataSetIntf.pas"/>
-        <DCCReference Include="CustomPlot.pas"/>
-        <DCCReference Include="Plot.GR32.pas"/>
         <DCCReference Include="..\DataImportIntf.pas"/>
         <DCCReference Include="DataImportImpl.pas"/>
         <DCCReference Include="..\Vector.pas"/>
-        <DCCReference Include="Plot.Controls.pas"/>
         <DCCReference Include="JDtools.pas"/>
         <DCCReference Include="LasDataSet.pas"/>
         <DCCReference Include="FileDataSet.pas"/>
@@ -217,7 +214,13 @@
         <DCCReference Include="..\MagniProTool.pas"/>
         <DCCReference Include="ExportMetaData.pas"/>
         <DCCReference Include="TrrInclin.Temp.PolyModel.pas"/>
-        <DCCReference Include="CustomPlot.DataLink.pas"/>
+        <DCCReference Include="Plot\CustomPlot.DataLink.pas"/>
+        <DCCReference Include="Plot\CustomPlot.pas"/>
+        <DCCReference Include="Plot\Plot.Controls.pas"/>
+        <DCCReference Include="Plot\Plot.DtLink.pas"/>
+        <DCCReference Include="Plot\GR32\Plot.GR32.Data.pas"/>
+        <DCCReference Include="Plot\GR32\Plot.GR32.Legend.pas"/>
+        <DCCReference Include="Plot\GR32\Plot.GR32.Tools.pas"/>
         <None Include="..\Script.inc"/>
         <None Include="..\global.inc"/>
         <BuildConfiguration Include="Base">
