@@ -184,7 +184,6 @@
         <DCCReference Include="JDtools.pas"/>
         <DCCReference Include="LasDataSet.pas"/>
         <DCCReference Include="FileDataSet.pas"/>
-        <DCCReference Include="Plot.DataLink.pas"/>
         <DCCReference Include="..\StolBKIntf.pas"/>
         <DCCReference Include="Fifo.pas"/>
         <DCCReference Include="Fifo.FFT.pas"/>
@@ -218,6 +217,7 @@
         <DCCReference Include="..\MagniProTool.pas"/>
         <DCCReference Include="ExportMetaData.pas"/>
         <DCCReference Include="TrrInclin.Temp.PolyModel.pas"/>
+        <DCCReference Include="CustomPlot.DataLink.pas"/>
         <None Include="..\Script.inc"/>
         <None Include="..\global.inc"/>
         <BuildConfiguration Include="Base">

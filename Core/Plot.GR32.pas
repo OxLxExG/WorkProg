@@ -5,9 +5,9 @@ interface
 {$INCLUDE global.inc}
 
 
-uses
+uses CustomPlot.DataLink,
   System.SysUtils, System.Classes, System.Types, System.UITypes, ExtendIntf, Vcl.Forms,
-  Plot.DataLink, Vcl.Graphics, Vcl.Themes, Winapi.Windows, Winapi.Messages,
+  Plot.DtLink, Vcl.Graphics, Vcl.Themes, Winapi.Windows, Winapi.Messages,
   System.Math, GR32_Math, GR32, GR32_Image, GR32_RangeBars, GR32_Blend, Controls,
   GR32_Polygons, GR32_Resamplers, GR32_VectorUtils, GR32_Geometry, RootImpl,
   Container, tools, JDtools, debug_except, CustomPlot;

@@ -1,4 +1,4 @@
-п»їunit VCLGraphDataForm;
+unit VCLGraphDataForm;
 
 interface
 
@@ -7,7 +7,7 @@ interface
 
 uses  VCL.CustomDataForm, Container, ExtendIntf, Actns, plot.GR32, plot.Controls, Data.DB, XMLDataSet, RootIntf,  FileCachImpl,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, RootImpl, CustomPlot, System.SyncObjs;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, RootImpl, CustomPlot, System.SyncObjs, CustomPlot.DataLink;
 
 {$IFDEF ENG_VERSION}
   const
@@ -16,9 +16,9 @@ uses  VCL.CustomDataForm, Container, ExtendIntf, Actns, plot.GR32, plot.Controls
    C_Memu_Show='Show';
 {$ELSE}
   const
-      C_CaptGrForm ='РќРѕРІС‹Р№ РіСЂР°С„РёРє';
-      C_MenuView ='РћРєРЅР° РІРёР·СѓР°Р»РёР·Р°С†РёРё';
-      C_Memu_Show='РџРѕРєР°Р·Р°С‚СЊ';
+      C_CaptGrForm ='Новый график';
+      C_MenuView ='Окна визуализации';
+      C_Memu_Show='Показать';
 {$ENDIF}
 
 type
@@ -85,7 +85,9 @@ begin
      if  (SameText(ClientName, TXMLDataSet(p.Link.DataSet).BinFileName)
          or SameText(ClientName, TXMLDataSet(p.Link.DataSet).CLCFileName)) then
       begin
-       (GContainer as IProjectDataFile).TmpFileNeedDelete(p.Link.BufferFileName);
+       var lb: IDataLinkBuffer;
+       if Supports(p.Link, IDataLinkBuffer, lb) then
+       (GContainer as IProjectDataFile).TmpFileNeedDelete(lb.BufferFileName);
        p.Free;
       end;
      end;
@@ -165,7 +167,7 @@ var
 begin
   inherited;
   FBindLock := TCriticalSection.Create;
-  //AddToNCMenu('Р”РѕР»Р±Р°РІРёС‚СЊ РґР°РЅРЅС‹Рµ С‚РµРєСѓС‰РµРіРѕ РїСЂРѕРµРєС‚Р°...', NAddDataClick);
+  //AddToNCMenu('Долбавить данные текущего проекта...', NAddDataClick);
   Graph.PopupMenu := CreateUnLoad<TPlotMenu>;
   for c in Graph.Columns do
     for p in c.Params do GraphParamsAdded(p.Link.DataSet);

@@ -89,7 +89,6 @@ contains
   JDtools in 'JDtools.pas',
   LasDataSet in 'LasDataSet.pas',
   FileDataSet in 'FileDataSet.pas',
-  Plot.DataLink in 'Plot.DataLink.pas',
   StolBKIntf in '..\StolBKIntf.pas',
   Fifo in 'Fifo.pas',
   Fifo.FFT in 'Fifo.FFT.pas',
@@ -122,7 +121,8 @@ contains
   SDcardToolsAsync in '..\SDcardToolsAsync.pas',
   MagniProTool in '..\MagniProTool.pas',
   ExportMetaData in 'ExportMetaData.pas',
-  TrrInclin.Temp.PolyModel in 'TrrInclin.Temp.PolyModel.pas';
+  TrrInclin.Temp.PolyModel in 'TrrInclin.Temp.PolyModel.pas',
+  CustomPlot.DataLink in 'CustomPlot.DataLink.pas';
 
 end.
 

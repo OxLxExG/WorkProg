@@ -5,7 +5,7 @@ interface
 {$WARN UNIT_PLATFORM OFF}
 
 uses RootIntf, debug_except, ExtendIntf, DockIForm, PluginAPI, RootImpl, Container, JDtools, XMLDataSet,
-     DataSetIntf, IDataSets, CustomPlot, Plot.DataLink, Plot.GR32, Data.DB, System.IOUtils,
+     DataSetIntf, IDataSets, CustomPlot, Plot.DtLink, Plot.GR32, Data.DB, System.IOUtils,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, System.TypInfo, Xml.XMLIntf,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls,  Vcl.Graphics,
   Vcl.Menus, Vcl.StdCtrls, Vcl.Grids, Vcl.DBGrids, Vcl.ExtCtrls,

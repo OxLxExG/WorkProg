@@ -134,10 +134,6 @@
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="VCL.CustomDataForm.pas"/>
-        <DCCReference Include="VCLGraphDataForm.pas">
-            <Form>GraphDataForm</Form>
-            <FormType>dfm</FormType>
-        </DCCReference>
         <DCCReference Include="VCLTableDataForm.pas">
             <Form>TableDataForm</Form>
             <FormType>dfm</FormType>
@@ -152,6 +148,10 @@
         </DCCReference>
         <DCCReference Include="VCLGraphCartForm.pas">
             <Form>GraphCartForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="VCLGraphDataForm.pas">
+            <Form>GraphDataForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <BuildConfiguration Include="Base">

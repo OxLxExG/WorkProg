@@ -3,7 +3,7 @@ unit VCLDlgOpenLas;
 interface
 
 uses RootIntf, debug_except, ExtendIntf, DockIForm, PluginAPI, RootImpl, Container, JDtools,
-     DataSetIntf, IDataSets, LasDataSet, CustomPlot, LAS, LasImpl, Plot.DataLink,
+     DataSetIntf, IDataSets, LasDataSet, CustomPlot, LAS, LasImpl, Plot.DtLink,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, System.TypInfo, Xml.XMLIntf,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls,  Vcl.Graphics,
   JvExComCtrls, JvComCtrls, JvDotNetControls, Plot.GR32, Data.DB, Vcl.Menus, JvComponentBase, JvInspector, Vcl.StdCtrls, Vcl.Grids,

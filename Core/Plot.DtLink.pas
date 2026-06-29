@@ -1,8 +1,8 @@
-﻿unit Plot.DataLink;
+﻿unit Plot.DtLink;
 
 interface
 
-uses IDataSets, Container,
+uses IDataSets, Container, CustomPlot.DataLink,
      System.SysUtils, ExtendIntf, System.Rtti, System.TypInfo, Data.DB, System.Classes,  debug_except, DataSetIntf, FileDataSet,
      CustomPlot, LasDataSet, XMLDataSet, FileCachImpl, Parser, Winapi.ActiveX, System.SyncObjs;
 
@@ -17,7 +17,7 @@ type
    end;
 
    TAddpointEvent<T> = Reference to procedure(Y: Single; const X: T);
-   TDataLink<T> = class (TCustomDataLink)
+   TDataLink<T> = class (TCustomDataLinkBuffer)
    private
      FXFieldDef: TFileFieldDef;
      FBufferFileName: string;
@@ -56,7 +56,7 @@ type
      function GetXValue(Fx: TField): T; virtual; abstract;
      procedure ResetBuffer; override;
    public
-    constructor Create(AOwner: TGraphPar); override;
+    constructor Create(AOwner: Tobject); override;
     destructor Destroy; override;
      property YValue: Single read GetFieldY;
      property XFieldDef: TFileFieldDef read GetXFieldDef;
@@ -64,7 +64,7 @@ type
      property BufferFileName: string read GetBufferFileName write FBufferFileName;
    end;
 
-  ILineDataLink = interface(IDataLink)
+  ILineDataLink = interface(IDataLinkBuffer)
    ['{437AAA7B-C3CD-4D30-8A75-4CD745EB8BB3}']
     procedure Read(YFrom, Yto: Single; AddpointEvent: TAddpointEvent<Single>);
   end;
@@ -74,7 +74,7 @@ type
      function GetXValue(Fx: TField): single; override;
    end;
 
-  IWaveDataLink = interface(IDataLink)
+  IWaveDataLink = interface(IDataLinkBuffer)
    ['{D9EA754D-F43C-4029-A05F-F6008EFB3052}']
      function GetArrayCount: Integer;
      function GetRecordCount: Integer;
@@ -144,7 +144,7 @@ end;
 
 { TDataLink<T> }
 
-constructor TDataLink<T>.Create(AOwner: TGraphPar);
+constructor TDataLink<T>.Create(AOwner: Tobject);
 begin
   inherited;
   FBufferLock := TCriticalSection.Create;

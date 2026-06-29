@@ -2,7 +2,9 @@ unit CoreReg;
 
 interface
 
-uses System.Classes, RootImpl, EditControl, OtklonitelPaintClass, CustomPlot, DataImportImpl, LasDataSet, RangeSelector;//, DBGrid;
+uses System.Classes, RootImpl, EditControl, OtklonitelPaintClass,
+CustomPlot,
+DataImportImpl, LasDataSet, RangeSelector;//, DBGrid;
 
 procedure Register;
 

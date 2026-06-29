@@ -6,7 +6,7 @@ interface
 
 
 uses IDataSets, Vcl.ActnList, debug_except, Xml.XMLIntf, FileDataSet,
-     VCL.CustomDataForm, Container, ExtendIntf, Actns, plot.GR32, plot.Controls, Data.DB, XMLDataSet, RootIntf,
+     VCL.CustomDataForm, Container, ExtendIntf, Actns, Data.DB, XMLDataSet, RootIntf,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, RootImpl, CustomPlot, Vcl.Grids, Vcl.DBGrids, Vcl.Menus;
 

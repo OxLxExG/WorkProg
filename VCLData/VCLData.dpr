@@ -27,11 +27,11 @@ uses
   DialogOpenLas in 'DialogOpenLas.pas' {DlgOpenLAS},
   VCLFormShowArray in 'VCLFormShowArray.pas' {FormShowArray},
   VCL.CustomDataForm in 'VCL.CustomDataForm.pas',
-  VCLGraphDataForm in 'VCLGraphDataForm.pas' {GraphDataForm},
   VCLTableDataForm in 'VCLTableDataForm.pas' {TableDataForm},
   DlgEditParam in 'DlgEditParam.pas' {FormEditParam},
   VCLFormShowArrayTable in 'VCLFormShowArrayTable.pas' {FormTableGraph},
-  VCLGraphCartForm in 'VCLGraphCartForm.pas' {GraphCartForm};
+  VCLGraphCartForm in 'VCLGraphCartForm.pas' {GraphCartForm},
+  VCLGraphDataForm in 'VCLGraphDataForm.pas' {GraphDataForm};
 
 {$R *.res}
 
