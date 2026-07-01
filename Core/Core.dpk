@@ -1,4 +1,4 @@
-// JCL_DEBUG_EXPERT_DELETEMAPFILE OFF
+п»ї// JCL_DEBUG_EXPERT_DELETEMAPFILE OFF
 // JCL_DEBUG_EXPERT_GENERATEJDBG OFF
 {$IFDEF RELEASE}
 // JCL_DEBUG_EXPERT_INSERTJDBG OFF
@@ -33,7 +33,7 @@ package Core;
 {$IMAGEBASE $400000}
 {$DEFINE DEBUG}
 {$ENDIF IMPLICITBUILDING}
-{$DESCRIPTION 'Core 3.0.0 Корневые классы и утилиты'}
+{$DESCRIPTION 'Core 3.0.0 РљРѕСЂРЅРµРІС‹Рµ РєР»Р°СЃСЃС‹ Рё СѓС‚РёР»РёС‚С‹'}
 {$IMPLICITBUILD ON}
 
 requires
@@ -125,7 +125,9 @@ contains
   Plot.DtLink in 'Plot\Plot.DtLink.pas',
   Plot.GR32.Data in 'Plot\GR32\Plot.GR32.Data.pas',
   Plot.GR32.Legend in 'Plot\GR32\Plot.GR32.Legend.pas',
-  Plot.GR32.Tools in 'Plot\GR32\Plot.GR32.Tools.pas';
+  Plot.GR32.Tools in 'Plot\GR32\Plot.GR32.Tools.pas',
+  Plot.VirtualData in 'Plot\New\Plot.VirtualData.pas',
+  Plot.VirtualDataLink in 'Plot\New\Plot.VirtualDataLink.pas';
 
 end.
 

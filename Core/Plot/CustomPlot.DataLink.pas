@@ -64,7 +64,7 @@ type
     FFieldX: TField;
     FFieldY: TField;
   // IDataLink
-    function IndexOfY(Y: Double; FindIndexType: TFindIndexType; out YFind: Double): Integer; virtual;
+    function IndexOfY(Y: Double; FindIndexType: TFindIndexType; out YFind: Double): Integer;
     procedure NillDataSet;
     function GetCaption: string; virtual;
     procedure SetCaption(const Value: string);
