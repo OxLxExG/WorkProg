@@ -1,4 +1,4 @@
-unit Plot.GR32.Data;
+Ôªøunit Plot.GR32.Data;
 
 interface
 
@@ -14,7 +14,7 @@ uses CustomPlot.DataLink, Plot.GR32.Tools,
 
 
 type
-{$REGION 'ŒÚËÒÓ‚Í‡ ‰‡ÌÌ˚ı'}
+{$REGION '–û—Ç—Ä–∏—Å–æ–≤–∫–∞ –¥–∞–Ω–Ω—ã—Ö'}
 
   TGR32GraphicData = class;
 
@@ -48,7 +48,7 @@ type
     procedure UpdateDashOffset;
   end;
 
-  /// ÒÍÓÎÎËÌ„ Ï˚¯ÍÓÈ
+  /// —Å–∫—Ä–æ–ª–ª–∏–Ω–≥ –º—ã—à–∫–æ–π
   TScrollMouseData = class(TIObject, IParamMouseEdit)
     Owner: TGR32GraphicData;
     YBegin: Integer;
@@ -58,7 +58,7 @@ type
     procedure DoMouseMove(X, Y: Integer);
     procedure DoMouseUp(X, Y: Integer);
   end;
-  /// ÍÓÌÂ‚ÓÈ ÍÎ‡ÒÒ ‰Îˇ Í‰‡ÍÚËÓ‚‡ÌËˇ ÎËÌËÈ
+  /// –∫–æ—Ä–Ω–µ–≤–æ–π –∫–ª–∞—Å—Å –¥–ª—è —Ä–∫–¥–∞–∫—Ç–∏—Ä–æ–≤–∞–Ω–∏—è –ª–∏–Ω–∏–π
 
   TLineParamMouseEdit = class(TIObject, IParamMouseEdit)
     Owner: TGR32GraphicData;
@@ -71,14 +71,14 @@ type
     procedure DoMouseMove(X, Y: Integer); virtual; abstract;
     procedure DoMouseUp(X, Y: Integer); virtual; abstract;
   end;
-  /// Ò‰‚Ë„‡ÌËÂ ÎËÌËË
+  /// —Å–¥–≤–∏–≥–∞–Ω–∏–µ –ª–∏–Ω–∏–∏
 
   TLineParamMouseMove = class(TLineParamMouseEdit)
     KSumm: Integer;
     procedure DoMouseMove(X, Y: Integer); override;
     procedure DoMouseUp(X, Y: Integer); override;
   end;
-  /// Ï‡Ò¯Ú‡·ËÓ‚‡ÌËÂ ÎËÌËË ÔÓ ’
+  /// –º–∞—Å—à—Ç–∞–±–∏—Ä–æ–≤–∞–Ω–∏–µ –ª–∏–Ω–∏–∏ –ø–æ –•
 
   TLineParamMouseScale = class(TLineParamMouseEdit)
     XMiddle: Double;
@@ -133,7 +133,7 @@ type
     [ShowProp('Labels axis Y')]
     property ShowYlegend: boolean read FShowYlegend write SetShowYlegend default True;
   end;
-{$ENDREGION 'ŒÚËÒÓ‚Í‡ ‰‡ÌÌ˚ı'}
+{$ENDREGION '–û—Ç—Ä–∏—Å–æ–≤–∫–∞ –¥–∞–Ω–Ω—ã—Ö'}
 
 
 implementation
@@ -223,7 +223,7 @@ begin
   begin
     KDeltaOLD := k;
     KScale := SCALE_PRESET_MOUSE[k];
-   /// ‘ÓÏÛÎ˚ ‚ ·ÎÓÌÌÓÚÂ (›Í‡Ì ÔÓÂÍÚ 3)
+   /// –§–æ—Ä–º—É–ª—ã –≤ –±–ª–æ–Ω–Ω–æ—Ç–µ (–≠–∫—Ä–∞–Ω –ø—Ä–æ–µ–∫—Ç 3)
     Delta := XMiddle / KScale - XMiddle;
     for i := 0 to Length(points) - 1 do
       points[i].X := (origin[i] + Delta) * KScale;
@@ -240,7 +240,7 @@ begin
   pp2mm := Screen.PixelsPerInch / 2.54 * 2;
   Owner.Graph.Frost;
   try
-   /// ‘ÓÏÛÎ˚ ‚ ·ÎÓÌÌÓÚÂ (›Í‡Ì ÔÓÂÍÚ 3)
+   /// –§–æ—Ä–º—É–ª—ã –≤ –±–ª–æ–Ω–Ω–æ—Ç–µ (–≠–∫—Ä–∞–Ω –ø—Ä–æ–µ–∫—Ç 3)
     Param.DeltaX := Param.DeltaX - Delta / Param.ScaleX / pp2mm;
     Param.ScaleX := FindBestScale(Param.ScaleX * KScale);
     Param.DeltaX := Round(Param.DeltaX * Param.ScaleX) / Param.ScaleX;
@@ -388,7 +388,7 @@ begin
 {$IFDEF ENG_VERSION}
   Result := 'Diagramas GR32'
 {$ELSE}
-  Result := '√‡ÙËÍË GR32'
+  Result := '–ì—Ä–∞—Ñ–∏–∫–∏ GR32'
 {$ENDIF}
 end;
 
@@ -464,79 +464,68 @@ var
   var
     p: TGraphPar;
     pss: IWaveDataLink;
- // ˝Í‡Ì:
- // ˝Í‡Ì       ÓÚÓ·‡ÊÂÌËÂ ¡ƒ  ÔÂÂÒÂ˜ÂÌËÂ
- //
-    {ScreenRect,}     DstRect{,        ClipDstRect}: TRect;
- // ¡ƒ:
- // ÓÚÓ·‡ÊÂÌËÂ ˝Í‡Ìa   –Â‡Î¸Ì˚Â ‰‡ÌÌ˚Â    ÔÂÂÒÂ˜ÂÌËÂ
- //
-    {BDScreenRect,}            BDSrcRect        {, ClipSrcRect}: TRect;
- /// 1. Ì‡ıÓ‰ËÏ ScreenRect - clientRect Â„ËÓÌa ‰‡ÌÌ˚ı ˝ÚÓ ÂÒÚ¸ FBitmap.BoundsRect
- /// 2. Ì‡ıÓ‰ËÏ BDSrcRect - –Â‡Î¸Ì˚Â ‰‡ÌÌ˚Â ’-[0..ArraySize] Y-·ÎËÊ‡È¯ËÂ Â‡Î¸Ì˚Â  ‰‡ÌÌ˚Â ÓÚ BDScreenRect
- /// 3. Ì‡ıÓ‰ËÏ BDScreenRect - ÓÚÓ·‡‰ÂÌËÂ ‚ ·ÛÙÙÂÂ ScreenRect => BDScreenRect
- /// 4. Ì‡ıÓ‰ËÏ ÔÂÂÒÂ˜ÂÌËÂ ClipSrcRect = BDScreenRect & BDSrcRect ˝ÚÓ ·Û‰ÂÚ ËÒÚÓ˜ÌËÍ
- /// 5  Ì‡ıÓ‰ËÏ Ó·‡ÚÌÓÂ ÓÓÚÓ·‡ÊÂÌËÂ ‚ ˝Í‡Ì DstRect  ClipSrcRect => DstRect
- /// 6. Ì‡ıÓ‰ËÏ ÔÂÂÒÂ˜ÂÌËÂ ClipDstRect = ScreenRect & DstRect ˝ÚÓ ·Û‰ÂÚ ÔËÂÏÌËÍ
- /// 6‡. ≈ÒÎË ‚ÒÂ Ô‡‚ËÎ¸ÌÓ ÚÓ ‰ÂÈÒÚ‚ËÂ 6. ÌÂ ÌÛÊÌÓ ClipDstRect == DstRect
- ///        ‚‡Ë‡ÌÚ II
- /// 1. Ì‡ıÓ‰ËÏ ScreenRect - ˝ÚÓ ÂÒÚ¸ clientRect Â„ËÓÌa ‰‡ÌÌ˚ı ›“Œ ¡”ƒ≈“ DSTCLIPRECT !!!
- /// 2. ÔÓ YTopScreen YButtomScreen Ì‡ıÓ‰ËÏ ·ÎËÊ‡È¯ËÂ Â‡Î¸Ì˚Â (¬Õ≈!!! ËÎË ‚ÌÛÚË ˝Í‡Ì‡) Y0 Y1  Ytop Ybot Ì‡ıÓ‰ËÏ BDSrcRect - –Â‡Î¸Ì˚Â ‰‡ÌÌ˚Â ’-[0..ArraySize]
- /// 3. Ì‡ıÓ‰ËÏ Ó·‡ÚÌÓÂ ÓÓÚÓ·‡ÊÂÌËÂ ‚ ˝Í‡Ì DstRect  BDSrcRect => DstRect ˝ÚÓ ·Û‰ÂÚ ÔËÂÏÌËÍ
+    DstRect, BDSrcRect, TargetSrcRect: TRect;
     Src: TBitmap32;
     ky, kx: Single;
-    X0, X1, Y0, Y1, indx: Integer;
+    X0, X1, Y0s, Y1s: Integer;
+    Y0d, Y1d: Integer;
     Ytop, Ybot: Double;
+    BufferHeight: Integer;
   begin
     for p in Column.Params do
       if p.Visible and (p is TWaveParam) and Supports(p, IWaveDataLink, pss) then
       begin
-        if not Assigned(pss.DrowMemoryBuffer) then
-        begin
-          pss.DrowMemoryBuffer := TWaveParamBuffer.Create;
-          TWaveParamBuffer(pss.DrowMemoryBuffer).Bitmap.SetSize(pss.ArrayCount, pss.RecordCount);
-        end;
-        Src := TWaveParamBuffer(pss.DrowMemoryBuffer).Bitmap;
-        Src.SetSize(pss.ArrayCount, pss.RecordCount);
+      /// 1. –†–∞—Å—á–µ—Ç —Ä–µ–∞–ª—å–Ω—ã—Ö –∏–Ω–¥–µ–∫—Å–æ–≤ Y –≤ –ë–î
+        Y0s := pss.IndexOfY(p.Graph.YTopScreen - p.DeltaY, fndLower, Ytop);
+        Y1s := pss.IndexOfY(p.Graph.YButtomScreen - p.DeltaY, fndHiger, Ybot);
+        BDSrcRect := TRect.Create(0, Y0s, pss.ArrayCount, Y1s);
 
-      /// 2. Ì‡ıÓ‰ËÏ BDSrcRect - –Â‡Î¸Ì˚Â ‰‡ÌÌ˚Â ’-[0..ArraySize] Y-·ÎËÊ‡È¯ËÂ Â‡Î¸Ì˚Â (‚ÌÂ ˝Í‡Ì‡) ‰‡ÌÌ˚Â ÓÚ BDScreenRect
-        Y0 := pss.IndexOfY(p.Graph.YTopScreen - p.DeltaY, fndLower, Ytop);
-        Y1 := pss.IndexOfY(p.Graph.YButtomScreen - p.DeltaY, fndHiger, Ybot);
-        BDSrcRect := TRect.Create(0, Y0, pss.ArrayCount, Y1);
-      /// 3. Ì‡ıÓ‰ËÏ Ó·‡ÚÌÓÂ ÓÓÚÓ·‡ÊÂÌËÂ BDSrcRect ‚ ˝Í‡Ì
+      /// 2. –†–∞—Å—á–µ—Ç —ç–∫—Ä–∞–Ω–Ω—ã—Ö –∫–æ–æ—Ä–¥–∏–Ω–∞—Ç (DstRect)
         ky := p.Graph.YScale * pp2mm;
         kx := TWaveParam(p).ScaleX * pp2mm;
         X0 := Round((0 - p.DeltaX) * kx);
         X1 := Round((pss.ArrayCount - p.DeltaX) * kx);
-        Y0 := Round((Ytop - p.Graph.YTopScreen + p.DeltaY) * ky);
-        Y1 := Round((Ybot - p.Graph.YTopScreen + p.DeltaY) * ky);
-        DstRect := TRect.Create(X0, Y0, X1, Y1);
+        Y0d := Round((Ytop - p.Graph.YTopScreen + p.DeltaY) * ky);
+        Y1d := Round((Ybot - p.Graph.YTopScreen + p.DeltaY) * ky);
+        DstRect := TRect.Create(X0, Y0d, X1, Y1d);
 
-        if DstRect.IsEmpty or BDSrcRect.IsEmpty then Exit;
+        if DstRect.IsEmpty or BDSrcRect.IsEmpty then Continue;
 
+      /// 3. –î–∏–Ω–∞–º–∏—á–µ—Å–∫–æ–µ –æ–ø—Ä–µ–¥–µ–ª–µ–Ω–∏–µ –≤—ã—Å–æ—Ç—ã –±—É—Ñ–µ—Ä–∞ (–ó–∞—â–∏—Ç–∞ –æ—Ç Zoom-In / Zoom-Out)
+        if BDSrcRect.Height >= DstRect.Height then
+          BufferHeight := DstRect.Height  // –°–∂–∞—Ç–∏–µ: —Ä–∞–∑–º–µ—Ä –±—É—Ñ–µ—Ä–∞ —Ä–∞–≤–µ–Ω —ç–∫—Ä–∞–Ω—É
+        else
+          BufferHeight := BDSrcRect.Height; // –†–∞—Å—Ç—è–∂–µ–Ω–∏–µ: —Ä–∞–∑–º–µ—Ä –±—É—Ñ–µ—Ä–∞ —Ä–∞–≤–µ–Ω —á–∏—Å–ª—É —Å—Ç—Ä–æ–∫ –≤ –ë–î
+
+      /// 4. –ò–Ω–∏—Ü–∏–∞–ª–∏–∑–∞—Ü–∏—è –±—É—Ñ–µ—Ä–∞
+        if not Assigned(pss.DrowMemoryBuffer) then
+          pss.DrowMemoryBuffer := TWaveParamBuffer.Create;
+
+        Src := TWaveParamBuffer(pss.DrowMemoryBuffer).Bitmap;
+        Src.SetSize(pss.ArrayCount, BufferHeight);
+
+      /// 5. –û–ø—Ç–∏–º–∏–∑–∏—Ä–æ–≤–∞–Ω–Ω–æ–µ —á—Ç–µ–Ω–∏–µ
         if UpdateBuffers { TODO : AND paramApdateGamma changed: ZeroGamma, KoeffGamma, Gamma} then
         begin
-          indx := 0;
-          pss.Read(TWaveParam(p).ZeroGamma, TWaveParam(p).KoeffGamma,
+          pss.Read(BDSrcRect, DstRect.Height, TWaveParam(p).ZeroGamma, TWaveParam(p).KoeffGamma,
             procedure(Y: Single; const X: TArray<ShortInt>)
             var
-              i: Integer;
+              i, MaxX: Integer;
             begin
-              for i := 0 to Length(X) - 1 do
-                Src.Pixel[i, indx] := TColor32(TWaveParam(p).Gamma[X[i]]);
-              inc(indx);
+              MaxX := Min(Length(X) - 1, Src.Width - 1);
+              for i := 0 to MaxX do
+                Src.Pixel[i, Round(Y)] := TColor32(TWaveParam(p).Gamma[X[i]]);
             end);
         end;
-   //    TDebug.Log('  %d    %d    ',[SrcRect.Width, SrcRect.Height]);
-                                             // Destination Data     clip
-        if not BDSrcRect.IsEmpty then
-          StretchTransfer(FBitmap, DstRect, FBitmap.BoundsRect,
-                                                   // Src
-            Src, BDSrcRect,
-                                                   // resamplers
-            Src.Resampler,
-                                                   // drow mode
-            dmBlend, Src.OnPixelCombine);
+
+      /// 6. –û—Ç—Ä–∏—Å–æ–≤–∫–∞. StretchTransfer –æ—Ç—Ä–∞–±–æ—Ç–∞–µ—Ç –∫–∞–∫ —Å–∂–∞—Ç–∏–µ –ø–æ X,
+      ///    —Ç–∞–∫ –∏ –≤–æ–∑–º–æ–∂–Ω–æ–µ —Ä–∞—Å—Ç—è–∂–µ–Ω–∏–µ –ø–æ Y, –µ—Å–ª–∏ BufferHeight < DstRect.Height
+        TargetSrcRect := TRect.Create(0, 0, Src.Width, Src.Height);
+
+        StretchTransfer(FBitmap, DstRect, FBitmap.BoundsRect,
+          Src, TargetSrcRect,
+          Src.Resampler,
+          dmBlend, Src.OnPixelCombine);
       end;
   end;
 
@@ -551,25 +540,25 @@ var
     for p in Column.Params do
       if p.Visible and (p is TLineParam) and Supports(p, ILineDataLink, pss) then
       begin
-     // ÒÓÁ‰‡ÌËÂ ·ÛÙÂ‡
+     // —Å–æ–∑–¥–∞–Ω–∏–µ –±—É—Ñ–µ—Ä–∞
         if not Assigned(pss.DrowMemoryBuffer) then
           pss.DrowMemoryBuffer := TLineParamBuffer.Create;
         with TLineParamBuffer(pss.DrowMemoryBuffer) do
         begin
           if UpdateBuffers then
           begin
-          // ÔÓ‰„ÓÚÓ‚Í‡ ·ÛÙÂ‡ ˜ÚÂÌËÂ ËÁ ¡ƒ ·ÛÙÂ‡ ÙËÎ¸Ú‡
+          // –ø–æ–¥–≥–æ—Ç–æ–≤–∫–∞ –±—É—Ñ–µ—Ä–∞ —á—Ç–µ–Ω–∏–µ –∏–∑ –ë–î –±—É—Ñ–µ—Ä–∞ —Ñ–∏–ª—å—Ç—Ä–∞
             SetLength(points, 0);
             ky := p.Graph.YScale * pp2mm;
             kx := TLineParam(p).ScaleX * pp2mm;
-            // ˜ÚÂÌËÂ ËÁ ¡ƒ
+            // —á—Ç–µ–Ω–∏–µ –∏–∑ –ë–î
             pss.Read(Min(p.Graph.YTopScreen, p.Graph.YButtomScreen) - p.DeltaY, Max(p.Graph.YTopScreen, p.Graph.YButtomScreen) - p.DeltaY,
               procedure(Y: Single; const X: Single)
               begin
                 if not X.IsNan and not Y.IsNan and (Abs(X) < 10000000) and (Abs(Y) < 10000000) then
                   points := points + [TFloatPoint.Create(X * kx, Y * ky)];
               end);
-           // Û‰‡ÎÂÌËÂ ÎË¯ÌËı ÚÓ˜ÂÍ
+           // —É–¥–∞–ª–µ–Ω–∏–µ –ª–∏—à–Ω–∏—Ö —Ç–æ—á–µ–∫
             if Length(points) > 100 then
               points := VertexReduction(points);
             if TXScalableParam(p).DashStyle <> ldsSolid then UpdateDashOffset();
@@ -606,7 +595,7 @@ var
                 points[i].X := -10;
             end;
           end;
-       // ÂÌ‰ÂËÌ„
+       // —Ä–µ–Ω–¥–µ—Ä–∏–Ω–≥
           if Length(points) > 1 then
             DrawLineParametr(FBitmap, TLineParam(p), points, DashOffset);
         end;

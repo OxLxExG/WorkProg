@@ -42,14 +42,6 @@ type
     constructor Create(AOwner: TObject); override;
   end;
 
-  /// <summary>
-  /// Generic forwarder. Exists only to satisfy code that references TDataLink<T>.
-  /// </summary>
-  TDataLink<T> = class(TVirtualDataLink)
-  protected
-    function CreateReader: TVirtualDataReaderBase; override;
-  end;
-
   {$ENDREGION}
 
 implementation
@@ -72,18 +64,7 @@ end;
 
 {$ENDREGION}
 
-{$REGION 'TDataLink<T>'}
-
-function TDataLink<T>.CreateReader: TVirtualDataReaderBase;
-const
-  MSG = 'Generic TDataLink<T> cannot be instantiated directly; use TlineDataLink or TWaveDataLink.';
-begin
-  raise Exception.Create(MSG);
-end;
-
-{$ENDREGION}
-
 initialization
-  RegisterClasses([TlineDataLink, TWaveDataLink, TDataLink<Single>, TDataLink<TArray<ShortInt>>]);
+  RegisterClasses([TlineDataLink, TWaveDataLink]);
 
 end.

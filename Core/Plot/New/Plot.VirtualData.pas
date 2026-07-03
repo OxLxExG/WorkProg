@@ -138,6 +138,10 @@ type
   /// </summary>
   TWaveRecordCache = TDictionary<Integer, TWaveRecord>;
 
+  /// <summary>
+  /// Cache-aware record finder. Returns True and sets FoundRecNo if any record in
+  /// the specified range is already cached. Used to implement "минимального раздувания кеша".
+  /// </summary>
   TWaveVirtualDataReader = class abstract(TVirtualDataReaderBase)
   private
     FCache: TWaveRecordCache;
@@ -150,6 +154,11 @@ type
     procedure Invalidate; override;
     function GetWindow(const DataSet: TDataSet; const AWindow: TVirtualDataWindow): TArray<TWaveRecord>;
     function ReadRecord(const DataSet: TDataSet; RecNo: Integer; out Rec: TWaveRecord): Boolean;
+    /// <summary>
+    /// Checks if any record in the range [RecFrom, RecTo] is already cached.
+    /// If found, returns True and sets FoundRecNo to the first found cached record.
+    /// </summary>
+    function FindCachedRecordInRange(RecFrom, RecTo: Integer; out FoundRecNo: Integer): Boolean;
   end;
 
   TBinaryWaveVirtualDataReader = class(TWaveVirtualDataReader)
@@ -617,7 +626,36 @@ end;
 
 function TWaveVirtualDataReader.ReadRecord(const DataSet: TDataSet; RecNo: Integer; out Rec: TWaveRecord): Boolean;
 begin
-  Result := ReadRecordDirect(DataSet, RecNo, Rec);
+  Result := False;
+  if not Assigned(DataSet) then Exit;
+
+  if not Assigned(FCurrentDataSet) or (FCurrentDataSet <> DataSet) then
+    Invalidate;
+  FCurrentDataSet := DataSet;
+
+  // Try cache first
+  FCacheLock.Enter;
+  try
+    if FCache.TryGetValue(RecNo, Rec) then
+    begin
+      Result := True;
+      Exit;
+    end;
+  finally
+    FCacheLock.Leave;
+  end;
+
+  // Cache miss: read directly and store in cache
+  if ReadRecordDirect(DataSet, RecNo, Rec) then
+  begin
+    FCacheLock.Enter;
+    try
+      FCache.AddOrSetValue(RecNo, Rec);
+    finally
+      FCacheLock.Leave;
+    end;
+    Result := True;
+  end;
 end;
 
 function TWaveVirtualDataReader.GetWindow(const DataSet: TDataSet; const AWindow: TVirtualDataWindow): TArray<TWaveRecord>;
@@ -679,6 +717,33 @@ begin
   SetLength(Res, Capacity);
   Result := Res;
   FLastWindow := AWindow;
+end;
+
+/// <summary>
+/// Checks if any record in the range [RecFrom, RecTo] is already cached.
+/// Used for "минимального раздувания кеша" (minimum cache bloat).
+/// Returns True if found and sets FoundRecNo to the cached record number.
+/// </summary>
+function TWaveVirtualDataReader.FindCachedRecordInRange(RecFrom, RecTo: Integer; out FoundRecNo: Integer): Boolean;
+var
+  Pair: TPair<Integer, TWaveRecord>;
+begin
+  Result := False;
+  FoundRecNo := -1;
+  FCacheLock.Enter;
+  try
+    for Pair in FCache do
+    begin
+      if (Pair.Key >= RecFrom) and (Pair.Key <= RecTo) then
+      begin
+        FoundRecNo := Pair.Key;
+        Result := True;
+        Exit;
+      end;
+    end;
+  finally
+    FCacheLock.Leave;
+  end;
 end;
 
 {$ENDREGION}

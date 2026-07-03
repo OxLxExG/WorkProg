@@ -1,11 +1,11 @@
-unit Plot.VirtualDataLink;
+﻿unit Plot.VirtualDataLink;
 
 interface
 
 {$INCLUDE global.inc}
 
 uses
-  System.SysUtils, System.Classes, System.Math, System.SyncObjs,
+  System.SysUtils, System.Classes, System.Math, System.SyncObjs, System.Types,
   Data.DB, DataSetIntf, IDataSets, FileDataSet, CustomPlot.DataLink, CustomPlot,
   Plot.VirtualData, Parser, ExtendIntf, Container, debug_except, tools;
 
@@ -25,6 +25,13 @@ type
     function GetRecordCount: Integer;
     procedure Read(Delta, Scale: Single; AddWaveEvent: TAddpointEvent<TArray<ShortInt>>); overload;
     procedure Read(YFrom, Yto: Single; Delta, Scale: Single; AddWaveEvent: TAddpointEvent<TArray<ShortInt>>); overload;
+    /// <summary>
+    /// Optimized read for rendering. Reads data from BDSrcRect region and writes to
+    /// buffer rows 0..TargetHeight-1. Handles both compression (many DB rows -> few screen pixels)
+    /// and stretching (few DB rows -> many screen pixels) modes automatically.
+    /// </summary>
+    procedure Read(const ABDSrcRect: TRect; TargetHeight: Integer; Delta, Scale: Single;
+      AddWaveEvent: TAddpointEvent<TArray<ShortInt>>); overload;
     property ArrayCount: Integer read GetArrayCount;
     property RecordCount: Integer read GetRecordCount;
   end;
@@ -81,6 +88,8 @@ type
   public
     procedure Read(YFrom, Yto: Single; Delta, Scale: Single; AddWaveEvent: TAddpointEvent<TArray<ShortInt>>); reintroduce; overload; virtual;
     procedure Read(Delta, Scale: Single; AddWaveEvent: TAddpointEvent<TArray<ShortInt>>); reintroduce; overload; virtual;
+    procedure Read(const ABDSrcRect: TRect; TargetHeight: Integer; Delta, Scale: Single;
+      AddWaveEvent: TAddpointEvent<TArray<ShortInt>>); reintroduce; overload; virtual;
     procedure ResetBuffer; override;
   end;
 
@@ -433,6 +442,104 @@ begin
   d.RecNo := d.RecordCount;
   Yto := YF.AsFloat;
   Read(YFrom, Yto, Delta, Scale, AddWaveEvent);
+end;
+
+procedure TVirtualWaveDataLink.Read(const ABDSrcRect: TRect; TargetHeight: Integer; Delta, Scale: Single;
+  AddWaveEvent: TAddpointEvent<TArray<ShortInt>>);
+var
+  d: TDataSet;
+  Reader: TWaveVirtualDataReader;
+  SourceY, TargetY: Integer;
+  StepY: Double;
+  Rec: TWaveRecord;
+  LocalYField: TField;
+  YName, XName: string;
+  TargetYFrom, TargetYTo: Integer;
+begin
+  d := DataSet;
+  if not Assigned(d) then Exit;
+  d.Active := True;
+  if d.RecordCount = 0 then Exit;
+
+  LocalYField := FieldY;
+  if not Assigned(LocalYField) then Exit;
+  YName := LocalYField.FullName;
+  XName := '';
+  if Assigned(FieldX) then
+    XName := FieldX.FullName;
+
+  if (FDelta <> Delta) or (FScale <> Scale) then
+  begin
+    FDelta := Delta;
+    FScale := Scale;
+    ResetBuffer;
+  end;
+
+  if not Assigned(FReaderBase) then
+    FReaderBase := CreateReader;
+  Reader := GetReader;
+  if Reader is TBinaryWaveVirtualDataReader then
+    TBinaryWaveVirtualDataReader(Reader).SetWaveTransform(Delta, Scale);
+  if Reader is TDataSetWaveVirtualDataReader then
+    TDataSetWaveVirtualDataReader(Reader).SetWaveTransform(Delta, Scale);
+
+  try
+    SetVirtualParamNames(YName, XName);
+
+    if ABDSrcRect.Height >= TargetHeight then
+    begin
+      // Compression mode: iterate through screen rows, subsample data with cache awareness
+      // Principle: "минимального раздувания кеша" - check cache first, only add if missing
+      StepY := ABDSrcRect.Height / TargetHeight;
+      for TargetY := 0 to TargetHeight - 1 do
+      begin
+        TargetYFrom := ABDSrcRect.Top + Round(TargetY * StepY);
+        TargetYTo := ABDSrcRect.Top + Round((TargetY + 1) * StepY) - 1;
+        // Ensure TargetYTo is within bounds
+//        if TargetYTo >= ABDSrcRect.Height then // Бред от ии
+//          TargetYTo := ABDSrcRect.Height - 1;
+        if TargetYTo > ABDSrcRect.Bottom then
+           TargetYTo := ABDSrcRect.Bottom;
+
+        // Check cache for any record in this target range using the public method
+        if Reader.FindCachedRecordInRange(TargetYFrom, TargetYTo, SourceY) then
+        begin
+          // Cache hit: use the cached record
+          if Reader.ReadRecord(d, SourceY, Rec) then
+            AddWaveEvent(TargetY, Rec.X);
+        end
+        else if (TargetYFrom >= 0) and (TargetYFrom < d.RecordCount) then
+        begin
+          // No cached record in range - use middle of range to minimize cache bloat
+          SourceY := (TargetYFrom + TargetYTo) div 2;
+          if (SourceY >= 0) and (SourceY < d.RecordCount) then
+          begin
+            if Reader.ReadRecord(d, SourceY, Rec) then
+              AddWaveEvent(TargetY, Rec.X);
+          end;
+        end;
+      end;
+    end
+    else
+    begin
+      // Stretching mode: iterate through DB rows, write one-to-one
+      for SourceY := ABDSrcRect.Top to ABDSrcRect.Bottom - 1 do
+      begin
+        TargetY := SourceY - ABDSrcRect.Top;
+        if (SourceY >= 0) and (SourceY < d.RecordCount) then
+        begin
+          if Reader.ReadRecord(d, SourceY, Rec) then
+            AddWaveEvent(TargetY, Rec.X);
+        end;
+      end;
+    end;
+  except
+    on E: Exception do
+    begin
+      TDebug.DoException(E);
+      raise;
+    end;
+  end;
 end;
 
 procedure TVirtualWaveDataLink.ResetBuffer;
