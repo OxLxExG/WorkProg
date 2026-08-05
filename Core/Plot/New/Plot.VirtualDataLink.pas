@@ -1,4 +1,4 @@
-﻿unit Plot.VirtualDataLink;
+﻿unit Plot.VirtualDataLink;        //198 007 165
 
 interface
 
@@ -16,15 +16,16 @@ type
 
   IVirtualLineDataLink = interface(IDataLinkBuffer)
     ['{437AAA7B-C3CD-4D30-8A75-4CD745EB8BB3}']
-    procedure Read(YFrom, Yto: Single; AddpointEvent: TAddpointEvent<Single>);
+    procedure Read(YFrom, Yto: Single; TargetHeight: Integer; AddpointEvent: TAddpointEvent<Single>);
   end;
 
-  IVirtualWaveDataLink = interface(IDataLinkBuffer)
+  IVirtualWaveDataLink = interface(IDataLink)
     ['{D9EA754D-F43C-4029-A05F-F6008EFB3052}']
     function GetArrayCount: Integer;
     function GetRecordCount: Integer;
-    procedure Read(Delta, Scale: Single; AddWaveEvent: TAddpointEvent<TArray<ShortInt>>); overload;
-    procedure Read(YFrom, Yto: Single; Delta, Scale: Single; AddWaveEvent: TAddpointEvent<TArray<ShortInt>>); overload;
+//    procedure Read(Delta, Scale: Single; AddWaveEvent: TAddpointEvent<TArray<ShortInt>>); overload;
+    procedure Read(Y: Single; Delta, Scale: Single; AddWaveEvent: TAddpointEvent<TArray<ShortInt>>); overload;
+    procedure Read(Y: Single; AddWaveEvent: TAddpointEvent<TArray<Integer>>); overload;
     /// <summary>
     /// Optimized read for rendering. Reads data from BDSrcRect region and writes to
     /// buffer rows 0..TargetHeight-1. Handles both compression (many DB rows -> few screen pixels)
@@ -56,11 +57,11 @@ type
   function GetArrayCount: Integer; virtual;
   function GetRecordCount: Integer; virtual;
   function CreateReader: TVirtualDataReaderBase; virtual; abstract;
-  procedure DoRead(YFrom, YTo: Single; AddpointEvent: TAddpointEvent<Single>); virtual;
+//  procedure DoRead(YFrom, YTo: Single; AddpointEvent: TAddpointEvent<Single>); virtual;
   public
     constructor Create(AOwner: TObject); override;
     destructor Destroy; override;
-    procedure Read(YFrom, Yto: Single; AddpointEvent: TAddpointEvent<Single>); virtual;
+//    procedure Read(YFrom, Yto: Single; AddpointEvent: TAddpointEvent<Single>); virtual;
     procedure ResetBuffer; override;
   end;
 
@@ -72,6 +73,8 @@ type
   protected
     function CreateReader: TVirtualDataReaderBase; override;
     function GetReader: TLineVirtualDataReader;
+  public
+    procedure Read(YFrom, Yto: Single; TargetHeight: Integer; AddpointEvent: TAddpointEvent<Single>);
   end;
 
   TVirtualWaveDataLink = class(TVirtualDataLink, IVirtualWaveDataLink)
@@ -86,11 +89,11 @@ type
     function GetRecordCount: Integer; override;
     function CreateReader: TVirtualDataReaderBase; override;
   public
-    procedure Read(YFrom, Yto: Single; Delta, Scale: Single; AddWaveEvent: TAddpointEvent<TArray<ShortInt>>); reintroduce; overload; virtual;
-    procedure Read(Delta, Scale: Single; AddWaveEvent: TAddpointEvent<TArray<ShortInt>>); reintroduce; overload; virtual;
+    procedure Read(Y: Single; Delta, Scale: Single; AddWaveEvent: TAddpointEvent<TArray<ShortInt>>); reintroduce; overload; virtual;
+    procedure Read(Y: Single; AddWaveEvent: TAddpointEvent<TArray<Integer>>); overload;
     procedure Read(const ABDSrcRect: TRect; TargetHeight: Integer; Delta, Scale: Single;
       AddWaveEvent: TAddpointEvent<TArray<ShortInt>>); reintroduce; overload; virtual;
-    procedure ResetBuffer; override;
+//    procedure ResetBuffer; override;
   end;
 
   {$ENDREGION}
@@ -140,109 +143,109 @@ begin
   Result := DataSet.RecordCount;
 end;
 
-procedure TVirtualDataLink.DoRead(YFrom, YTo: Single; AddpointEvent: TAddpointEvent<Single>);
-var
-  d: TDataSet;
-  Yfirst, Ylast, dy: Double;
-  RecFrom, RecTo, i, Cnt: Integer;
-  Window: TVirtualDataWindow;
-  Records: TArray<TLineRecord>;
-  Rec: TLineRecord;
-  LocalReader: TLineVirtualDataReader;
-  LocalYField: TField;
-  YName, XName: string;
-  function EstimateRange: Boolean;
-  var
-    RecLow, RecHigh, TmpI: Integer;
-  begin
-    d.RecNo := 1;
-    Yfirst := LocalYField.AsFloat;
-    d.RecNo := d.RecordCount;
-    Ylast := LocalYField.AsFloat;
-    Result := True;
-    if Ylast > Yfirst then
-    begin
-      dy := (Ylast - Yfirst) / Max(1, d.RecordCount - 1);
-      RecFrom := Floor((Min(YFrom, YTo) - Yfirst) / dy) - 2;
-      RecTo := Ceil((Max(YFrom, YTo) - Yfirst) / dy) + 2;
-    end
-    else if Ylast < Yfirst then
-    begin
-      dy := (Yfirst - Ylast) / Max(1, d.RecordCount - 1);
-      RecFrom := Floor((Yfirst - Max(YFrom, YTo)) / dy) - 2;
-      RecTo := Ceil((Yfirst - Min(YFrom, YTo)) / dy) + 2;
-    end
-    else
-    begin
-      RecFrom := 0;
-      RecTo := d.RecordCount - 1;
-    end;
-    RecLow := Min(0, d.RecordCount - 1);
-    RecHigh := Max(0, d.RecordCount - 1);
-    RecFrom := Max(RecLow, RecFrom);
-    RecTo := Min(RecHigh, RecTo);
-    if RecFrom > RecTo then
-    begin
-      TmpI := RecFrom;
-      RecFrom := RecTo;
-      RecTo := TmpI;
-    end;
-  end;
+//procedure TVirtualDataLink.DoRead(YFrom, YTo: Single; AddpointEvent: TAddpointEvent<Single>);
+//var
+//  d: TDataSet;
+//  Yfirst, Ylast, dy: Double;
+//  RecFrom, RecTo, i, Cnt: Integer;
+//  Window: TVirtualDataWindow;
+//  Records: TArray<TLineRecord>;
+//  Rec: TLineRecord;
+//  LocalReader: TLineVirtualDataReader;
+//  LocalYField: TField;
+//  YName, XName: string;
+////  function EstimateRange: Boolean;
+////  var
+////    RecLow, RecHigh, TmpI: Integer;
+////  begin
+////    d.RecNo := 1;
+////    Yfirst := LocalYField.AsFloat;
+////    d.RecNo := d.RecordCount;
+////    Ylast := LocalYField.AsFloat;
+////    Result := True;
+////    if Ylast > Yfirst then
+////    begin
+////      dy := (Ylast - Yfirst) / Max(1, d.RecordCount - 1);
+////      RecFrom := Floor((Min(YFrom, YTo) - Yfirst) / dy) - 2;
+////      RecTo := Ceil((Max(YFrom, YTo) - Yfirst) / dy) + 2;
+////    end
+////    else if Ylast < Yfirst then
+////    begin
+////      dy := (Yfirst - Ylast) / Max(1, d.RecordCount - 1);
+////      RecFrom := Floor((Yfirst - Max(YFrom, YTo)) / dy) - 2;
+////      RecTo := Ceil((Yfirst - Min(YFrom, YTo)) / dy) + 2;
+////    end
+////    else
+////    begin
+////      RecFrom := 0;
+////      RecTo := d.RecordCount - 1;
+////    end;
+////    RecLow := Min(0, d.RecordCount - 1);
+////    RecHigh := Max(0, d.RecordCount - 1);
+////    RecFrom := Max(RecLow, RecFrom);
+////    RecTo := Min(RecHigh, RecTo);
+////    if RecFrom > RecTo then
+////    begin
+////      TmpI := RecFrom;
+////      RecFrom := RecTo;
+////      RecTo := TmpI;
+////    end;
+////  end;
+//
+//begin
+//  d := DataSet;
+//  if not Assigned(d) then Exit;
+//  d.Active := True;
+//  if d.RecordCount = 0 then Exit;
+//
+//  LocalYField := FieldY;
+//  if not Assigned(LocalYField) then Exit;
+//  YName := LocalYField.FullName;
+//  XName := '';
+//  if Assigned(FieldX) then
+//    XName := FieldX.FullName;
+//
+//  FReaderLock.Enter;
+//  try
+//    if not Assigned(FReaderBase) then
+//      FReaderBase := CreateReader;
+//    LocalReader := TLineVirtualDataReader(FReaderBase);
+//  finally
+//    FReaderLock.Leave;
+//  end;
+//
+//  if not EstimateRange then Exit;
+//
+//  Window.YFrom := Min(YFrom, YTo);
+//  Window.YTo := Max(YFrom, YTo);
+//  Window.RecordFrom := RecFrom;
+//  Window.RecordTo := RecTo;
+//  Window.ScreenHeightPx := 0;
+//
+//  try
+//    SetVirtualParamNames(YName, XName);
+//    Records := LocalReader.GetWindow(d, Window);
+//    Cnt := Length(Records);
+//    for i := 0 to Cnt - 1 do
+//    begin
+//      Rec := Records[i];
+//      AddpointEvent(Rec.Y, Rec.X);
+//    end;
+//  except
+//    on E: Exception do
+//    begin
+//      TDebug.DoException(E);
+//      raise;
+//    end;
+//  end;
+//end;
 
-begin
-  d := DataSet;
-  if not Assigned(d) then Exit;
-  d.Active := True;
-  if d.RecordCount = 0 then Exit;
-
-  LocalYField := FieldY;
-  if not Assigned(LocalYField) then Exit;
-  YName := LocalYField.FullName;
-  XName := '';
-  if Assigned(FieldX) then
-    XName := FieldX.FullName;
-
-  FReaderLock.Enter;
-  try
-    if not Assigned(FReaderBase) then
-      FReaderBase := CreateReader;
-    LocalReader := TLineVirtualDataReader(FReaderBase);
-  finally
-    FReaderLock.Leave;
-  end;
-
-  if not EstimateRange then Exit;
-
-  Window.YFrom := Min(YFrom, YTo);
-  Window.YTo := Max(YFrom, YTo);
-  Window.RecordFrom := RecFrom;
-  Window.RecordTo := RecTo;
-  Window.ScreenHeightPx := 0;
-
-  try
-    SetVirtualParamNames(YName, XName);
-    Records := LocalReader.GetWindow(d, Window);
-    Cnt := Length(Records);
-    for i := 0 to Cnt - 1 do
-    begin
-      Rec := Records[i];
-      AddpointEvent(Rec.Y, Rec.X);
-    end;
-  except
-    on E: Exception do
-    begin
-      TDebug.DoException(E);
-      raise;
-    end;
-  end;
-end;
-
-procedure TVirtualDataLink.Read(YFrom, Yto: Single; AddpointEvent: TAddpointEvent<Single>);
-begin
-  FLastYFrom := YFrom;
-  FLastYTo := Yto;
-  DoRead(YFrom, Yto, AddpointEvent);
-end;
+//procedure TVirtualDataLink.Read(YFrom, Yto: Single; AddpointEvent: TAddpointEvent<Single>);
+//begin
+//  FLastYFrom := YFrom;
+//  FLastYTo := Yto;
+//  DoRead(YFrom, Yto, AddpointEvent);
+//end;
 
 procedure TVirtualDataLink.ResetBuffer;
 begin
@@ -266,7 +269,7 @@ end;
 
 function TVirtualLineDataLink.CreateReader: TVirtualDataReaderBase;
 begin
-  Result := TVirtualDataReaderFactory.CreateLineReader(DataSet);
+  Result := TLineVirtualDataReader.Create;// TVirtualDataReaderFactory.CreateLineReader(DataSet);
 end;
 
 function TVirtualLineDataLink.GetReader: TLineVirtualDataReader;
@@ -274,9 +277,108 @@ begin
   Result := TLineVirtualDataReader(FReaderBase);
 end;
 
+procedure TVirtualLineDataLink.Read(YFrom, Yto: Single; TargetHeight: Integer; AddpointEvent: TAddpointEvent<Single>);
+var
+  d: TDataSet;
+  Reader: TLineVirtualDataReader;
+  SourceY, TargetY: Integer;
+  StepY: Double;
+  Rec: TLineRecord;
+  LocalYField: TField;
+  YName, XName: string;
+  TargetYFrom, TargetYTo: Integer;
+  Height: integer;
+begin
+  d := DataSet;
+  if not Assigned(d) then Exit;
+  d.Active := True;
+  if d.RecordCount = 0 then Exit;
+
+  LocalYField := FieldY;
+  if not Assigned(LocalYField) then Exit;
+  YName := LocalYField.FullName;
+  XName := '';
+  if Assigned(FieldX) then
+    XName := FieldX.FullName;
+
+  if not Assigned(FReaderBase) then
+    FReaderBase := CreateReader;
+  Reader := TLineVirtualDataReader(FReaderBase);
+
+//  if (FDelta <> Delta) or (FScale <> Scale) then
+//  begin
+//    FDelta := Delta;
+//    FScale := Scale;
+//    ResetBuffer;
+//    Reader.SetWaveTransform(Delta, Scale);
+//  end;
+   Height := Round(Yto - YFrom);
+
+  try
+    SetVirtualParamNames(YName, XName);
+
+    if Height >= TargetHeight then
+    begin
+      // Compression mode: iterate through screen rows, subsample data with cache awareness
+      // Principle: "минимального раздувания кеша" - check cache first, only add if missing
+      StepY := Height / TargetHeight;
+      for TargetY := 0 to TargetHeight - 1 do
+      begin
+        TargetYFrom := Round(YFrom + TargetY * StepY);
+///        TargetYTo := ABDSrcRect.Top + Round((TargetY + 1) * StepY) - 1;
+
+        // Ensure TargetYTo is within bounds
+//        if TargetYTo >= ABDSrcRect.Height then // Бред от ии
+//          TargetYTo := ABDSrcRect.Height - 1;
+
+//        if TargetYTo > ABDSrcRect.Bottom then
+//           TargetYTo := ABDSrcRect.Bottom;
+
+        // Check cache for any record in this target range using the public method
+//        if Reader.FindCachedRecordInRange(TargetYFrom, TargetYTo, SourceY) then
+//        begin
+          // Cache hit: use the cached record
+          SourceY := TargetYFrom;
+          if Reader.ReadRecord(d, SourceY, Rec) then
+            AddpointEvent(SourceY, Rec.X);
+//        end
+//        else if (TargetYFrom >= 0) and (TargetYFrom < d.RecordCount) then
+//        begin
+//          // No cached record in range - use middle of range to minimize cache bloat
+//          SourceY := (TargetYFrom + TargetYTo) div 2;
+//          if (SourceY >= 0) and (SourceY < d.RecordCount) then
+//          begin
+//            if Reader.ReadRecord(d, SourceY, Rec) then
+//              AddWaveEvent(TargetY, Rec.X);
+//          end;
+//        end;
+      end;
+    end
+    else
+    begin
+      // Stretching mode: iterate through DB rows, write one-to-one
+      for SourceY := Round(YFrom) to Round(YTo) do
+      begin
+        TargetY := Round(SourceY - YFrom);
+        if (SourceY >= 0) and (SourceY < d.RecordCount) then
+        begin
+          if Reader.ReadRecord(d, SourceY, Rec) then
+            AddpointEvent(SourceY, Rec.X);
+        end;
+      end;
+    end;
+  except
+    on E: Exception do
+    begin
+      TDebug.DoException(E);
+      raise;
+    end;
+  end;
+end;
+
 function TVirtualWaveDataLink.CreateReader: TVirtualDataReaderBase;
 begin
-  Result := TVirtualDataReaderFactory.CreateWaveReader(DataSet);
+  Result := TWaveVirtualDataReader.Create; // TVirtualDataReaderFactory.CreateWaveReader(DataSet);
 end;
 
 function TVirtualWaveDataLink.GetReader: TWaveVirtualDataReader;
@@ -316,55 +418,20 @@ begin
   Result := FRecordCount;
 end;
 
-procedure TVirtualWaveDataLink.Read(YFrom, Yto, Delta, Scale: Single; AddWaveEvent: TAddpointEvent<TArray<ShortInt>>);
+procedure TVirtualWaveDataLink.Read(Y: Single; AddWaveEvent: TAddpointEvent<TArray<Integer>>);
+begin
+
+end;
+
+procedure TVirtualWaveDataLink.Read(Y, Delta, Scale: Single; AddWaveEvent: TAddpointEvent<TArray<ShortInt>>);
 var
   d: TDataSet;
-  Yfirst, Ylast, dy: Double;
-  RecFrom, RecTo, i, Cnt, Idx: Integer;
-  YFind: Double;
-  Window: TVirtualDataWindow;
-  Records: TArray<TWaveRecord>;
   Rec: TWaveRecord;
   Reader: TWaveVirtualDataReader;
   LocalYField: TField;
   YName, XName: string;
-  function EstimateRange: Boolean;
-  var
-    RecLow, RecHigh, TmpI: Integer;
-  begin
-    d.RecNo := 1;
-    Yfirst := LocalYField.AsFloat;
-    d.RecNo := d.RecordCount;
-    Ylast := LocalYField.AsFloat;
-    Result := True;
-    if Ylast > Yfirst then
-    begin
-      dy := (Ylast - Yfirst) / Max(1, d.RecordCount - 1);
-      RecFrom := Floor((Min(YFrom, YTo) - Yfirst) / dy) - 2;
-      RecTo := Ceil((Max(YFrom, YTo) - Yfirst) / dy) + 2;
-    end
-    else if Ylast < Yfirst then
-    begin
-      dy := (Yfirst - Ylast) / Max(1, d.RecordCount - 1);
-      RecFrom := Floor((Yfirst - Max(YFrom, YTo)) / dy) - 2;
-      RecTo := Ceil((Yfirst - Min(YFrom, YTo)) / dy) + 2;
-    end
-    else
-    begin
-      RecFrom := 0;
-      RecTo := d.RecordCount - 1;
-    end;
-    RecLow := Min(0, d.RecordCount - 1);
-    RecHigh := Max(0, d.RecordCount - 1);
-    RecFrom := Max(RecLow, RecFrom);
-    RecTo := Min(RecHigh, RecTo);
-    if RecFrom > RecTo then
-    begin
-      TmpI := RecFrom;
-      RecFrom := RecTo;
-      RecTo := TmpI;
-    end;
-  end;
+  Idx: Integer;
+  YFind: Double;
 begin
   d := DataSet;
   d.Active := True;
@@ -375,74 +442,45 @@ begin
   if Assigned(FieldX) then
     XName := FieldX.FullName;
 
+  if not Assigned(FReaderBase) then
+    FReaderBase := CreateReader;
+  Reader := GetReader;
+
   if (FDelta <> Delta) or (FScale <> Scale) then
   begin
     FDelta := Delta;
     FScale := Scale;
     ResetBuffer;
+    Reader.SetWaveTransform(Delta, Scale);
   end;
-
-  if not Assigned(FReaderBase) then
-    FReaderBase := CreateReader;
-  Reader := GetReader;
-  if Reader is TBinaryWaveVirtualDataReader then
-    TBinaryWaveVirtualDataReader(Reader).SetWaveTransform(Delta, Scale);
-  if Reader is TDataSetWaveVirtualDataReader then
-    TDataSetWaveVirtualDataReader(Reader).SetWaveTransform(Delta, Scale);
 
   if d.RecordCount = 0 then Exit;
 
-  try
-    SetVirtualParamNames(YName, XName);
-    if YFrom = YTo then
-    begin
-      // Single-record mode: find nearest Y and read only that record
-      Idx := IndexOfY(YFrom, fndNear, YFind);
-      if Idx >= 0 then
-        if Reader.ReadRecord(d, Idx, Rec) then
-          AddWaveEvent(Rec.Y, Rec.X);
-      Exit;
-    end;
+  SetVirtualParamNames(YName, XName);
 
-    if not EstimateRange then Exit;
-
-    Window.YFrom := Min(YFrom, YTo);
-    Window.YTo := Max(YFrom, YTo);
-    Window.RecordFrom := RecFrom;
-    Window.RecordTo := RecTo;
-    Window.ScreenHeightPx := 0;
-
-    Records := Reader.GetWindow(d, Window);
-    Cnt := Length(Records);
-    for i := 0 to Cnt - 1 do
-    begin
-      Rec := Records[i];
+  Idx := IndexOfY(Y, fndNear, YFind);
+  if Idx >= 0 then
+  begin
+    if Reader.ReadRecord(d, Idx, Rec) then
       AddWaveEvent(Rec.Y, Rec.X);
-    end;
-  except
-    on E: Exception do
-    begin
-      TDebug.DoException(E);
-      raise;
-    end;
   end;
 end;
 
-procedure TVirtualWaveDataLink.Read(Delta, Scale: Single; AddWaveEvent: TAddpointEvent<TArray<ShortInt>>);
-var
-  YFrom, Yto: Single;
-  d: TDataSet;
-  YF: TField;
-begin
-  d := DataSet;
-  d.Active := True;
-  YF := FieldY;
-  d.RecNo := 1;
-  YFrom := YF.AsFloat;
-  d.RecNo := d.RecordCount;
-  Yto := YF.AsFloat;
-  Read(YFrom, Yto, Delta, Scale, AddWaveEvent);
-end;
+//procedure TVirtualWaveDataLink.Read(Delta, Scale: Single; AddWaveEvent: TAddpointEvent<TArray<ShortInt>>);
+//var
+//  YFrom, Yto: Single;
+//  d: TDataSet;
+//  YF: TField;
+//begin
+//  d := DataSet;
+//  d.Active := True;
+//  YF := FieldY;
+//  d.RecNo := 1;
+//  YFrom := YF.AsFloat;
+//  d.RecNo := d.RecordCount;
+//  Yto := YF.AsFloat;
+//  Read(YFrom, Yto, Delta, Scale, AddWaveEvent);
+//end;
 
 procedure TVirtualWaveDataLink.Read(const ABDSrcRect: TRect; TargetHeight: Integer; Delta, Scale: Single;
   AddWaveEvent: TAddpointEvent<TArray<ShortInt>>);
@@ -468,20 +506,18 @@ begin
   if Assigned(FieldX) then
     XName := FieldX.FullName;
 
+  if not Assigned(FReaderBase) then
+    FReaderBase := CreateReader;
+  Reader := GetReader;
+
   if (FDelta <> Delta) or (FScale <> Scale) then
   begin
     FDelta := Delta;
     FScale := Scale;
     ResetBuffer;
+    Reader.SetWaveTransform(Delta, Scale);
   end;
 
-  if not Assigned(FReaderBase) then
-    FReaderBase := CreateReader;
-  Reader := GetReader;
-  if Reader is TBinaryWaveVirtualDataReader then
-    TBinaryWaveVirtualDataReader(Reader).SetWaveTransform(Delta, Scale);
-  if Reader is TDataSetWaveVirtualDataReader then
-    TDataSetWaveVirtualDataReader(Reader).SetWaveTransform(Delta, Scale);
 
   try
     SetVirtualParamNames(YName, XName);
@@ -494,30 +530,33 @@ begin
       for TargetY := 0 to TargetHeight - 1 do
       begin
         TargetYFrom := ABDSrcRect.Top + Round(TargetY * StepY);
-        TargetYTo := ABDSrcRect.Top + Round((TargetY + 1) * StepY) - 1;
+///        TargetYTo := ABDSrcRect.Top + Round((TargetY + 1) * StepY) - 1;
+
         // Ensure TargetYTo is within bounds
 //        if TargetYTo >= ABDSrcRect.Height then // Бред от ии
 //          TargetYTo := ABDSrcRect.Height - 1;
-        if TargetYTo > ABDSrcRect.Bottom then
-           TargetYTo := ABDSrcRect.Bottom;
+
+//        if TargetYTo > ABDSrcRect.Bottom then
+//           TargetYTo := ABDSrcRect.Bottom;
 
         // Check cache for any record in this target range using the public method
-        if Reader.FindCachedRecordInRange(TargetYFrom, TargetYTo, SourceY) then
-        begin
+//        if Reader.FindCachedRecordInRange(TargetYFrom, TargetYTo, SourceY) then
+//        begin
           // Cache hit: use the cached record
+          SourceY := TargetYFrom;
           if Reader.ReadRecord(d, SourceY, Rec) then
             AddWaveEvent(TargetY, Rec.X);
-        end
-        else if (TargetYFrom >= 0) and (TargetYFrom < d.RecordCount) then
-        begin
-          // No cached record in range - use middle of range to minimize cache bloat
-          SourceY := (TargetYFrom + TargetYTo) div 2;
-          if (SourceY >= 0) and (SourceY < d.RecordCount) then
-          begin
-            if Reader.ReadRecord(d, SourceY, Rec) then
-              AddWaveEvent(TargetY, Rec.X);
-          end;
-        end;
+//        end
+//        else if (TargetYFrom >= 0) and (TargetYFrom < d.RecordCount) then
+//        begin
+//          // No cached record in range - use middle of range to minimize cache bloat
+//          SourceY := (TargetYFrom + TargetYTo) div 2;
+//          if (SourceY >= 0) and (SourceY < d.RecordCount) then
+//          begin
+//            if Reader.ReadRecord(d, SourceY, Rec) then
+//              AddWaveEvent(TargetY, Rec.X);
+//          end;
+//        end;
       end;
     end
     else
@@ -542,14 +581,14 @@ begin
   end;
 end;
 
-procedure TVirtualWaveDataLink.ResetBuffer;
-begin
-  inherited;
-  FArrayCount := 0;
-  FRecordCount := 0;
-  FDelta := 0;
-  FScale := 1;
-end;
+//procedure TVirtualWaveDataLink.ResetBuffer;
+//begin
+//  inherited;
+//  FArrayCount := 0;
+//  FRecordCount := 0;
+//  FDelta := 0;
+//  FScale := 1;
+//end;
 
 {$ENDREGION}
 

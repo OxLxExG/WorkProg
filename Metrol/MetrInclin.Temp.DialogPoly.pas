@@ -7,7 +7,8 @@ uses  DockIForm, ExtendIntf, System.TypInfo, RootImpl, PluginAPI, MetrInclin.Tem
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls;
 
   const
-   STAT_FMT =  'Accel: %d %1.2f%% av: %1.3f%%     Magnit: %d %1.2f%% av: %1.3f%%     Ink:   %d %1.2f av: %1.3f'#$D#$A
+   STAT_FMT_N= '%s: %3d %8.2f%s av: %8.3f%s (T:%8.1f  A%8.1f°  Z%8.2f°  V%8.1f°)';
+   STAT_FMT =  'Accel: %d %1.2f%% av: %1.3f%%     Magnit: %d %1.2f%% av: %1.3f%%     Ink:   %d %1.2f°av: %1.3f'#$D#$A
               +'Зенит: %d %1.2f°  av: %1.3f°     Азимут: %d %1.2f° av: %1.3f°     Визир: %d %1.2f°av: %1.3f°';
 type
   TDialogPoly = class(TDialogIForm, IDialog, IDialog<TFormMetrInclinTP>)
@@ -154,7 +155,13 @@ begin
   if chkA.Checked then s := s+' Magnit';
   if s <> 'Correction:' then mmo.Lines.Add(s);
 
-  mmo.Lines.Add(TpolyMath.EStatToStr(STAT_FMT));
+  mmo.Lines.Add(TpolyMath.EStatToStrN(0,'Accel      ','%', STAT_FMT_N, 100/RES_AMP));
+  mmo.Lines.Add(TpolyMath.EStatToStrN(1,'Magnit     ','%', STAT_FMT_N, 100/RES_AMP));
+  mmo.Lines.Add(TpolyMath.EStatToStrN(2,'Наклон     ','°', STAT_FMT_N));
+  mmo.Lines.Add(TpolyMath.EStatToStrN(3,'Зенит      ','°', STAT_FMT_N));
+  mmo.Lines.Add(TpolyMath.EStatToStrN(4,'Азимут     ','°', STAT_FMT_N));
+  mmo.Lines.Add(TpolyMath.EStatToStrN(5,'отклонитель','°', STAT_FMT_N));
+//  mmo.Lines.Add(TpolyMath.EStatToStr(STAT_FMT));
   mmo.Lines.Add('------------ошибка стола-------------');
   var e := TpolyMath.eStol;
   mmo.Lines.Add(Format(SE,[e.cNakl,e.cAzi,e.cVis,e.cZenA, e.cZenAng]));

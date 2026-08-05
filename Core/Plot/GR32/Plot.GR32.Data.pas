@@ -5,7 +5,7 @@ interface
 {$INCLUDE global.inc}
 
 
-uses CustomPlot.DataLink, Plot.GR32.Tools,
+uses CustomPlot.DataLink, Plot.GR32. Tools,System.Generics.Collections,
   System.SysUtils, System.Classes, System.Types, System.UITypes, ExtendIntf, Vcl.Forms,
   Plot.DtLink, Vcl.Graphics, Vcl.Themes, Winapi.Windows, Winapi.Messages,
   System.Math, GR32_Math, GR32, GR32_Image, GR32_RangeBars, GR32_Blend, Controls,
@@ -23,11 +23,11 @@ type
     procedure DoMouseUp(X, Y: Integer);
   end;
 
-  TWaveParamBuffer = class(TIObject)
-    Bitmap: TBitmap32;
-    constructor Create;
-    destructor Destroy; override;
-  end;
+//  TWaveParamBuffer = class(TIObject)
+//    Bitmap: TBitmap32;
+//    constructor Create;
+//    destructor Destroy; override;
+//  end;
 
   TWaveShowGraph = class(TIObject, IParamMouseEdit)
     Owner: TGR32GraphicData;
@@ -45,7 +45,7 @@ type
     LastPoint: TFloatPoint;
     DashOffset: TFloat;
     LastOffset: TFloat;
-    procedure UpdateDashOffset;
+    procedure UpdateDashOffset(Mirror: double);
   end;
 
   /// скроллинг мышкой
@@ -107,6 +107,7 @@ type
     FPropertyChanged: string;
     FRenderNeeded: Boolean;
     FShowYlegend: boolean;
+    FCurrentParamsEvent: TCurrentParamsEvent;
     procedure SetPropertyChanged(const Value: string);
     procedure Render(UpdateBuffers: Boolean = True);
     procedure SetShowYlegend(const Value: boolean);
@@ -117,8 +118,9 @@ type
     procedure DrowAxis();
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
-    procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
+    function MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer):boolean; override;
     procedure SetClientRect(const Value: TRect); override;
+    procedure GetCurrentParamsAtMouseY(X,Y: Integer);
     procedure ParamCollectionChanged; override;
     procedure ParamPropChanged; override;
     procedure ParentFontChanged; override;
@@ -129,6 +131,7 @@ type
     function TryHitParametr(pos: TPoint; out Par: TGraphPar; Button: TMouseButton = TMouseButton.mbLeft; Shift: TShiftState = []): Boolean; override;
     property Bitmap: TBitmap32 read FBitmap;
     property C_PropertyChanged: string read FPropertyChanged write SetPropertyChanged;
+    property CurrentParamsEvent : TCurrentParamsEvent read FCurrentParamsEvent write FCurrentParamsEvent;
   published
     [ShowProp('Labels axis Y')]
     property ShowYlegend: boolean read FShowYlegend write SetShowYlegend default True;
@@ -278,6 +281,7 @@ var
   YFrom, Yold: Single;
   pp2mm: Double;
   Ye: Integer;
+  SignY: Integer;
 begin
   pp2mm := Screen.PixelsPerInch / 2.54 * 2;
 
@@ -287,10 +291,14 @@ begin
   for p in Owner.FLastHitWaveParametrs do
     if Supports(p, IWaveDataLink, pss) then
     begin
-      YFrom := Owner.Graph.YTopScreen - p.DeltaY + Y / (pp2mm * Owner.Graph.YScale);
+      // Определяем направление: 1 для обычного режима, -1 для зеркального
+      SignY := IfThen(Owner.Graph.YMirror, -1, 1);
+      // Единая формула расчета YFrom
+      YFrom := Owner.Graph.YTopScreen - p.DeltaY + SignY * Y / (pp2mm * Owner.Graph.YScale);
+
       Yold := Single.MaxValue;
       SetLength(pntrs, 0);
-      pss.Read(YFrom, YFrom, TWaveParam(p).ZeroGamma, TWaveParam(p).KoeffGamma,
+      pss.Read(YFrom, TWaveParam(p).ZeroGamma, TWaveParam(p).KoeffGamma,
         procedure(Y: Single; const X: TArray<ShortInt>)
         var
           i: Integer;
@@ -298,13 +306,25 @@ begin
           if abs(YFrom - Y) < Yold then
           begin
             Yold := Y;
-            Ye := Round(pp2mm * Owner.Graph.YScale * (-Owner.Graph.YTopScreen + p.DeltaY + Yold));
-            SetLength(pntrs, Length(X));
-            for i := 0 to Length(pntrs) - 1 do
+            // Единая формула обратного пересчета в пиксели без if/else
+            Ye := Round(pp2mm * Owner.Graph.YScale * SignY * (Yold - Owner.Graph.YTopScreen + p.DeltaY));
+            var DataLength := Length(X);
+            SetLength(pntrs, DataLength);
+
+            if DataLength > 0 then
             begin
-              pntrs[i].X := (i - p.DeltaX) * pp2mm * p.ScaleX;
-//              pntrs[i].Y := Ye - X[i];
-              pntrs[i].Y := Ye + X[i];
+              // 1. Предрасчет констант, которые не меняются внутри цикла
+              var FactorX := pp2mm * p.ScaleX;       // Вычисляем один раз вместо тысяч
+              var BaseX := -p.DeltaX * FactorX;      // Начальное смещение для i = 0
+
+              // 2. Оптимизированный цикл
+              for i := 0 to DataLength - 1 do
+              begin
+                // Избавляемся от операции (i - p.DeltaX) * ...
+                // Теперь здесь только одно сложение и одно умножение
+                pntrs[i].X := BaseX + i * FactorX;
+                pntrs[i].Y := Ye + X[i];
+              end;
             end;
           end;
         end);
@@ -392,6 +412,16 @@ begin
 {$ENDIF}
 end;
 
+procedure TGR32GraphicData.GetCurrentParamsAtMouseY(X, Y: Integer);
+var
+  p: TGraphPar;
+  clPoint: TFloatPoint;
+  Dist, delta: TFloat;
+begin
+  clPoint := TFloatPoint.Create(MouseToClient(TPoint.Create(X,Y)));
+  FCurrentParamsEvent(Self, clPoint.Y)
+end;
+
 function TGR32GraphicData.GetCursor: Integer;
 begin
   Result := crCross;
@@ -413,20 +443,24 @@ begin
         FParamMouseEdit := TWaveShowGraph.Create(Self, Y)
     end
   else
-    FParamMouseEdit := TScrollMouseData.Create(Self, Y)
+//   if ssAlt in Shift then
+   FParamMouseEdit := TScrollMouseData.Create(Self, Y)
 end;
 
 procedure TGR32GraphicData.MouseMove(Shift: TShiftState; X, Y: Integer);
 begin
+
   if Assigned(FParamMouseEdit) then
-    FParamMouseEdit.DoMouseMove(X, Y);
+    FParamMouseEdit.DoMouseMove(X, Y)
+  else if Assigned(FCurrentParamsEvent) then GetCurrentParamsAtMouseY(X, Y);
 end;
 
-procedure TGR32GraphicData.MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+function TGR32GraphicData.MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer): boolean;
 begin
   if Assigned(FParamMouseEdit) then
     FParamMouseEdit.DoMouseUp(X, Y);
   FParamMouseEdit := nil;
+  Result := not Assigned(FCurrentParamsEvent);
 end;
 
 procedure TGR32GraphicData.Paint;
@@ -478,7 +512,8 @@ var
       /// 1. Расчет реальных индексов Y в БД
         Y0s := pss.IndexOfY(p.Graph.YTopScreen - p.DeltaY, fndLower, Ytop);
         Y1s := pss.IndexOfY(p.Graph.YButtomScreen - p.DeltaY, fndHiger, Ybot);
-        BDSrcRect := TRect.Create(0, Y0s, pss.ArrayCount, Y1s);
+        if p.Graph.YMirror then BDSrcRect := TRect.Create(0, Y1s, pss.ArrayCount, Y0s)
+        else BDSrcRect := TRect.Create(0, Y0s, pss.ArrayCount, Y1s);
 
       /// 2. Расчет экранных координат (DstRect)
         ky := p.Graph.YScale * pp2mm;
@@ -486,7 +521,7 @@ var
         X0 := Round((0 - p.DeltaX) * kx);
         X1 := Round((pss.ArrayCount - p.DeltaX) * kx);
         Y0d := Round((Ytop - p.Graph.YTopScreen + p.DeltaY) * ky);
-        Y1d := Round((Ybot - p.Graph.YTopScreen + p.DeltaY) * ky);
+        Y1d := Abs(Round((Ybot - p.Graph.YTopScreen + p.DeltaY) * ky));
         DstRect := TRect.Create(X0, Y0d, X1, Y1d);
 
         if DstRect.IsEmpty or BDSrcRect.IsEmpty then Continue;
@@ -497,11 +532,9 @@ var
         else
           BufferHeight := BDSrcRect.Height; // Растяжение: размер буфера равен числу строк в БД
 
-      /// 4. Инициализация буфера
-        if not Assigned(pss.DrowMemoryBuffer) then
-          pss.DrowMemoryBuffer := TWaveParamBuffer.Create;
+        Src := Bm32ThemeGreate;
+        try
 
-        Src := TWaveParamBuffer(pss.DrowMemoryBuffer).Bitmap;
         Src.SetSize(pss.ArrayCount, BufferHeight);
 
       /// 5. Оптимизированное чтение
@@ -514,7 +547,10 @@ var
             begin
               MaxX := Min(Length(X) - 1, Src.Width - 1);
               for i := 0 to MaxX do
-                Src.Pixel[i, Round(Y)] := TColor32(TWaveParam(p).Gamma[X[i]]);
+                if p.Graph.YMirror then
+                  Src.Pixel[i, Src.Height - Round(Y)-1] := TColor32(TWaveParam(p).Gamma[X[i]])
+                else
+                 Src.Pixel[i, Round(Y)] := TColor32(TWaveParam(p).Gamma[X[i]]);
             end);
         end;
 
@@ -526,6 +562,10 @@ var
           Src, TargetSrcRect,
           Src.Resampler,
           dmBlend, Src.OnPixelCombine);
+
+        finally
+          Src.Free;
+        end;
       end;
   end;
 
@@ -534,6 +574,11 @@ var
     p: TGraphPar;
     pss: ILineDataLink;
     dx, dy, ky, kx: Single;
+
+    X0, X1, Y0s, Y1s: Integer;
+    Y0d, Y1d: Integer;
+    Ytop, Ybot: Double;
+
     i, cnt: Integer;
     fp: TFloatPoint;
   begin
@@ -547,53 +592,80 @@ var
         begin
           if UpdateBuffers then
           begin
-          // подготовка буфера чтение из БД буфера фильтра
-            SetLength(points, 0);
+
+            // 1. Подготовка коэффициентов и знака направления
             ky := p.Graph.YScale * pp2mm;
             kx := TLineParam(p).ScaleX * pp2mm;
-            // чтение из БД
-            pss.Read(Min(p.Graph.YTopScreen, p.Graph.YButtomScreen) - p.DeltaY, Max(p.Graph.YTopScreen, p.Graph.YButtomScreen) - p.DeltaY,
-              procedure(Y: Single; const X: Single)
-              begin
-                if not X.IsNan and not Y.IsNan and (Abs(X) < 10000000) and (Abs(Y) < 10000000) then
-                  points := points + [TFloatPoint.Create(X * kx, Y * ky)];
-              end);
-           // удаление лишних точек
-            if Length(points) > 100 then
-              points := VertexReduction(points);
-            if TXScalableParam(p).DashStyle <> ldsSolid then UpdateDashOffset();
             dx := p.DeltaX * kx;
             dy := (-p.Graph.YTopScreen + p.DeltaY) * ky;
-            cnt := Length(points);
-            if p.Graph.YMirror then
+
+            // Вводим множитель для Y: 1 для обычного режима, -1 для зеркального
+            var SignY := if p.Graph.YMirror then -1.0 else 1.0;
+
+            // 2. Индексы и экранные координаты (оставлено без изменений)
+            Y0s := pss.IndexOfY(p.Graph.YTopScreen - p.DeltaY, fndLower, Ytop);
+            Y1s := pss.IndexOfY(p.Graph.YButtomScreen - p.DeltaY, fndHiger, Ybot);
+            Y0d := Round((Ytop - p.Graph.YTopScreen + p.DeltaY) * ky);
+            Y1d := Round((Ybot - p.Graph.YTopScreen + p.DeltaY) * ky);
+
+            // 3. Выделяем память с запасом под буфер (например, 2000 точек или сколько обычно возвращает БД)
+            // Это кардинально ускорит добавление точек по сравнению с points := points + [...]
+            SetLength(points, 2000);
+            var ActualCount := 0;
+
+            // Чтение из БД
+            pss.Read(Min(p.Graph.YTopScreen, p.Graph.YButtomScreen) - p.DeltaY, Max(p.Graph.YTopScreen, p.Graph.YButtomScreen) - p.DeltaY,
+              Abs(Y1d - Y0d),
+              procedure(Y: Single; const X: Single)
+              begin
+                // Валидация данных
+                if not X.IsNan and not Y.IsNan and (Abs(X) < 10000000) and (Abs(Y) < 10000000) then
+                begin
+                  // Если вышли за пределы выделенного буфера — расширяем его порцией
+                  if ActualCount >= Length(points) then
+                    SetLength(points, Length(points) * 2);
+
+                  // Сразу вычисляем базовые экранные координаты точек
+                  points[ActualCount] := TFloatPoint.Create(X * kx, Y * ky);
+                  Inc(ActualCount);
+                end;
+              end);
+
+            // Обрезаем массив до реально считанного количества точек
+            SetLength(points, ActualCount);
+
+            if TXScalableParam(p).DashStyle <> ldsSolid then UpdateDashOffset(SignY);
+
+            // 4. ЕДИНЫЙ ЦИКЛ для трансформации координат, зеркалирования и обрезки по ширине
+            var MaxW := p.Column.Width + 10.0;
+            for i := 0 to ActualCount - 1 do
             begin
-              if odd(cnt) then
-              begin
-                points[cnt div 2].X := points[cnt div 2].X - dx;
-                points[cnt div 2].Y := -(points[cnt div 2].Y + dy);
-              end;
-              for i := 0 to cnt div 2 - 1 do
-              begin
-                fp := points[i];
-                points[i].X := points[cnt - 1 - i].X - dx;
-                points[i].Y := -(points[cnt - 1 - i].Y + dy);
-                points[cnt - 1 - i].X := fp.X - dx;
-                points[cnt - 1 - i].Y := -(fp.Y + dy);
-              end
-            end
-            else
-              for i := 0 to cnt - 1 do
-              begin
-                points[i].X := points[i].X - dx;
-                points[i].Y := points[i].Y + dy;
-              end;
-            for i := 0 to cnt - 1 do
-            begin
-              if points[i].X > p.Column.Width + 10 then
-                points[i].X := p.Column.Width + 10
-              else if points[i].X < -10 then
-                points[i].X := -10;
+              // Применяем смещение X
+              points[i].X := points[i].X - dx;
+
+              // Умная формула Y: если Mirror=true, SignY=-1, превращая формулу в -(Y * ky + dy)
+              // Если Mirror=false, SignY=1, превращая формулу в Y * ky + dy
+              points[i].Y := SignY * (points[i].Y + dy);
+
+              // Ограничение по границам экрана (Clamp)
+              if points[i].X > MaxW then
+                points[i].X := MaxW
+              else if points[i].X < -10.0 then
+                points[i].X := -10.0;
             end;
+
+            // 5. Быстрый реверс массива на месте (In-Place) без сторонних методов
+              if p.Graph.YMirror and (ActualCount > 1) then
+              begin
+                var TempPt: TFloatPoint;
+                // Идем строго до середины массива и меняем элементы местами
+                for i := 0 to (ActualCount div 2) - 1 do
+                begin
+                  TempPt := points[i];
+                  points[i] := points[ActualCount - 1 - i];
+                  points[ActualCount - 1 - i] := TempPt;
+                end;
+              end;
           end;
        // рендеринг
           if Length(points) > 1 then
@@ -683,38 +755,50 @@ end;
 
 { TWaveParamBuffer }
 
-constructor TWaveParamBuffer.Create;
-begin
-  Bitmap := Bm32ThemeGreate;
-end;
-
-destructor TWaveParamBuffer.Destroy;
-begin
-  Bitmap.Free;
-  inherited;
-end;
+//constructor TWaveParamBuffer.Create;
+//begin
+//  Bitmap := Bm32ThemeGreate;
+//end;
+//
+//destructor TWaveParamBuffer.Destroy;
+//begin
+//  Bitmap.Free;
+//  inherited;
+//end;
 
 { TLineParamBuffer }
 
-procedure TLineParamBuffer.UpdateDashOffset;
- var
+procedure TLineParamBuffer.UpdateDashOffset(Mirror: Double);
+var
   lp: TFloatPoint;
+  DirectionSign: Double;
 begin
   if (Length(Points) > 1) then
-   begin
-    if (LastPoint = Points[0]) then
-     begin
-      DashOffset := DashOffset + LastOffset;
-      lp := Points[0] - Points[1];
-      LastOffset := System.Math.Hypot(lp.X, lp.Y);
-     end
-    else
-     begin
+  begin
+    // Инициализация при первом запуске
+    if (LastPoint.X = 0) and (LastPoint.Y = 0) then
+    begin
+      LastPoint := Points[0];
       DashOffset := 0;
-      LastOffset := 0;
-     end;
-    LastPoint := Points[1];
-   end;
+      Exit;
+    end;
+
+    // Вычисляем вектор сдвига графика относительно его прошлой позиции
+    lp := Points[0] - LastPoint;
+    LastOffset := System.Math.Hypot(lp.X, lp.Y);
+
+    // Определяем базовый знак направления (вверх = +1, вниз = -1)
+    if lp.Y < 0 then
+      DirectionSign := 1.0
+    else
+      DirectionSign := -1.0;
+
+    // Применяем коэффициент Mirror для инвертирования или сохранения логики
+    DashOffset := DashOffset + (LastOffset * DirectionSign * Mirror);
+
+    // Запоминаем текущую точку для следующего шага
+    LastPoint := Points[0];
+  end;
 end;
 
 initialization

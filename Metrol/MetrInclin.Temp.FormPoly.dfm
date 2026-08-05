@@ -34,11 +34,12 @@ object FormMetrInclinTP: TFormMetrInclinTP
     object lbInfo: TLabel
       Left = 1
       Top = 364
-      Width = 80
+      Width = 870
       Height = 13
       Align = alBottom
       Caption = '--------------------'
       WordWrap = True
+      ExplicitWidth = 80
     end
     object Tree: TVirtualStringTree
       Left = 1

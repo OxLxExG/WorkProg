@@ -1,4 +1,4 @@
-unit XMLLua.Math;
+Ôªøunit XMLLua.Math;
 
 interface
 
@@ -184,9 +184,9 @@ var
   procedure vTovngk;
   begin
     if IsGk then
-      vngk := v.„Í
+      vngk := v.–≥–∫
     else
-      vngk := v.Ì„Í
+      vngk := v.–Ω–≥–∫
   end;
 
 begin
@@ -405,8 +405,15 @@ class function TXMLScriptMath.AddPolyTrr(root: IXMLNode; const ModelA, ModelH: s
   end;
   procedure SetSence(r: IXMLNode; const sense, model: string);
   begin
+    var IsNew := not Assigned(r.ChildNodes.FindNode(sense));
     var sns := GetXNode(r, sense, true);
     sns.Attributes['Model'] := model.Replace(',',' ');
+    if IsNew then
+    begin
+      sns.Attributes['Basis'] := 'Chebyshev';
+      sns.Attributes['TMin'] := 20;
+      sns.Attributes['TMax'] := 120;
+    end;
     for var ax in xyz do
     sns.Attributes[ax] := SetAx(ax, model);
   end;
@@ -457,7 +464,7 @@ begin
   end
   else
   begin
-    tx := Double(ix.Attributes[AT_VALUE]); // *Scale; Õ≈¬≈–ÕŒ !!! Ú.Í. m*X + m*Y + m*Z + d =tX  d- ÓÒÚ‡ÎÓÒ¸ ·ÂÁ Ï‡Ò¯Ú‡·ËÓ‚‡ÌËˇ
+    tx := Double(ix.Attributes[AT_VALUE]); // *Scale; –ù–ï–í–ï–†–ù–û !!! —Ç.–∫. m*X + m*Y + m*Z + d =tX  d- –æ—Å—Ç–∞–ª–æ—Å—å –±–µ–∑ –º–∞—Å—à—Ç–∞–±–∏—Ä–æ–≤–∞–Ω–∏—è
     ty := Double(iy.Attributes[AT_VALUE]); // *Scale;
     tz := Double(iz.Attributes[AT_VALUE]); // *Scale;
   end;
@@ -482,7 +489,7 @@ begin
   x := m11 * tx + m12 * ty + m13 * tz + m14;
   y := m21 * tx + m22 * ty + m23 * tz + m24;
   z := m31 * tx + m32 * ty + m33 * tz + m34;
-  ix.Attributes[AT_VALUE] := x * Scale; // *Scale; ¬≈–ÕŒ !!!
+  ix.Attributes[AT_VALUE] := x * Scale; // *Scale; –í–ï–†–ù–û !!!
   iy.Attributes[AT_VALUE] := y * Scale;
   iz.Attributes[AT_VALUE] := z * Scale;
 //  ix.Attributes[AT_TIP] := varDouble;
@@ -701,19 +708,32 @@ end;
 
 class procedure TXMLScriptMath.TrrVectPoly(trr, v: IXMLNode; var ax, ay, az, x, y, z: Double; ScaleA: Double = 1; ScaleH: Double = 1);
 
- var
-  at: TArray<Double>;
-
-  procedure RunTrr(sence: IXMLNode; k: TArray<Double>; pm: PolyModel; var rx, ry, rz: Double; Scale: Double; coso: boolean);
+  procedure RunTrr(sence: IXMLNode; k: TArray<Double>; pm: PolyModel;
+    const Temp: Double; var rx, ry, rz: Double; Scale: Double; coso: boolean);
   begin
     var vs := XToVar(sence);
+    var at := pm.CreatePowerT(Temp, pm.MaxPowT);
     var r := pm.CreateRow(at,[vs.X.DEV.VALUE,vs.Y.DEV.VALUE,vs.Z.DEV.VALUE], Scale);
     if coso then pm.FindAxisKoso(@k[0], r, rx, ry, rz)
     else pm.FindAxis(@k[0], r, rx, ry, rz);
   end;
 
  var
-  pmA, pmH: PolyModel;
+ pmA, pmH: PolyModel;
+
+  procedure ReadTemperatureModel(const Node: IXMLNode; var Model: PolyModel);
+  begin
+    if Node.HasAttribute('Basis') and
+       SameText(string(Node.Attributes['Basis']), 'Chebyshev') then
+    begin
+      if not Node.HasAttribute('TMin') or not Node.HasAttribute('TMax') then
+        raise Exception.Create('Chebyshev model requires TMin and TMax');
+      Model.UseChebyshevTemperature(Double(Node.Attributes['TMin']),
+                                    Double(Node.Attributes['TMax']));
+    end
+    else
+      Model.UseLegacyTemperature;
+  end;
 begin
   var d := XToVar(v);
   var acc := GetXNode(trr, 'Poly.accel');
@@ -721,14 +741,13 @@ begin
 
   pma :=  acc.Attributes['Model'];
   pmh :=  mag.Attributes['Model'];
-
-  var pwt := pmH.MaxPowT; if pmA.MaxPowT > pwt then pwt := pmA.MaxPowT;
-  at := pmA.CreatePowerT(d.T.DEV.VALUE, pwt);
+  ReadTemperatureModel(acc, pmA);
+  ReadTemperatureModel(mag, pmH);
 
   var sens := GetXNode(v, 'accel');
   var ak := SenseToKoefs(acc);
   var coso := ak[pma.KyIdx] = 0;
-  RunTrr(sens, ak, pmA, ax, ay, az, ScaleA, coso);
+  RunTrr(sens, ak, pmA, d.T.DEV.VALUE, ax, ay, az, ScaleA, coso);
 
   var vs := XtoVar(sens);
   TXMLScriptMath.AddXmlPath(vs.X,'CLC').VALUE := ax;
@@ -737,7 +756,8 @@ begin
 
   sens := GetXNode(v, 'magnit');
   ak := SenseToKoefs(mag);
-  RunTrr(sens,ak,pmH, x,  y,  z, ScaleH, coso);
+  coso := ak[pmH.KyIdx] = 0;
+  RunTrr(sens,ak,pmH, d.T.DEV.VALUE, x, y, z, ScaleH, coso);
 
   vs := XtoVar(sens);
   TXMLScriptMath.AddXmlPath(vs.X,'CLC').VALUE := x;
@@ -1136,7 +1156,7 @@ const
   FramePeriodSec = 2.097152;
   SecInDay       = 86400.0;
   FrameInDays    = FramePeriodSec / SecInDay;
-  DateEpoch      = 36526.0; // TDateTime ‰Îˇ 01.01.2000
+  DateEpoch      = 36526.0; // TDateTime –¥–ª—è 01.01.2000
   begin
     Result := DateEpoch + (AnRTC * FrameInDays);
   end;
@@ -1468,11 +1488,11 @@ var
   root: variant;
 begin
   root := Xtovar(TXMLLua.XNode(L, 1));
-  s := root.—√ .DEV.VALUE;
+  s := root.–°–ì–ö.DEV.VALUE;
   Sm := 0;
   for d in s.Split([' '], TStringSplitOptions.ExcludeEmpty) do
     Sm := Sm + d.ToInteger;
-  root.„Í.DEV.VALUE := Sm;
+  root.–≥–∫.DEV.VALUE := Sm;
   Result := 0;
 end;
 
@@ -1492,16 +1512,16 @@ var
     n: IXMLNode;
   begin
     if kp = 100 then
-      skp := '¬Ó‰‡'
+      skp := '–í–æ–¥–∞'
     else
       skp := FloatToStr(kp);
     for n in XEnum(root) do
       if (n.Attributes['KP'] = skp) and (n.Attributes['D'] = d) then
       begin
         n.Attributes['EXECUTED'] := True;
-        DevNode(n.ChildNodes['ÌÍ1']).Attributes[AT_VALUE] := k1;
-        DevNode(n.ChildNodes['ÌÍ2']).Attributes[AT_VALUE] := k2;
-        DevNode(n.ChildNodes['Ì„Í']).Attributes[AT_VALUE] := gk;
+        DevNode(n.ChildNodes['–Ω–∫1']).Attributes[AT_VALUE] := k1;
+        DevNode(n.ChildNodes['–Ω–∫2']).Attributes[AT_VALUE] := k2;
+        DevNode(n.ChildNodes['–Ω–≥–∫']).Attributes[AT_VALUE] := gk;
         Break;
       end;
   end;
@@ -1524,10 +1544,10 @@ begin
   try
     ss.LoadFromFile(TrrFile);
     if ss.Count <> 17 then
-      raise EBaseException.Createfmt('” Ù‡ÈÎ‡ %s %d (17)ÒÚÓÍ', [TrrFile, ss.Count]);
+      raise EBaseException.Createfmt('–£ —Ñ–∞–π–ª–∞ %s %d (17)—Å—Ç—Ä–æ–∫', [TrrFile, ss.Count]);
     dev.Attributes[AT_SERIAL] := Trim(Copy(ss[0], 5, 3));
     root.Attributes[AT_TIMEATT] := Trim(Copy(ss[1], 1, 12));
-    root.Attributes['ISTOCHNIK'] := Trim(Copy(ss[2], 1, pos('»ÒÚÓ˜ÌËÍ', ss[2]) - 1));
+    root.Attributes['ISTOCHNIK'] := Trim(Copy(ss[2], 1, pos('–ò—Å—Ç–æ—á–Ω–∏–∫', ss[2]) - 1));
     for i := 1 to 13 do
     begin
       sp := ss[i + 3].Trim.split([' '], TStringSplitOptions.ExcludeEmpty);

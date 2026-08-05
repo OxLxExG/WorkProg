@@ -1,4 +1,4 @@
-unit Plot.VirtualData;
+﻿unit Plot.VirtualData;
 
 interface
 
@@ -108,81 +108,42 @@ type
   private
     FCache: TLineRecordCache;
   protected
-    function ReadRecordDirect(const DataSet: TDataSet; RecNo: Integer; out Rec: TLineRecord): Boolean; virtual; abstract;
-    function ReadRecordViaDataSet(const DataSet: TDataSet; RecNo: Integer; out Rec: TLineRecord): Boolean; virtual; abstract;
+    function ReadRecordDirect(const DataSet: TDataSet; RecNo: Integer; out Rec: TLineRecord): Boolean;
+    function ReadRecordViaDataSet(const DataSet: TDataSet; RecNo: Integer; out Rec: TLineRecord): Boolean;
   public
     constructor Create;
     destructor Destroy; override;
     procedure Invalidate; override;
-    function GetWindow(const DataSet: TDataSet; const AWindow: TVirtualDataWindow): TArray<TLineRecord>;
+    function ReadRecord(const DataSet: TDataSet; RecNo: Integer; out Rec: TLineRecord): Boolean;
+//    function GetWindow(const DataSet: TDataSet; const AWindow: TVirtualDataWindow): TArray<TLineRecord>;
   end;
 
-  TBinaryLineVirtualDataReader = class(TLineVirtualDataReader)
-  protected
-    function ReadRecordDirect(const DataSet: TDataSet; RecNo: Integer; out Rec: TLineRecord): Boolean; override;
-    function ReadRecordViaDataSet(const DataSet: TDataSet; RecNo: Integer; out Rec: TLineRecord): Boolean; override;
-  end;
-
-  TDataSetLineVirtualDataReader = class(TLineVirtualDataReader)
-  protected
-    function ReadRecordDirect(const DataSet: TDataSet; RecNo: Integer; out Rec: TLineRecord): Boolean; override;
-    function ReadRecordViaDataSet(const DataSet: TDataSet; RecNo: Integer; out Rec: TLineRecord): Boolean; override;
-  end;
+//  TBinaryLineVirtualDataReader = class(TLineVirtualDataReader)
+//  protected
+//    function ReadRecordDirect(const DataSet: TDataSet; RecNo: Integer; out Rec: TLineRecord): Boolean; override;
+//    function ReadRecordViaDataSet(const DataSet: TDataSet; RecNo: Integer; out Rec: TLineRecord): Boolean; override;
+//  end;
+//
+//  TDataSetLineVirtualDataReader = class(TLineVirtualDataReader)
+//  protected
+//    function ReadRecordDirect(const DataSet: TDataSet; RecNo: Integer; out Rec: TLineRecord): Boolean; override;
+//    function ReadRecordViaDataSet(const DataSet: TDataSet; RecNo: Integer; out Rec: TLineRecord): Boolean; override;
+//  end;
 
   {$ENDREGION}
 
   {$REGION 'Wave reader / cache'}
 
-  /// <summary>
-  /// Cache for wave data records keyed by record number.
-  /// </summary>
-  TWaveRecordCache = TDictionary<Integer, TWaveRecord>;
-
-  /// <summary>
-  /// Cache-aware record finder. Returns True and sets FoundRecNo if any record in
-  /// the specified range is already cached. Used to implement "минимального раздувания кеша".
-  /// </summary>
-  TWaveVirtualDataReader = class abstract(TVirtualDataReaderBase)
-  private
-    FCache: TWaveRecordCache;
-  protected
-    function ReadRecordDirect(const DataSet: TDataSet; RecNo: Integer; out Rec: TWaveRecord): Boolean; virtual; abstract;
-    function ReadRecordViaDataSet(const DataSet: TDataSet; RecNo: Integer; out Rec: TWaveRecord): Boolean; virtual; abstract;
-  public
-    constructor Create;
-    destructor Destroy; override;
-    procedure Invalidate; override;
-    function GetWindow(const DataSet: TDataSet; const AWindow: TVirtualDataWindow): TArray<TWaveRecord>;
-    function ReadRecord(const DataSet: TDataSet; RecNo: Integer; out Rec: TWaveRecord): Boolean;
-    /// <summary>
-    /// Checks if any record in the range [RecFrom, RecTo] is already cached.
-    /// If found, returns True and sets FoundRecNo to the first found cached record.
-    /// </summary>
-    function FindCachedRecordInRange(RecFrom, RecTo: Integer; out FoundRecNo: Integer): Boolean;
-  end;
-
-  TBinaryWaveVirtualDataReader = class(TWaveVirtualDataReader)
+  TWaveVirtualDataReader = class(TVirtualDataReaderBase)
   private
     FDelta: Single;
     FScale: Single;
     FEnumFunc: TAsTypeFunction<Integer>;
   protected
-    function ReadRecordDirect(const DataSet: TDataSet; RecNo: Integer; out Rec: TWaveRecord): Boolean; override;
-    function ReadRecordViaDataSet(const DataSet: TDataSet; RecNo: Integer; out Rec: TWaveRecord): Boolean; override;
+    function ReadRecordDirect(const DataSet: TDataSet; RecNo: Integer; out Rec: TWaveRecord): Boolean;
+    function ReadRecordViaDataSet(const DataSet: TDataSet; RecNo: Integer; out Rec: TWaveRecord): Boolean;
   public
-    procedure SetWaveTransform(Delta, Scale: Single); virtual;
-    property Delta: Single read FDelta;
-    property Scale: Single read FScale;
-  end;
-
-  TDataSetWaveVirtualDataReader = class(TWaveVirtualDataReader)
-  private
-    FDelta: Single;
-    FScale: Single;
-  protected
-    function ReadRecordDirect(const DataSet: TDataSet; RecNo: Integer; out Rec: TWaveRecord): Boolean; override;
-    function ReadRecordViaDataSet(const DataSet: TDataSet; RecNo: Integer; out Rec: TWaveRecord): Boolean; override;
-  public
+    function ReadRecord(const DataSet: TDataSet; RecNo: Integer; out Rec: TWaveRecord): Boolean;
     procedure SetWaveTransform(Delta, Scale: Single); virtual;
     property Delta: Single read FDelta;
     property Scale: Single read FScale;
@@ -192,11 +153,11 @@ type
 
   {$REGION 'Reader factory'}
 
-  TVirtualDataReaderFactory = class
-  public
-    class function CreateLineReader(const DataSet: TDataSet): TLineVirtualDataReader;
-    class function CreateWaveReader(const DataSet: TDataSet): TWaveVirtualDataReader;
-  end;
+//  TVirtualDataReaderFactory = class
+//  public
+//    class function CreateLineReader(const DataSet: TDataSet): TLineVirtualDataReader;
+//    class function CreateWaveReader(const DataSet: TDataSet): TWaveVirtualDataReader;
+//  end;
 
   {$ENDREGION}
 
@@ -293,9 +254,9 @@ end;
 
 procedure TVirtualDataReaderBase.Invalidate;
 begin
-  FRecordCount := -1;
-  FCurrentDataSet := nil;
-  FillChar(FFieldLayout, SizeOf(FFieldLayout), 0);
+//  FRecordCount := -1;
+//  FCurrentDataSet := nil;
+//  FillChar(FFieldLayout, SizeOf(FFieldLayout), 0);
 end;
 
 function TVirtualDataReaderBase.GetRecordCount(const DataSet: TDataSet): Integer;
@@ -371,10 +332,6 @@ end;
 
 {$ENDREGION}
 
-{$REGION 'TVirtualDataReaderBase'}
-
-{$ENDREGION}
-
 {$REGION 'TLineVirtualDataReader'}
 
 constructor TLineVirtualDataReader.Create;
@@ -395,72 +352,85 @@ begin
   FCache.Clear;
 end;
 
-function TLineVirtualDataReader.GetWindow(const DataSet: TDataSet; const AWindow: TVirtualDataWindow): TArray<TLineRecord>;
-var
-  i, Cnt, RecFrom, RecTo, Capacity: Integer;
-  Rec: TLineRecord;
-  LocalCache: TLineRecordCache;
-  Res: TArray<TLineRecord>;
-begin
-  Result := nil;
-  if AWindow.IsEmpty or not Assigned(DataSet) then Exit;
-
-  if FCurrentDataSet <> DataSet then
-    Invalidate;
-
-  FCurrentDataSet := DataSet;
-  GetRecordCount(DataSet);
-
-  RecFrom := Max(0, AWindow.RecordFrom - 2);
-  RecTo := Min(FRecordCount - 1, AWindow.RecordTo + 2);
-  if RecFrom > RecTo then Exit;
-
-  Cnt := RecTo - RecFrom + 1;
-  SetLength(Res, Cnt);
-  Capacity := 0;
-
-  FCacheLock.Enter;
-  try
-    LocalCache := TLineRecordCache.Create(FCache);
-  finally
-    FCacheLock.Leave;
-  end;
-
-  try
-    for i := RecFrom to RecTo do
-    begin
-      if not LocalCache.TryGetValue(i, Rec) then
-      begin
-        if ReadRecordDirect(DataSet, i, Rec) then
-        begin
-          FCacheLock.Enter;
-          try
-            FCache.AddOrSetValue(i, Rec);
-          finally
-            FCacheLock.Leave;
-          end;
-        end;
-      end;
-      if not IsNaN(Rec.Y) then
-      begin
-        Res[Capacity] := Rec;
-        Inc(Capacity);
-      end;
-    end;
-  finally
-    LocalCache.Free;
-  end;
-
-  SetLength(Res, Capacity);
-  Result := Res;
-  FLastWindow := AWindow;
-end;
+//function TLineVirtualDataReader.GetWindow(const DataSet: TDataSet; const AWindow: TVirtualDataWindow): TArray<TLineRecord>;
+//var
+//  i, Cnt, RecFrom, RecTo, Capacity: Integer;
+//  Rec: TLineRecord;
+//  LocalCache: TLineRecordCache;
+//  Res: TArray<TLineRecord>;
+//begin
+//  Result := nil;
+//  if AWindow.IsEmpty or not Assigned(DataSet) then Exit;
+//
+//  if FCurrentDataSet <> DataSet then
+//    Invalidate;
+//
+//  FCurrentDataSet := DataSet;
+//  GetRecordCount(DataSet);
+//
+//  RecFrom := Max(0, AWindow.RecordFrom - 2);
+//  RecTo := Min(FRecordCount - 1, AWindow.RecordTo + 2);
+//  if RecFrom > RecTo then Exit;
+//
+//  Cnt := RecTo - RecFrom + 1;
+//  SetLength(Res, Cnt);
+//  Capacity := 0;
+//
+//  FCacheLock.Enter;
+//  try
+//    LocalCache := TLineRecordCache.Create(FCache);
+//  finally
+//    FCacheLock.Leave;
+//  end;
+//
+//  try
+//    for i := RecFrom to RecTo do
+//    begin
+////     ReadRecord(DataSet, i, Rec);
+//      if not LocalCache.TryGetValue(i, Rec) then
+//      begin
+//        if ReadRecord(DataSet, i, Rec) then
+//        begin
+//          FCacheLock.Enter;
+//          try
+//            FCache.AddOrSetValue(i, Rec);
+//          finally
+//            FCacheLock.Leave;
+//          end;
+//        end;
+//      end;
+//      if not IsNaN(Rec.Y) then
+//      begin
+//        Res[Capacity] := Rec;
+//        Inc(Capacity);
+//      end;
+//    end;
+//  finally
+//    LocalCache.Free;
+//  end;
+//
+//  SetLength(Res, Capacity);
+//  Result := Res;
+//  FLastWindow := AWindow;
+//end;
 
 {$ENDREGION}
 
 {$REGION 'TBinaryLineVirtualDataReader'}
 
-function TBinaryLineVirtualDataReader.ReadRecordDirect(const DataSet: TDataSet; RecNo: Integer; out Rec: TLineRecord): Boolean;
+function TLineVirtualDataReader.ReadRecord(const DataSet: TDataSet; RecNo: Integer; out Rec: TLineRecord): Boolean;
+begin
+  Result := False;
+  if not Assigned(DataSet) then Exit;
+
+  if not Assigned(FCurrentDataSet) or (FCurrentDataSet <> DataSet) then
+    Invalidate;
+  FCurrentDataSet := DataSet;
+  if (DataSet is TFileDataSet) then Exit(ReadRecordDirect(DataSet, RecNo, Rec))
+  else Exit(ReadRecordViaDataSet(DataSet, RecNo, Rec));
+end;
+
+function TLineVirtualDataReader.ReadRecordDirect(const DataSet: TDataSet; RecNo: Integer; out Rec: TLineRecord): Boolean;
 var
   FDS: TFileDataSet;
   P: PByte;
@@ -504,61 +474,61 @@ begin
   end;
 end;
 
-function TBinaryLineVirtualDataReader.ReadRecordViaDataSet(const DataSet: TDataSet; RecNo: Integer; out Rec: TLineRecord): Boolean;
-var
-  FDS: TFileDataSet;
-  YField, XField: TField;
-  YData, XData: TValueBuffer;
-  YName, XName: string;
-  HasLayout: Boolean;
-  function LayoutReady: Boolean;
-  begin
-    if FFieldLayout.RecordLength = 0 then
-      HasLayout := BuildLayout(DataSet)
-    else
-      HasLayout := True;
-    Result := HasLayout;
-  end;
-begin
-  HasLayout := False;
-  Result := False;
-  if not (DataSet is TFileDataSet) then Exit;
-  if not LayoutReady then Exit;
-
-  FDS := TFileDataSet(DataSet);
-  YName := FYParamName;
-  XName := FXParamName;
-  YField := DataSet.FindField(YName);
-  XField := DataSet.FindField(XName);
-  if not Assigned(YField) or not Assigned(XField) then Exit;
-
-  DataSet.Active := True;
-  DataSet.RecNo := RecNo + 1;
-
-  if FDS.GetFieldData(YField, YData) and FDS.GetFieldData(XField, XData) then
-  begin
-    Rec.Y := ReadBufferAsSingle(YData, DBFieldTypeToVarType(YField.DataType));
-    Rec.X := ReadBufferAsSingle(XData, DBFieldTypeToVarType(XField.DataType));
-    Result := True;
-  end;
-end;
-
+//function TLineVirtualDataReader.ReadRecordViaDataSet(const DataSet: TDataSet; RecNo: Integer; out Rec: TLineRecord): Boolean;
+//var
+////  FDS: TFileDataSet;
+//  YField, XField: TField;
+//  YData, XData: TValueBuffer;
+//  YName, XName: string;
+////  HasLayout: Boolean;
+////  function LayoutReady: Boolean;
+////  begin
+////    if FFieldLayout.RecordLength = 0 then
+////      HasLayout := BuildLayout(DataSet)
+////    else
+////      HasLayout := True;
+////    Result := HasLayout;
+////  end;
+//begin
+////  HasLayout := False;
+//  Result := False;
+////  if not (DataSet is TFileDataSet) then Exit;
+////  if not LayoutReady then Exit;
+//
+//  FDS := TFileDataSet(DataSet);
+//  YName := FYParamName;
+//  XName := FXParamName;
+//  YField := DataSet.FindField(YName);
+//  XField := DataSet.FindField(XName);
+//  if not Assigned(YField) or not Assigned(XField) then Exit;
+//
+//  DataSet.Active := True;
+//  DataSet.RecNo := RecNo + 1;
+//
+//  if FDS.GetFieldData(YField, YData) and FDS.GetFieldData(XField, XData) then
+//  begin
+//    Rec.Y := ReadBufferAsSingle(YData, DBFieldTypeToVarType(YField.DataType));
+//    Rec.X := ReadBufferAsSingle(XData, DBFieldTypeToVarType(XField.DataType));
+//    Result := True;
+//  end;
+//end;
+//
 {$ENDREGION}
 
-{$REGION 'TDataSetLineVirtualDataReader'}
-
-function TDataSetLineVirtualDataReader.ReadRecordDirect(const DataSet: TDataSet; RecNo: Integer; out Rec: TLineRecord): Boolean;
-begin
-  Result := ReadRecordViaDataSet(DataSet, RecNo, Rec);
-end;
-
-function TDataSetLineVirtualDataReader.ReadRecordViaDataSet(const DataSet: TDataSet; RecNo: Integer; out Rec: TLineRecord): Boolean;
+//{$REGION 'TDataSetLineVirtualDataReader'}
+//
+//function TDataSetLineVirtualDataReader.ReadRecordDirect(const DataSet: TDataSet; RecNo: Integer; out Rec: TLineRecord): Boolean;
+//begin
+//  Result := ReadRecordViaDataSet(DataSet, RecNo, Rec);
+//end;
+//
+function TLineVirtualDataReader.ReadRecordViaDataSet(const DataSet: TDataSet; RecNo: Integer; out Rec: TLineRecord): Boolean;
 var
   YField, XField: TField;
   YData, XData: TValueBuffer;
   YName, XName: string;
-  FDS: TFileDataSet;
-  XDef: TFileFieldDef;
+//  FDS: TFileDataSet;
+//  XDef: TFileFieldDef;
 begin
   Result := False;
   YName := FYParamName;
@@ -574,22 +544,22 @@ begin
     if not DataSet.GetFieldData(YField, YData) then Exit;
     Rec.Y := ReadBufferAsSingle(YData, DBFieldTypeToVarType(YField.DataType));
 
-    if DataSet is TFileDataSet then
-    begin
-      FDS := TFileDataSet(DataSet);
-      XDef := FDS.FindFieldDef(XField.FullName);
-      if (XDef <> nil) and (XDef.ArraySize > 1) then
-      begin
-        // Wave-like array on a line field: take first element as line value.
-        DataSet.GetFieldData(XField, XData);
-        Rec.X := ReadBufferAsSingle(XData, XDef.ArrayType);
-      end
-      else if FDS.GetFieldData(XField, XData) then
-        Rec.X := ReadBufferAsSingle(XData, DBFieldTypeToVarType(XField.DataType))
-      else
-        Rec.X := 0;
-    end
-    else
+//    if DataSet is TFileDataSet then
+//    begin
+//      FDS := TFileDataSet(DataSet);
+//      XDef := FDS.FindFieldDef(XField.FullName);
+//      if (XDef <> nil) and (XDef.ArraySize > 1) then
+//      begin
+//        // Wave-like array on a line field: take first element as line value.
+//        DataSet.GetFieldData(XField, XData);
+//        Rec.X := ReadBufferAsSingle(XData, XDef.ArrayType);
+//      end
+//      else if FDS.GetFieldData(XField, XData) then
+//        Rec.X := ReadBufferAsSingle(XData, DBFieldTypeToVarType(XField.DataType))
+//      else
+//        Rec.X := 0;
+//    end
+//    else
     begin
       if DataSet.GetFieldData(XField, XData) then
         Rec.X := ReadBufferAsSingle(XData, DBFieldTypeToVarType(XField.DataType))
@@ -602,27 +572,9 @@ begin
   end;
 end;
 
-{$ENDREGION}
+//{$ENDREGION}
 
 {$REGION 'TWaveVirtualDataReader'}
-
-constructor TWaveVirtualDataReader.Create;
-begin
-  inherited;
-  FCache := TWaveRecordCache.Create;
-end;
-
-destructor TWaveVirtualDataReader.Destroy;
-begin
-  FCache.Free;
-  inherited;
-end;
-
-procedure TWaveVirtualDataReader.Invalidate;
-begin
-  inherited;
-  FCache.Clear;
-end;
 
 function TWaveVirtualDataReader.ReadRecord(const DataSet: TDataSet; RecNo: Integer; out Rec: TWaveRecord): Boolean;
 begin
@@ -632,132 +584,18 @@ begin
   if not Assigned(FCurrentDataSet) or (FCurrentDataSet <> DataSet) then
     Invalidate;
   FCurrentDataSet := DataSet;
-
-  // Try cache first
-  FCacheLock.Enter;
-  try
-    if FCache.TryGetValue(RecNo, Rec) then
-    begin
-      Result := True;
-      Exit;
-    end;
-  finally
-    FCacheLock.Leave;
-  end;
-
-  // Cache miss: read directly and store in cache
-  if ReadRecordDirect(DataSet, RecNo, Rec) then
-  begin
-    FCacheLock.Enter;
-    try
-      FCache.AddOrSetValue(RecNo, Rec);
-    finally
-      FCacheLock.Leave;
-    end;
-    Result := True;
-  end;
+  if (DataSet is TFileDataSet) then Exit(ReadRecordDirect(DataSet, RecNo, Rec))
+  else Exit(ReadRecordViaDataSet(DataSet, RecNo, Rec));
 end;
 
-function TWaveVirtualDataReader.GetWindow(const DataSet: TDataSet; const AWindow: TVirtualDataWindow): TArray<TWaveRecord>;
-var
-  i, Cnt, RecFrom, RecTo, Capacity: Integer;
-  Rec: TWaveRecord;
-  LocalCache: TWaveRecordCache;
-  Res: TArray<TWaveRecord>;
-begin
-  Result := nil;
-  if AWindow.IsEmpty or not Assigned(DataSet) then Exit;
 
-  if not Assigned(FCurrentDataSet) or (FCurrentDataSet <> DataSet) then
-    Invalidate;
-
-  FCurrentDataSet := DataSet;
-  GetRecordCount(DataSet);
-
-  RecFrom := Max(0, AWindow.RecordFrom - 2);
-  RecTo := Min(FRecordCount - 1, AWindow.RecordTo + 2);
-  if RecFrom > RecTo then Exit;
-
-  Cnt := RecTo - RecFrom + 1;
-  SetLength(Res, Cnt);
-  Capacity := 0;
-
-  FCacheLock.Enter;
-  try
-    LocalCache := TWaveRecordCache.Create(FCache);
-  finally
-    FCacheLock.Leave;
-  end;
-
-  try
-    for i := RecFrom to RecTo do
-    begin
-      if not LocalCache.TryGetValue(i, Rec) then
-      begin
-        if ReadRecordDirect(DataSet, i, Rec) then
-        begin
-          FCacheLock.Enter;
-          try
-            FCache.AddOrSetValue(i, Rec);
-          finally
-            FCacheLock.Leave;
-          end;
-        end;
-      end;
-      if not IsNaN(Rec.Y) then
-      begin
-        Res[Capacity] := Rec;
-        Inc(Capacity);
-      end;
-    end;
-  finally
-    LocalCache.Free;
-  end;
-
-  SetLength(Res, Capacity);
-  Result := Res;
-  FLastWindow := AWindow;
-end;
-
-/// <summary>
-/// Checks if any record in the range [RecFrom, RecTo] is already cached.
-/// Used for "минимального раздувания кеша" (minimum cache bloat).
-/// Returns True if found and sets FoundRecNo to the cached record number.
-/// </summary>
-function TWaveVirtualDataReader.FindCachedRecordInRange(RecFrom, RecTo: Integer; out FoundRecNo: Integer): Boolean;
-var
-  Pair: TPair<Integer, TWaveRecord>;
-begin
-  Result := False;
-  FoundRecNo := -1;
-  FCacheLock.Enter;
-  try
-    for Pair in FCache do
-    begin
-      if (Pair.Key >= RecFrom) and (Pair.Key <= RecTo) then
-      begin
-        FoundRecNo := Pair.Key;
-        Result := True;
-        Exit;
-      end;
-    end;
-  finally
-    FCacheLock.Leave;
-  end;
-end;
-
-{$ENDREGION}
-
-{$REGION 'TBinaryWaveVirtualDataReader'}
-
-procedure TBinaryWaveVirtualDataReader.SetWaveTransform(Delta, Scale: Single);
+procedure TWaveVirtualDataReader.SetWaveTransform(Delta, Scale: Single);
 begin
   FDelta := Delta;
   FScale := Scale;
-  Invalidate;
-end;
+  end;
 
-function TBinaryWaveVirtualDataReader.ReadRecordDirect(const DataSet: TDataSet; RecNo: Integer; out Rec: TWaveRecord): Boolean;
+function TWaveVirtualDataReader.ReadRecordDirect(const DataSet: TDataSet; RecNo: Integer; out Rec: TWaveRecord): Boolean;
 var
   FDS: TFileDataSet;
   P: PByte;
@@ -803,7 +641,6 @@ begin
       if Val < ShortInt.MinValue then Val := ShortInt.MinValue
       else if Val > ShortInt.MaxValue then Val := ShortInt.MaxValue;
       Rec.X[i] := ShortInt(Val);
-      //Inc(PByte(Src), FFieldLayout.XSize);
     end;
     Result := True;
   finally
@@ -811,30 +648,30 @@ begin
   end;
 end;
 
-function TBinaryWaveVirtualDataReader.ReadRecordViaDataSet(const DataSet: TDataSet; RecNo: Integer; out Rec: TWaveRecord): Boolean;
+function TWaveVirtualDataReader.ReadRecordViaDataSet(const DataSet: TDataSet; RecNo: Integer; out Rec: TWaveRecord): Boolean;
 var
-  FDS: TFileDataSet;
+  FDS: TDataSet;
   YField, XField: TField;
   YData, Raw: TValueBuffer;
   YName, XName: string;
-  HasLayout: Boolean;
+//  HasLayout: Boolean;
   XDef: TFileFieldDef;
   P: Pointer;
   i, Val, XSize: Integer;
   EnumFunc: TAsTypeFunction<Integer>;
-  function LayoutReady: Boolean;
-  begin
-    if FFieldLayout.RecordLength = 0 then
-      HasLayout := BuildLayout(DataSet)
-    else
-      HasLayout := True;
-    Result := HasLayout;
-  end;
+//  function LayoutReady: Boolean;
+//  begin
+//    if FFieldLayout.RecordLength = 0 then
+//      HasLayout := BuildLayout(DataSet)
+//    else
+//      HasLayout := True;
+//    Result := HasLayout;
+//  end;
 begin
-  HasLayout := False;
+//  HasLayout := False;
   Result := False;
   if not (DataSet is TFileDataSet) then Exit;
-  if not LayoutReady then Exit;
+//  if not LayoutReady then Exit;
 
   FDS := TFileDataSet(DataSet);
   YName := FYParamName;
@@ -849,8 +686,8 @@ begin
   if not FDS.GetFieldData(YField, YData) then Exit;
   Rec.Y := ReadBufferAsSingle(YData, DBFieldTypeToVarType(YField.DataType));
 
-  XDef := FDS.FindFieldDef(XField.FullName);
-  if not Assigned(XDef) or (XDef.ArraySize <= 0) then Exit;
+//  XDef := FDS.FindFieldDef(XField.FullName);
+//  if not Assigned(XDef) or (XDef.ArraySize <= 0) then Exit;
 
   XSize := TPars.VarTypeToLength(XDef.ArrayType);
   EnumFunc := TPars.GetAsTypeFunction(XDef.ArrayType);
@@ -871,99 +708,18 @@ end;
 
 {$ENDREGION}
 
-{$REGION 'TDataSetWaveVirtualDataReader'}
 
-procedure TDataSetWaveVirtualDataReader.SetWaveTransform(Delta, Scale: Single);
-begin
-  FDelta := Delta;
-  FScale := Scale;
-  Invalidate;
-end;
-
-function TDataSetWaveVirtualDataReader.ReadRecordDirect(const DataSet: TDataSet; RecNo: Integer; out Rec: TWaveRecord): Boolean;
-begin
-  Result := ReadRecordViaDataSet(DataSet, RecNo, Rec);
-end;
-
-function TDataSetWaveVirtualDataReader.ReadRecordViaDataSet(const DataSet: TDataSet; RecNo: Integer; out Rec: TWaveRecord): Boolean;
-var
-  YField, XField: TField;
-  YData, Raw: TValueBuffer;
-  YName, XName: string;
-  FDS: TFileDataSet;
-  XDef: TFileFieldDef;
-  P: Pointer;
-  i, Val, XSize: Integer;
-  EnumFunc: TAsTypeFunction<Integer>;
-begin
-  Result := False;
-  YName := FYParamName;
-  XName := FXParamName;
-  YField := DataSet.FindField(YName);
-  XField := DataSet.FindField(XName);
-  if not Assigned(YField) or not Assigned(XField) then Exit;
-
-  DataSet.Active := True;
-  DataSet.DisableControls;
-  try
-    DataSet.RecNo := RecNo + 1;
-    if not DataSet.GetFieldData(YField, YData) then Exit;
-    Rec.Y := ReadBufferAsSingle(YData, DBFieldTypeToVarType(YField.DataType));
-
-    if DataSet is TFileDataSet then
-    begin
-      FDS := TFileDataSet(DataSet);
-      XDef := FDS.FindFieldDef(XField.FullName);
-      if not Assigned(XDef) or (XDef.ArraySize <= 0) then Exit;
-      XSize := TPars.VarTypeToLength(XDef.ArrayType);
-      EnumFunc := TPars.GetAsTypeFunction(XDef.ArrayType);
-      if not Assigned(EnumFunc) then Exit;
-      FDS.GetFieldData(XField, Raw);
-      P := PPointer(@Raw[0])^;
-      SetLength(Rec.X, XDef.ArraySize);
-      for i := 0 to XDef.ArraySize - 1 do
-      begin
-        Val := Round((EnumFunc(P) + FDelta) * FScale);
-        if Val < ShortInt.MinValue then Val := ShortInt.MinValue
-        else if Val > ShortInt.MaxValue then Val := ShortInt.MaxValue;
-        Rec.X[i] := ShortInt(Val);
-      end;
-    end
-    else
-    begin
-      // Generic dataset: read X as raw buffer; cannot scale without type info.
-      DataSet.GetFieldData(XField, Raw);
-      SetLength(Rec.X, Length(Raw));
-      if Length(Raw) > 0 then
-        Move(Raw[0], Rec.X[0], Length(Raw));
-    end;
-    Result := True;
-  finally
-    DataSet.EnableControls;
-  end;
-end;
-
-{$ENDREGION}
-
-{$REGION 'TVirtualDataReaderFactory'}
-
-class function TVirtualDataReaderFactory.CreateLineReader(const DataSet: TDataSet): TLineVirtualDataReader;
-begin
-  if DataSet is TFileDataSet then
-    Result := TBinaryLineVirtualDataReader.Create
-  else
-    Result := TDataSetLineVirtualDataReader.Create;
-end;
-
-class function TVirtualDataReaderFactory.CreateWaveReader(const DataSet: TDataSet): TWaveVirtualDataReader;
-begin
-  if DataSet is TFileDataSet then
-    Result := TBinaryWaveVirtualDataReader.Create
-  else
-    Result := TDataSetWaveVirtualDataReader.Create;
-end;
-
-{$ENDREGION}
+//{$REGION 'TVirtualDataReaderFactory'}
+//
+//class function TVirtualDataReaderFactory.CreateLineReader(const DataSet: TDataSet): TLineVirtualDataReader;
+//begin
+//  if DataSet is TFileDataSet then
+//    Result := TBinaryLineVirtualDataReader.Create
+//  else
+//    Result := TDataSetLineVirtualDataReader.Create;
+//end;
+//
+//{$ENDREGION}
 
 {$REGION 'FYParamName / FXParamName helpers'}
 

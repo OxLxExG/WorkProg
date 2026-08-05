@@ -229,6 +229,7 @@
         </DCCReference>
         <DCCReference Include="MetrInclin.Temp.Stat.pas"/>
         <DCCReference Include="PatchCart.pas"/>
+        <DCCReference Include="ai\MetrInclin.Temp.LeaveOneOut.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

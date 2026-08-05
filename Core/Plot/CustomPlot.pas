@@ -338,7 +338,7 @@ type
     procedure ParentFontChanged; virtual;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); virtual;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); virtual;
-    procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); virtual;
+    function MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer): boolean; virtual;
     procedure MouseWheel(var Message: TCMMouseWheel); virtual;
     procedure SetClientRect(const Value: TRect); virtual;
     procedure UpdateSize;
@@ -519,6 +519,11 @@ type
   end;
 
   TLineParam = class(TXScalableParam)
+//  public
+//    LastPointX: Single;
+//    LastPointY: Single;
+//    DashOffset: Single;
+//    LastOffset: Single;
   published
 {$IFDEF ENG_VERSION}
     [ShowProp('Freeze')]
@@ -1483,8 +1488,9 @@ begin
   Result := pos - clientRect.TopLeft;
 end;
 
-procedure TGraphRegion.MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+function TGraphRegion.MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer): boolean;
 begin
+ Result := true;
 end;
 
 procedure TGraphRegion.MouseWheel(var Message: TCMMouseWheel);
@@ -2452,14 +2458,14 @@ begin
    begin
 //    Frost;
 //    try
-    for c in Columns do
-     begin
-      for p in c.Params do
-       begin
-         var lb: IDataLinkBuffer;
-         if Supports(p.FLink, IDataLinkBuffer, lb) then lb.ResetBuffer;
-       end;
-     end;
+//    for c in Columns do
+//     begin
+//      for p in c.Params do
+//       begin
+//         var lb: IDataLinkBuffer;
+//         if Supports(p.FLink, IDataLinkBuffer, lb) then lb.ResetBuffer;
+//       end;
+//     end;
     YPosition := Ylast;
 //    finally
 //     DeFrost;
@@ -2714,8 +2720,8 @@ begin
     FreeAndNil(FEditGraph)
   else if Assigned(FHitRegion) then
   begin
-    FHitRegion.MouseUp(Button, Shift, X, Y);
-    FHitRegion := nil;
+    if FHitRegion.MouseUp(Button, Shift, X, Y) then
+      FHitRegion := nil;
   end;
   inherited;
 end;

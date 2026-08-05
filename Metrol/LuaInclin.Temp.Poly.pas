@@ -27,6 +27,7 @@ type
    class procedure FindInklKoso(inx: Integer; var Incl: TInclRes);
    class function StepToIdx(st: integer): Integer;
    class function EStatToStr(const Fmt: string): string;
+   class function EStatToStrN(n: integer; const s1,s2,Fmt: string; scale: double = 1): string; static;
   end;
 
   TColumn = class
@@ -177,6 +178,23 @@ begin
 end;
 
 { TpolyMathHelper }
+
+//   STAT_FMT_N= '%s: %d(T:%1.1f A%1.1f°Z%1.2f°O%1.1f°) %1.2f%s av: %1.3f%s';
+class function TpolyMathHelper.EStatToStrN( n: integer;const s1,s2,Fmt: string; scale: double): string;
+begin
+  Result := Format(Fmt,
+  [ s1,
+  EStat[n].Step+1,
+  EStat[n].Pik*scale,
+  s2,
+  EStat[n].Av*scale,
+  s2,
+  EStat[n].Temp,
+  EStat[n].Azi,
+  EStat[n].Zen,
+  EStat[n].Vis
+  ]);
+end;
 
 class function TpolyMathHelper.EStatToStr(const Fmt: string): string;
 begin

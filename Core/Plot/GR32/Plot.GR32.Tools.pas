@@ -16,6 +16,8 @@ const
   CHECKBOX_SIZE = 10;
 
 type
+  TCurrentParamsEvent = procedure(Sender: TObject; Y: TFloat) of object;
+
   TGR32GraphicCollumn = class(TGraphColmn, ICaption)
   protected
     function GetCaption: string;
@@ -26,6 +28,11 @@ type
   end;
 
   TGR32LegendRow = class(TCustomGraphLegendRow)
+  protected
+    procedure DoVisibleChanged; override;
+  end;
+
+  TGR32InfoRow = class(TCustomGraphInfoRow)
   protected
     procedure DoVisibleChanged; override;
   end;
@@ -163,6 +170,19 @@ begin
   end;
 end;
 
+
+function GetDashPeriod(DashStyle: TLineDashStyle; Width: Integer): Double;
+begin
+  case DashStyle of
+    ldsDot:         Result := 1 + 2;
+    ldsDash:        Result := 8 + 2;
+    ldsDashDot:     Result := 8 + 2 + 1 + 2;
+    ldsDashDotDot:  Result := 8 + 2 + 1 + 2 + 1 + 2;
+    else            Result := 1;
+  end;
+  Result := Result * Width;
+end;
+
 procedure DrawLineParametr(Bitmap: TBitmap32; Color: TColor; const points: TArrayOfFloatPoint;
           Width: Integer = 1; DashStyle: TLineDashStyle = ldsSolid; offset: TFloat = 0); overload;
 
@@ -192,38 +212,23 @@ begin
     PolylineFS(Bitmap, points, Color, False, Width{ * FixedOne})
   else
    begin
+// Устраняем проблему отрицательного offset при движении вверх
+    var Period := GetDashPeriod(DashStyle, Width);
+    if Period > 0 then
+    begin
+  // Универсальное приведение к строго положительному остатку [0..Period)
+      offset := Frac(offset / Period) * Period;
+      if offset < 0 then
+        offset := offset + Period;
+    end;
     MultiPoly := GR32_VectorUtils.BuildDashedLine(Points, GetDashes, offset, False);
     PolyPolylineFS(Bitmap, MultiPoly, Color, False, Width);
-    //DashLineFS(Bitmap, points, GetDashes, Color, False, Width{ * FixedOne});
    end;
 end;
 
 procedure DrawLineParametr(Bitmap: TBitmap32; P: TXScalableParam; const points: TArrayOfFloatPoint; offset: TFloat = 0); overload;
-
-//  function GetDashes: TArrayOfFloat;
-//  var
-//    i: Integer;
-//  begin
-//    case P.DashStyle of
-//      ldsDot:
-//        Result := [1, 2];
-//      ldsDash:
-//        Result := [8, 2];
-//      ldsDashDot:
-//        Result := [8, 2, 1, 2];
-//      ldsDashDotDot:
-//        Result := [8, 2, 1, 2, 1, 2];
-//    end;
-//    for i := 0 to High(Result) do
-//      Result[i] := Result[i] {* FixedOne}   * P.Width;
-//  end;
-
 begin
   DrawLineParametr(Bitmap, p.Color, points, p.Width, p.DashStyle, offset);
-//  if P.DashStyle = ldsSolid then
-//    PolylineFS(Bitmap, points, P.Color, False, P.Width{ * FixedOne})
-//  else
-//    DashLineFS(Bitmap, points, GetDashes, P.Color, False, P.Width{ * FixedOne});
 end;
 
 {$ENDREGION}
@@ -286,8 +291,20 @@ begin
 
 end;
 
+{ TGR32InfoRow }
+
+procedure TGR32InfoRow.DoVisibleChanged;
+var
+  i: Integer;
+begin
+  inherited DoVisibleChanged;
+  for i := 0 to RegionsCount - 1 do
+    if Regions[i] is TGR32Region then
+      TGR32Region(Regions[i]).SetVisible(Visible);
+end;
+
 initialization
   TGR32GraphicCollumn.ColClsRegister(TGR32GraphicCollumn, RS_Grath);
-    RegisterClasses([TGR32GraphicCollumn, TGR32LegendRow]);
+    RegisterClasses([TGR32GraphicCollumn, TGR32LegendRow, TGR32InfoRow]);
 
 end.

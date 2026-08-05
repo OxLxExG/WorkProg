@@ -56,7 +56,8 @@ uses
   LuaInclin.Temp.Poly in 'LuaInclin.Temp.Poly.pas',
   MetrInclin.Temp.Form in 'MetrInclin.Temp.Form.pas' {FormMetrInclinT},
   MetrInclin.Temp.Stat in 'MetrInclin.Temp.Stat.pas',
-  PatchCart in 'PatchCart.pas';
+  PatchCart in 'PatchCart.pas',
+  MetrInclin.Temp.LeaveOneOut in 'ai\MetrInclin.Temp.LeaveOneOut.pas';
 
 {$R *.res}
 

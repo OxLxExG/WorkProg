@@ -10,6 +10,7 @@ uses  VCL.CustomDataForm, Container, ExtendIntf, Actns,
   CustomPlot.DataLink,
   plot.GR32.Data,
   plot.GR32.Legend,
+  plot.GR32.Info,
   plot.GR32.Tools,
   plot.Controls, Data.DB, XMLDataSet, RootIntf,  FileCachImpl,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
@@ -111,7 +112,7 @@ begin
   gdf := CreateUser();
   gdf.Graph.Rows.Add<TGR32LegendRow>;
   gdf.Graph.Rows.Add<TCustomGraphDataRow>;
-  gdf.Graph.Rows.Add<TCustomGraphInfoRow>;
+  gdf.Graph.Rows.Add<TGR32InfoRow>;
   gdf.Graph.Columns.Add<TGR32GraphicCollumn>;
   gdf.Caption := 'Chart';
   f := gdf as IForm;

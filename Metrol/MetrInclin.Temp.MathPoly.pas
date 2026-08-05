@@ -1,4 +1,4 @@
-unit MetrInclin.Temp.MathPoly;
+п»їunit MetrInclin.Temp.MathPoly;
 
 interface
 
@@ -11,7 +11,7 @@ type
 {$REGION 'old'}
 //  // x,y,z
 //  T3DPoint = array [0..2] of Double;
-//   // искомые коэфициенты
+//   // РёСЃРєРѕРјС‹Рµ РєРѕСЌС„РёС†РёРµРЅС‚С‹
 //  TVekModel = array[0..3] of Double;
 //  //     |k0|
 //  //     |k1|     model inclin
@@ -22,12 +22,12 @@ type
 //
 //  // Ti = |1,t,tt,ttt|      ti = 25 60 100 125 25
 //  TAxisModel = array[0..3] of TVekModel;
-//  // модель сенсора в векторном виде
-//  // Xэ = (K1 + Xij*K2 +  Yij*K3 +  Zij*K4)*Ti
-//  // Yэ = (K5 + Xij*K6 +  Yij*K7 +  Zij*K8)*Ti
-//  // Zэ = (K9 + Xij*K10 + Yij*K11 + Zij*K12)*Ti
+//  // РјРѕРґРµР»СЊ СЃРµРЅСЃРѕСЂР° РІ РІРµРєС‚РѕСЂРЅРѕРј РІРёРґРµ
+//  // XСЌ = (K1 + Xij*K2 +  Yij*K3 +  Zij*K4)*Ti
+//  // YСЌ = (K5 + Xij*K6 +  Yij*K7 +  Zij*K8)*Ti
+//  // ZСЌ = (K9 + Xij*K10 + Yij*K11 + Zij*K12)*Ti
 //  TSensorModel = array[0..2] of TAxisModel;
-//  // j - 48 пространственных точек
+//  // j - 48 РїСЂРѕСЃС‚СЂР°РЅСЃС‚РІРµРЅРЅС‹С… С‚РѕС‡РµРє
 //  // Az90, Zu90, 8Vis
 //  // Az270,Zu90, 8Vis
 //  // Az0,  Zu0,  8Vis
@@ -35,21 +35,21 @@ type
 //  // Az0,  Zu18, 8Vis
 //  // Az0,  Zu198,8Vis
 //
-//  // 48*5  =240 уравнений
+//  // 48*5  =240 СѓСЂР°РІРЅРµРЅРёР№
 //
-//  // делим на три системы уравнений для каждой оси
+//  // РґРµР»РёРј РЅР° С‚СЂРё СЃРёСЃС‚РµРјС‹ СѓСЂР°РІРЅРµРЅРёР№ РґР»СЏ РєР°Р¶РґРѕР№ РѕСЃРё
 //
-//  // k = 16 неизвестных оа ось
-//  // ряд матрицы А измеренные X,Y,Z,t
-//  // Э = Xi,Xit,Xitt,Xittt, Yi,Yit,Yitt,Yittt, Zi,Zit,Zitt,Zittt, 1,t,tt,ttt
-//  // Э - вектор (X,Y,Z) (делим на три системы уравнений для каждой оси!)
+//  // k = 16 РЅРµРёР·РІРµСЃС‚РЅС‹С… РѕР° РѕСЃСЊ
+//  // СЂСЏРґ РјР°С‚СЂРёС†С‹ Рђ РёР·РјРµСЂРµРЅРЅС‹Рµ X,Y,Z,t
+//  // Р­ = Xi,Xit,Xitt,Xittt, Yi,Yit,Yitt,Yittt, Zi,Zit,Zitt,Zittt, 1,t,tt,ttt
+//  // Р­ - РІРµРєС‚РѕСЂ (X,Y,Z) (РґРµР»РёРј РЅР° С‚СЂРё СЃРёСЃС‚РµРјС‹ СѓСЂР°РІРЅРµРЅРёР№ РґР»СЏ РєР°Р¶РґРѕР№ РѕСЃРё!)
 //  TARow = TArray<Double>;
-//  // заготовка для НМК по каждой точке (240 строк)
+//  // Р·Р°РіРѕС‚РѕРІРєР° РґР»СЏ РќРњРљ РїРѕ РєР°Р¶РґРѕР№ С‚РѕС‡РєРµ (240 СЃС‚СЂРѕРє)
 //  // B = A*x
-//  // A одинакова для всех осей!
+//  // A РѕРґРёРЅР°РєРѕРІР° РґР»СЏ РІСЃРµС… РѕСЃРµР№!
 //  TAmatrix = TArray<TARow>;
-//  // B => Э => X,Y,Z- зталоны полученные из данных стола А.З.О.Маг.Нак (точка измерения в пространстве при текущей температуре t)
-//  // Xetalon,Yetalon,Zetalon: TBVector (делим на три системы уравнений для каждой оси! ARow,A-одинаковые для всех осей!)
+//  // B => Р­ => X,Y,Z- Р·С‚Р°Р»РѕРЅС‹ РїРѕР»СѓС‡РµРЅРЅС‹Рµ РёР· РґР°РЅРЅС‹С… СЃС‚РѕР»Р° Рђ.Р—.Рћ.РњР°Рі.РќР°Рє (С‚РѕС‡РєР° РёР·РјРµСЂРµРЅРёСЏ РІ РїСЂРѕСЃС‚СЂР°РЅСЃС‚РІРµ РїСЂРё С‚РµРєСѓС‰РµР№ С‚РµРјРїРµСЂР°С‚СѓСЂРµ t)
+//  // Xetalon,Yetalon,Zetalon: TBVector (РґРµР»РёРј РЅР° С‚СЂРё СЃРёСЃС‚РµРјС‹ СѓСЂР°РІРЅРµРЅРёР№ РґР»СЏ РєР°Р¶РґРѕР№ РѕСЃРё! ARow,A-РѕРґРёРЅР°РєРѕРІС‹Рµ РґР»СЏ РІСЃРµС… РѕСЃРµР№!)
 //  TBVector = TArray<Double>;
 {$ENDREGION}
 
@@ -61,8 +61,8 @@ type
     end;
 
 //  TSensRes = record
-//   ex,ey,ez,//эталон
-//   tx,ty,tz: Double;//тарированные
+//   ex,ey,ez,//СЌС‚Р°Р»РѕРЅ
+//   tx,ty,tz: Double;//С‚Р°СЂРёСЂРѕРІР°РЅРЅС‹Рµ
 //   Amp: Double;
 //  end;
   TPolyRes = record
@@ -190,10 +190,10 @@ begin
 
   for var i := 0 to High(inp) do
    begin
-    var at: TArray<Double>;
-    at := pmA.CreatePowerT(Inp[i].t, pwt);
-    acc[i] := pmA.CreateRow(at, Inp[i].G.V, SCALE_A);
-    mag[i] := pmH.CreateRow(at, Inp[i].H.V, SCALE_H);
+    var atA := pmA.CreatePowerT(Inp[i].t, pwt);
+    var atH := pmH.CreatePowerT(Inp[i].t, pwt);
+    acc[i] := pmA.CreateRow(atA, Inp[i].G.V, SCALE_A);
+    mag[i] := pmH.CreateRow(atH, Inp[i].H.V, SCALE_H);
    end;
 end;
 
@@ -350,8 +350,9 @@ begin
    SetLength(bh,kc*3);
    for var I := 0 to High(bl) do
     begin
-     bl[i] := -Abs(kb[i]);
-     bh[i] :=  Abs(kb[i]);
+     var Span := Max(Abs(kb[i]), 1.0);
+     bl[i] := kb[i] - Span;
+     bh[i] := kb[i] + Span;
     end;
    bl[YxIdx] := kb[YxIdx];
    bh[YxIdx] := kb[YxIdx];
@@ -377,8 +378,9 @@ begin
    kBegin := Res[vx] + Res[vY]+ Res[vZ];
    for var I := 0 to High(bl) do
     begin
-     bl[i] := -Abs(kBegin[i]*4);
-     bh[i] :=  Abs(kBegin[i]*4);
+     var Span := Max(Abs(kBegin[i])*4, 1.0);
+     bl[i] := kBegin[i] - Span;
+     bh[i] := kBegin[i] + Span;
     end;
    bl[YxIdx] := kBegin[YxIdx];
    bh[YxIdx] := kBegin[YxIdx];
@@ -600,7 +602,7 @@ begin
   for var i := 0 to High(d) do
    begin
     m.FindAxis(k, d[i], x,y,z);
-    f[i] := sqr(RES_AMP - TXMLScriptMath.Hypot3D(x,y,z));
+    f[i] := RES_AMP - TXMLScriptMath.Hypot3D(x,y,z);
    end;
 end;
 
@@ -630,12 +632,12 @@ begin
 
     Res.Inp := @InpData.Inpt[i];
     FindInclRes(vec, StolError, Res);
-    f[i*6+0] := Sqr(Res.Zen.Error);
+    f[i*6+0] := Res.Zen.Error;
     f[i*6+1] := Res.erAmp[sAcc];
     f[i*6+2] := Res.erAmp[sMag];
-    f[i*6+3] := Sqr(Res.Azi.Error);
-    f[i*6+4] := Sqr(Res.Nakl.Error);
-    f[i*6+5] := Sqr(Res.Otk.Error)/100;
+    f[i*6+3] := Res.Azi.Error;
+    f[i*6+4] := Res.Nakl.Error;
+    f[i*6+5] := Res.Otk.Error/10;
 
     zen := Res.Zen;
     if Zen > 170 then zen := zen - 180;
@@ -660,8 +662,8 @@ begin
     else
       dang := TMetrInclinMath.DeltaAngle(Zu-Inpt[i].Zen);
 
-    f[i*2] := sqr(dang);
-    f[i*2+1] := sqr(RES_AMP - TXMLScriptMath.Hypot3D(x,y,z))*10;
+    f[i*2] := dang;
+    f[i*2+1] := (RES_AMP - TXMLScriptMath.Hypot3D(x,y,z))*Sqrt(10);
    end;
 end;
 
@@ -689,7 +691,7 @@ begin
     G[vZ][i] := r[ka*2+i];
    end;
   var kh := TpolyMath.InpData.pmh.KoeffCnt;
-  for var I := 0 to High(G[vX]) do
+  for var I := 0 to High(H[vX]) do
    begin
     H[vX][i] := r[ka*3 + i];
     H[vY][i] := r[ka*3 + kh + i];

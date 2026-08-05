@@ -27,9 +27,9 @@ type
      (cVis,
      // ошибка по азимуту и по магнитному наклонению
      cAzi, cNakl: Double;
-     //  eZen(Azi) = cZen0*Cos(Azi) + cZen90*Sin(Azi)
-     // cZen0, cZen90 ошибки стола по зениту при 0 и 90 азимуте
 
+//  var corr := vizir*cos(DegToRad(zu)) + a;
+//  zen_crrect := DegNormalize(zu + cZenA *Cos(DegToRad(corr - cZenAng)));
      cZenA, cZenAng: Double;)
    end;
 
@@ -67,8 +67,12 @@ type
    Pik, Av: Double;
    cnt: Integer;
    Step: Integer;
+   Temp: Double;
+   // данные стола
+   Azi,Zen,Vis: Double;
+
    procedure Test(stNo: Integer; var Incl: TInclRes); virtual; abstract;
-   procedure ApplyStat(ne: double; stNo: Integer);
+   procedure ApplyStat(ne: double; stNo: Integer; Incl: TInclRes);
    procedure SetAV;
    class function FindErr(Incl: TInclRes):Double; virtual; abstract;
   end;
@@ -128,7 +132,7 @@ begin
   azi := Incl.azi;
   zen := Incl.zen;
 
-  if Incl.zen.CorStol > 190 then
+  if Incl.zen.CorStol > 180 then
    begin
     azi := DegNormalize(azi + 180);
    end;
@@ -144,7 +148,7 @@ begin
   Incl.azi.Error := FindErr(Incl);
 
   if Zen > 170 then zen := zen - 180;
-  if Abs(zen) > 5 then ApplyStat(Incl.azi.Error, stno);
+  if Abs(zen) > 5 then ApplyStat(Incl.azi.Error, stno, Incl);
 end;
 
 { TotkStat }
@@ -173,7 +177,7 @@ begin
   Incl.otk.Error :=  FindErr(Incl);
 
   if Zen > 170 then zen := zen - 180;
-  if Abs(zen) > 5 then ApplyStat(Incl.otk.Error, stno);
+  if Abs(zen) > 5 then ApplyStat(Incl.otk.Error, stno, Incl);
 end;
 
 { TZenStat }
@@ -190,12 +194,12 @@ end;
 procedure TZenStat.Test(stNo: Integer; var Incl: TInclRes);
 begin
   Incl.zen.Error :=  FindErr(Incl);
-  ApplyStat(Incl.zen.Error, stno);
+  ApplyStat(Incl.zen.Error, stno, Incl);
 end;
 
 { TAngleStat }
 
-procedure TeStat.ApplyStat(ne: double; stNo: Integer);
+procedure TeStat.ApplyStat(ne: double; stNo: Integer; Incl: TInclRes);
 begin
   av := av + Abs(ne);
   Inc(cnt);
@@ -203,6 +207,10 @@ begin
   begin
    Pik := ne;
    Step := stNo;
+   Temp := Incl.Inp.T;
+   Azi := Incl.Inp.Azi;
+   Zen := Incl.Inp.Zen;
+   Vis := Incl.Inp.Vis;
   end;
 end;
 
@@ -221,7 +229,7 @@ end;
 procedure TAccStat.Test(stNo: Integer; var Incl: TInclRes);
 begin
    Incl.erAmp[sAcc] := FindErr(Incl);
-   ApplyStat(Incl.erAmp[sAcc], stno);
+   ApplyStat(Incl.erAmp[sAcc], stno, Incl);
 end;
 
 { TMagStat }
@@ -234,7 +242,7 @@ end;
 procedure TMagStat.Test(stNo: Integer; var Incl: TInclRes);
 begin
   Incl.erAmp[sMag] := FindErr(Incl);
-  ApplyStat(Incl.erAmp[sMag], stno);
+  ApplyStat(Incl.erAmp[sMag], stno, Incl);
 end;
 
 { TMaklStat }
@@ -247,7 +255,7 @@ end;
 procedure TInclStat.Test(stNo: Integer; var Incl: TInclRes);
 begin
   Incl.Nakl.Error := FindErr(Incl);
-  ApplyStat(Incl.Nakl.Error, stno);
+  ApplyStat(Incl.Nakl.Error, stno, Incl);
 end;
 
 { TStolError }

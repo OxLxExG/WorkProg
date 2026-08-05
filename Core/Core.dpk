@@ -123,6 +123,7 @@ contains
   CustomPlot in 'Plot\CustomPlot.pas',
   Plot.Controls in 'Plot\Plot.Controls.pas',
   Plot.DtLink in 'Plot\Plot.DtLink.pas',
+  Plot.GR32.Info in 'Plot\GR32\Plot.GR32.Info.pas',
   Plot.GR32.Data in 'Plot\GR32\Plot.GR32.Data.pas',
   Plot.GR32.Legend in 'Plot\GR32\Plot.GR32.Legend.pas',
   Plot.GR32.Tools in 'Plot\GR32\Plot.GR32.Tools.pas',

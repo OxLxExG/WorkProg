@@ -1,4 +1,4 @@
-unit MetrInclin.Temp.FormPoly;
+п»їunit MetrInclin.Temp.FormPoly;
 
 interface
 
@@ -67,7 +67,7 @@ type
     property StolVizir: Double read FStolVizir;
     property StolZenit: Double read FStolZenit;
     property StolAzimut: Double read FStolAzimut;
-    [StaticAction('Метр. Инкл. Т poly ALL', 'Метрология', NICON, '0:Метрология.Инклинометры:-1')]
+    [StaticAction('РњРµС‚СЂ. РРЅРєР». Рў poly ALL', 'РњРµС‚СЂРѕР»РѕРіРёСЏ', NICON, '0:РњРµС‚СЂРѕР»РѕРіРёСЏ.РРЅРєР»РёРЅРѕРјРµС‚СЂС‹:-1')]
     class procedure DoCreateForm(Sender: IAction); override;
     class function MetrolMame: string; override;
     class function MetrolType: string; override;
@@ -79,7 +79,7 @@ type
   TFormMetrInclinTPOnlyT = class(TFormMetrInclinTP)
    const
     NICON = 186;
-    [StaticAction('Метр. Инкл. Т poly ONLY T', 'Метрология', NICON, '0:Метрология.Инклинометры:-1')]
+    [StaticAction('РњРµС‚СЂ. РРЅРєР». Рў poly ONLY T', 'РњРµС‚СЂРѕР»РѕРіРёСЏ', NICON, '0:РњРµС‚СЂРѕР»РѕРіРёСЏ.РРЅРєР»РёРЅРѕРјРµС‚СЂС‹:-1')]
     class procedure DoCreateForm(Sender: IAction); override;
     class function MetrolType: string; override;
     end;
@@ -128,23 +128,23 @@ begin
   v := XToVar(AttNode);
   if FAutomatMetrology.UakiExists then
    begin
-    v.СТОЛ.азимут := Double(FAutomatMetrology.uaki.Azi.CurrentAngle);
-    v.СТОЛ.зенит := Double(FAutomatMetrology.uaki.Zen.CurrentAngle);
-    v.СТОЛ.визир := Double(FAutomatMetrology.uaki.Viz.CurrentAngle);
+    v.РЎРўРћР›.Р°Р·РёРјСѓС‚ := Double(FAutomatMetrology.uaki.Azi.CurrentAngle);
+    v.РЎРўРћР›.Р·РµРЅРёС‚ := Double(FAutomatMetrology.uaki.Zen.CurrentAngle);
+    v.РЎРўРћР›.РІРёР·РёСЂ := Double(FAutomatMetrology.uaki.Viz.CurrentAngle);
      if FhckCnt > 0 then
       begin
-        v.СТОЛ.амплит_magnit := Fhck/FhckCnt;
+        v.РЎРўРћР›.Р°РјРїР»РёС‚_magnit := Fhck/FhckCnt;
         Fhck := 0;
         FhckCnt := 0;
       end
-     else v.СТОЛ.амплит_magnit := 1000;
+     else v.РЎРўРћР›.Р°РјРїР»РёС‚_magnit := 1000;
    end
   else
    begin
-    v.СТОЛ.зенит := StolZenit;
-    v.СТОЛ.визир := StolVizir;
-    v.СТОЛ.азимут := StolAzimut;
-    v.СТОЛ.амплит_magnit := 1000;
+    v.РЎРўРћР›.Р·РµРЅРёС‚ := StolZenit;
+    v.РЎРўРћР›.РІРёР·РёСЂ := StolVizir;
+    v.РЎРўРћР›.Р°Р·РёРјСѓС‚ := StolAzimut;
+    v.РЎРўРћР›.Р°РјРїР»РёС‚_magnit := 1000;
    end;
   inherited;
 end;
@@ -167,7 +167,7 @@ end;
 
 procedure TFormMetrInclinTP.NShowStolAndDev(Sender: TObject);
  const
-  VSTR: TArray<string> = ['№','T','sZu','sAz','sVis','sH','GX','GY','GZ','HX','HY','HZ'];
+  VSTR: TArray<string> = ['в„–','T','sZu','sAz','sVis','sH','GX','GY','GZ','HX','HY','HZ'];
 begin
   Tree.beginUpdate;
   try
@@ -210,7 +210,7 @@ begin
   UpdateRes(CurrentTrr);
   AttestatLabel.Caption := TpolyMath.EStatToStr(
   'Accel: %d %1.2f%% av: %1.3f%%     Magnit: %d %1.2f%% av: %1.3f%%     Ink: %d %1.2f av: %1.3f'#$D#$A
-  +'Зенит: %d %1.2f av: %1.3f      Азимут: %d %1.2f av: %1.3f     Визир: %d %1.2f av: %1.3f');
+  +'Р—РµРЅРёС‚: %d %1.2f av: %1.3f      РђР·РёРјСѓС‚: %d %1.2f av: %1.3f     Р’РёР·РёСЂ: %d %1.2f av: %1.3f');
   CopyTrrToDev();
   DoUpdateData();
   if TrrFile <> '' then FileData.OwnerDocument.SaveToFile(TrrFile)
@@ -236,8 +236,8 @@ begin
   FAutomatMetrology := TinclAuto.Create(Self, AutoReport);
   AttestatPanel.Align := alBottom;
   AddToNCMenu('Show dialog...', NShowDialofClick, 0, -1);
-  AddToNCMenu('Покозывать только данные аттестации', NShowStolAndDev, 0, -1);
-  var m := AddToNCMenu('Результат', NShowResClick, 1, 0);
+  AddToNCMenu('РџРѕРєРѕР·С‹РІР°С‚СЊ С‚РѕР»СЊРєРѕ РґР°РЅРЅС‹Рµ Р°С‚С‚РµСЃС‚Р°С†РёРё', NShowStolAndDev, 0, -1);
+  var m := AddToNCMenu('Р РµР·СѓР»СЊС‚Р°С‚', NShowResClick, 1, 0);
   m.Checked := pRes.Visible;
   var mtr := GetMetr([], GetFileOrDevData);
   if not Assigned(mtr) then Exit;
@@ -290,7 +290,7 @@ procedure TFormMetrInclinTP.TreeGetText(Sender: TBaseVirtualTree; Node: PVirtual
 //   var
 //    V: IXMLNode;
 //  begin
-//    if TryGetX(p.XMNode, 'СТОЛ', V, attr) then
+//    if TryGetX(p.XMNode, 'РЎРўРћР›', V, attr) then
 //     Result := Double(V.NodeValue)
 //    else
 //     Result := 0;
@@ -314,20 +314,20 @@ begin
 //      end;
 //   1: SetData('T.DEV',     AT_VALUE,     '%7.1f');
 //
-//   2: SetData('СТОЛ',      'зенит',     '%7.2f');
-//   3: SetData('зенит.CLC',        AT_VALUE,     '%7.2f');
-//   4: SetData('СТОЛ',             'err_зенит',  '%6.2f');
+//   2: SetData('РЎРўРћР›',      'Р·РµРЅРёС‚',     '%7.2f');
+//   3: SetData('Р·РµРЅРёС‚.CLC',        AT_VALUE,     '%7.2f');
+//   4: SetData('РЎРўРћР›',             'err_Р·РµРЅРёС‚',  '%6.2f');
 //
-//    5: SetData('СТОЛ',      'азимут',     '%7.1f');
-//    6: SetData('азимут.CLC',       AT_VALUE,     '%6.1f');
-//    7: SetData('СТОЛ',             'err_азимут', '%6.2f');
+//    5: SetData('РЎРўРћР›',      'Р°Р·РёРјСѓС‚',     '%7.1f');
+//    6: SetData('Р°Р·РёРјСѓС‚.CLC',       AT_VALUE,     '%6.1f');
+//    7: SetData('РЎРўРћР›',             'err_Р°Р·РёРјСѓС‚', '%6.2f');
 //
-//   8: SetData('СТОЛ',      'визир',     '%7.1f');
-//   9: SetData('отклонитель.CLC',  AT_VALUE,     '%6.1f');
-//   10: SetData('СТОЛ',             'err_визир',  '%6.2f');
+//   8: SetData('РЎРўРћР›',      'РІРёР·РёСЂ',     '%7.1f');
+//   9: SetData('РѕС‚РєР»РѕРЅРёС‚РµР»СЊ.CLC',  AT_VALUE,     '%6.1f');
+//   10: SetData('РЎРўРћР›',             'err_РІРёР·РёСЂ',  '%6.2f');
 //
-//   11: SetData('амплит_accel.CLC', AT_VALUE,     '%7.3f', -RES_AMP,100/RES_AMP);
-//   12: SetData('амплит_magnit.CLC',AT_VALUE,     '%7.3f', -RES_AMP,100/RES_AMP);
+//   11: SetData('Р°РјРїР»РёС‚_accel.CLC', AT_VALUE,     '%7.3f', -RES_AMP,100/RES_AMP);
+//   12: SetData('Р°РјРїР»РёС‚_magnit.CLC',AT_VALUE,     '%7.3f', -RES_AMP,100/RES_AMP);
 //
 //
 //   13: SetData('accel.X.DEV',      AT_VALUE,     '%7.1f');
@@ -337,12 +337,12 @@ begin
 //   17: SetData('magnit.Y.DEV',     AT_VALUE,     '%7.1f');
 //   18: SetData('magnit.Z.DEV',     AT_VALUE,    '%7.1f');
 //
-//   19: SetData('СТОЛ',      'GX',     FmtEnalon);
-//   20: SetData('СТОЛ',      'GY',     FmtEnalon);
-//   21: SetData('СТОЛ',      'GZ',     FmtEnalon);
-//   22: SetData('СТОЛ',      'HX',     FmtEnalon);
-//   23: SetData('СТОЛ',      'HY',     FmtEnalon);
-//   24: SetData('СТОЛ',      'HZ',     FmtEnalon);
+//   19: SetData('РЎРўРћР›',      'GX',     FmtEnalon);
+//   20: SetData('РЎРўРћР›',      'GY',     FmtEnalon);
+//   21: SetData('РЎРўРћР›',      'GZ',     FmtEnalon);
+//   22: SetData('РЎРўРћР›',      'HX',     FmtEnalon);
+//   23: SetData('РЎРўРћР›',      'HY',     FmtEnalon);
+//   24: SetData('РЎРўРћР›',      'HZ',     FmtEnalon);
 //
 //
 //   25: SetData('accel.X.CLC',      AT_VALUE,     '%7.3f', -StolEtalon('GX'),100/RES_AMP);
@@ -352,7 +352,7 @@ begin
 //   29: SetData('magnit.Y.CLC',     AT_VALUE,     '%7.3f', -StolEtalon('HY'),100/RES_AMP);
 //   30: SetData('magnit.Z.CLC',     AT_VALUE,     '%7.3f', -StolEtalon('HZ'),100/RES_AMP);
 //
-//   31: SetData('маг_наклон.CLC',   AT_VALUE,     '%6.2f', -FNakl);
+//   31: SetData('РјР°Рі_РЅР°РєР»РѕРЅ.CLC',   AT_VALUE,     '%6.2f', -FNakl);
 //
 //  end;
 end;
@@ -421,6 +421,19 @@ end;
 
 
 procedure TFormMetrInclinTP.UpdateFromOptions(alg: IXMLNode);
+  procedure ReadTemperatureModel(const Node: IXMLNode; var Model: PolyModel);
+  begin
+    if Assigned(Node) and Node.HasAttribute('Basis') and
+       SameText(string(Node.Attributes['Basis']), 'Chebyshev') then
+    begin
+      if not Node.HasAttribute('TMin') or not Node.HasAttribute('TMax') then
+        raise Exception.Create('Chebyshev model requires TMin and TMax');
+      Model.UseChebyshevTemperature(Double(Node.Attributes['TMin']),
+                                    Double(Node.Attributes['TMax']));
+    end
+    else
+      Model.UseLegacyTemperature;
+  end;
   procedure UpdateTree(pm: PolyModel; TreeRes: TVirtualStringTree);
     function AddCol(const name: string): TVirtualTreeColumn;
     begin
@@ -432,7 +445,7 @@ procedure TFormMetrInclinTP.UpdateFromOptions(alg: IXMLNode);
     end;
   begin
     TreeRes.Header.Columns.Clear;
-    var o := AddCol('Ось');
+    var o := AddCol('РћСЃСЊ');
     o.MaxWidth := 70;
     for var m in pm.ResultHeaders do AddCol(m);
     TreeRes.Header.Columns[1].MaxWidth := 70;
@@ -445,6 +458,9 @@ begin
   pmH := string(alg.Attributes['ModelH']);
 
   TXMLScriptMath.AddPolyTrr(alg.ParentNode, alg.Attributes['ModelA'], alg.Attributes['ModelH'], False);
+  var Poly := alg.ParentNode.ChildNodes.FindNode('Poly');
+  ReadTemperatureModel(Poly.ChildNodes.FindNode('accel'), pmA);
+  ReadTemperatureModel(Poly.ChildNodes.FindNode('magnit'), pmH);
 
   UpdateTree(pmA, TreeResA);
   UpdateTree(pmH, TreeResH);
@@ -506,18 +522,18 @@ function TFormMetrInclinTP.UserExecStep(Step: Integer; alg,trr: IXMLNode): Boole
 //     ip: TInclPoint;
 //     A,z,o: Double;
 //  begin
-//    a := st.СТОЛ.азимут;
-//    z := st.СТОЛ.зенит;
-//    o := st.СТОЛ.визир;
+//    a := st.РЎРўРћР›.Р°Р·РёРјСѓС‚;
+//    z := st.РЎРўРћР›.Р·РµРЅРёС‚;
+//    o := st.РЎРўРћР›.РІРёР·РёСЂ;
 //
 //    ip := TMetrInclinMath.FindXYZ(a,z,o,
 //    Double(alg.Attributes['MagNaklon']), RES_AMP);
-//    st.СТОЛ.GX := ip.G.X;
-//    st.СТОЛ.GY := ip.G.Y;
-//    st.СТОЛ.GZ := ip.G.Z;
-//    st.СТОЛ.HX := ip.H.X;
-//    st.СТОЛ.HY := ip.H.Y;
-//    st.СТОЛ.HZ := ip.H.Z;
+//    st.РЎРўРћР›.GX := ip.G.X;
+//    st.РЎРўРћР›.GY := ip.G.Y;
+//    st.РЎРўРћР›.GZ := ip.G.Z;
+//    st.РЎРўРћР›.HX := ip.H.X;
+//    st.РЎРўРћР›.HY := ip.H.Y;
+//    st.РЎРўРћР›.HZ := ip.H.Z;
 //  end;
 //  procedure azo(Trr,st: IXMLNode; var g,h,i: Double);
 //   var
@@ -525,10 +541,10 @@ function TFormMetrInclinTP.UserExecStep(Step: Integer; alg,trr: IXMLNode): Boole
 //  begin
 //  //  FindTrrAxisAndAZO(Trr, st, azi, zen, otk,g,h, i);
 //    var a := XToVar(st);
-//    a.СТОЛ.err_азимут := TMetrInclinMath.DeltaAngle(azi - a.СТОЛ.азимут);
-//    a.СТОЛ.err_визир := TMetrInclinMath.DeltaAngle(otk - a.СТОЛ.визир);
-//    if a.СТОЛ.зенит > 180 then a.СТОЛ.err_зенит := TMetrInclinMath.DeltaAngle(zen -(360 - a.СТОЛ.зенит))
-//    else a.СТОЛ.err_зенит := TMetrInclinMath.DeltaAngle(zen - a.СТОЛ.зенит);
+//    a.РЎРўРћР›.err_Р°Р·РёРјСѓС‚ := TMetrInclinMath.DeltaAngle(azi - a.РЎРўРћР›.Р°Р·РёРјСѓС‚);
+//    a.РЎРўРћР›.err_РІРёР·РёСЂ := TMetrInclinMath.DeltaAngle(otk - a.РЎРўРћР›.РІРёР·РёСЂ);
+//    if a.РЎРўРћР›.Р·РµРЅРёС‚ > 180 then a.РЎРўРћР›.err_Р·РµРЅРёС‚ := TMetrInclinMath.DeltaAngle(zen -(360 - a.РЎРўРћР›.Р·РµРЅРёС‚))
+//    else a.РЎРўРћР›.err_Р·РµРЅРёС‚ := TMetrInclinMath.DeltaAngle(zen - a.РЎРўРћР›.Р·РµРЅРёС‚);
 //  end;
 
 // procedure TstAmpErr(step: Integer; a: Double; var e,ave: Double; var eStep: Integer; etalon: Double);
@@ -557,15 +573,15 @@ begin
 
 //  if string(st.INFO).Contains('NotUse') then Exit;
 
-  // находим эталоны
+  // РЅР°С…РѕРґРёРј СЌС‚Р°Р»РѕРЅС‹
 //  FindEtalon(st);
 
   if Step <> alg.ChildNodes.Count then Exit;
 
-  // B = A*x линейная система уравнений по каждой оси
+  // B = A*x Р»РёРЅРµР№РЅР°СЏ СЃРёСЃС‚РµРјР° СѓСЂР°РІРЅРµРЅРёР№ РїРѕ РєР°Р¶РґРѕР№ РѕСЃРё
 
   SetLength(Input, alg.ChildNodes.Count);
-  // заполним A,B
+  // Р·Р°РїРѕР»РЅРёРј A,B
   cnt := 0;
   for var i := 0 to alg.ChildNodes.Count-1 do
    begin
@@ -576,7 +592,7 @@ begin
    end;
    Setlength(Input,cnt);
    TpolyMath.Init(pmA,pmH, FNakl, Input);
-   // решаем линейную систему уравнений  по каждой оси
+   // СЂРµС€Р°РµРј Р»РёРЅРµР№РЅСѓСЋ СЃРёСЃС‚РµРјСѓ СѓСЂР°РІРЅРµРЅРёР№  РїРѕ РєР°Р¶РґРѕР№ РѕСЃРё
 //   TpolyMath.RunLS;
 //   TpolyMath.ResultToXML(Trr, TpolyMath.Res.G, TpolyMath.Res.H);
    RecalcResultAndUpdateTree(false);
