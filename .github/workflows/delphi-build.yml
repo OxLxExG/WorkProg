@@ -6,7 +6,7 @@ on:
 
 jobs:
   build-and-package:
-    runs-on: [self-hosted, windows, delphi-build]
+    runs-on: [self-hosted, windows]
 
     steps:
     # 1. Загрузка кода
