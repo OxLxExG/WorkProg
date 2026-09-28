@@ -9,34 +9,34 @@ jobs:
     runs-on: [self-hosted, windows, delphi-build]
 
     steps:
-    # 1. Загрузка кода
+    # 1. Р—Р°РіСЂСѓР·РєР° РєРѕРґР°
     - name: Checkout Repository
       uses: actions/checkout@v4
       with:
         fetch-depth: 0
 
-    # 2. Сбор логов для Inno Setup
+    # 2. РЎР±РѕСЂ Р»РѕРіРѕРІ РґР»СЏ Inno Setup
     - name: Generate Changelog
       shell: cmd
       run: |
         git log -n 10 --pretty=format:"- %%s (%%an)" > changelog.txt
 
-    # 3. Компиляция через dcc32
-    # -B = полная пересборка всех модулей (Build all)
-    # -Q = "тихий" режим (Quiet), выводит только ошибки и предупреждения
-    # Замените "src\MyProject.dpr" на путь к вашему главному файлу проекта (.dpr)
+    # 3. РљРѕРјРїРёР»СЏС†РёСЏ С‡РµСЂРµР· dcc32
+    # -B = РїРѕР»РЅР°СЏ РїРµСЂРµСЃР±РѕСЂРєР° РІСЃРµС… РјРѕРґСѓР»РµР№ (Build all)
+    # -Q = "С‚РёС…РёР№" СЂРµР¶РёРј (Quiet), РІС‹РІРѕРґРёС‚ С‚РѕР»СЊРєРѕ РѕС€РёР±РєРё Рё РїСЂРµРґСѓРїСЂРµР¶РґРµРЅРёСЏ
+    # Р—Р°РјРµРЅРёС‚Рµ "src\MyProject.dpr" РЅР° РїСѓС‚СЊ Рє РІР°С€РµРјСѓ РіР»Р°РІРЅРѕРјСѓ С„Р°Р№Р»Сѓ РїСЂРѕРµРєС‚Р° (.dpr)
     - name: Compile Delphi App via dcc32
       shell: cmd
       run: |
         dcc32.exe -B -Q "C:\Projects\Delphi\13\Device2\ALLWorkProg.groupproj"
 
-    # 4. Сборка установщика Inno Setup
+    # 4. РЎР±РѕСЂРєР° СѓСЃС‚Р°РЅРѕРІС‰РёРєР° Inno Setup
     - name: Compile Inno Setup Installer
       shell: cmd
       run: |
        "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" /DSourceVersion="1.0.${{ github.run_number }}" C:\Projects\Delphi\13\Device2\_install\Setup.iss 
 
-    # 5. Сохранение инсталлятора на GitHub
+    # 5. РЎРѕС…СЂР°РЅРµРЅРёРµ РёРЅСЃС‚Р°Р»Р»СЏС‚РѕСЂР° РЅР° GitHub
     - name: Upload Installer to GitHub Artifacts
       uses: actions/upload-artifact@v4
       with:
