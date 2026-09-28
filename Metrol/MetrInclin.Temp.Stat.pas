@@ -3,7 +3,7 @@ unit MetrInclin.Temp.Stat;
 interface
 
 
-uses math, Vector, LuaInclin.Math, tools;
+uses math, Vector, LuaInclin.Math, tools, sysutils;
 
 
   const
@@ -36,7 +36,9 @@ type
   // копия XML файла  тарировки
   PinclInput = ^TinclInput;
   TinclInput = record
+    SetNo: integer;
     Step: Integer;
+    Info: string;
     // данные стола
     Azi,Zen,Vis: Double;
     EtalonMag: Double;
@@ -46,6 +48,43 @@ type
     // конвертор данные стола в эталонные данные сенсоров
     function VecEtalon(const Amp, MagNaklon: Double; const eS: TStolError): TSensorVect;
     class operator Implicit(V: Variant): TinclInput;
+  end;
+
+  TinclTestInfo = record
+  // прибор
+    DevName, // название
+    Serial, //  серийный номер
+    Maker,  //  производитель
+  // параметры метрологии
+    UsedStol, // изпользуемое оборудование
+    Category, // категория и принадлежность средства измерения
+    Room,     // условия проверки
+  // результат
+    TestTime, //  время поверки
+    Metrolog: string;  // кто проводил
+    class operator Implicit(V: Variant): TinclTestInfo;
+  end;
+
+  // копия XML файла поверки
+  PinclTest = ^TinclTest;
+  TinclTest = record
+    Step: Integer;
+    Info: string;
+    // данные стола
+    Stol: record
+     Azi, Zen, Vis: Double;
+     EtalonMag: Double;
+    end;
+    // данные инклинометра
+    Dev: record
+     Azi, Zen, Vis: Double;
+
+     G,H, MagNaklon: Double;
+
+     T: double;
+    end;
+    // конвертор данные стола в эталонные данные сенсоров
+    class operator Implicit(V: Variant): TinclTest;
   end;
 
 
@@ -307,9 +346,51 @@ begin
   Result[sAcc].Z :=  Amp*cz;
 end;
 
+
+class operator TinclTestInfo.Implicit(V: Variant): TinclTestInfo;
+begin
+  Result.DevName := V.DevName;
+  try
+    Result.Serial := TVxmlData(V).Node.ParentNode.ParentNode.ParentNode.Attributes[AT_SERIAL];
+  except
+    Result.Serial := '1';
+  end;
+  Result.Maker := V.Maker;
+  Result.UsedStol:= V.UsedStol;
+  Result.Category:= V.Category;
+  Result.Room:= V.Room;
+  Result.TestTime:= V.TIME_ATT;
+  Result.Metrolog:= V.Metrolog;
+end;
+
+class operator TinclTest.Implicit(V: Variant): TinclTest;
+begin
+  Result.Step := v.STEP;
+  Result.Info := v.INFO;
+  Result.Stol.Azi :=  v.СТОЛ.азимут;
+  Result.Stol.Zen :=  v.СТОЛ.зенит;
+  var n := TVxmlData(v.СТОЛ).Node;
+  if n.HasAttribute('визир') then Result.Stol.Vis := v.СТОЛ.визир;
+  if n.HasAttribute('амплит_magnit') then Result.Stol.EtalonMag := v.СТОЛ.амплит_magnit
+  else Result.Stol.EtalonMag := 1000;
+  Result.Dev.Azi := V.азимут.DEV.VALUE;
+  Result.Dev.Zen := V.зенит.DEV.VALUE;
+  Result.Dev.Vis := V.отклонитель.DEV.VALUE;
+  Result.Dev.MagNaklon := V.маг_наклон.DEV.VALUE;
+  Result.Dev.G := V.амплит_accel.DEV.VALUE;
+  Result.Dev.H := V.амплит_magnit.DEV.VALUE;
+  try
+   Result.Dev.T := v.T.DEV.VALUE;
+  except
+   Result.Dev.T := 32;
+  end;
+end;
+
+
 class operator TinclInput.Implicit(V: Variant): TinclInput;
 begin
   Result.Step := v.STEP;
+  Result.Info := v.INFO;
   Result.G.X := v.accel.X.DEV.VALUE;
   Result.G.y := v.accel.Y.DEV.VALUE;
   Result.G.z := v.accel.Z.DEV.VALUE;
@@ -322,6 +403,10 @@ begin
   if n.HasAttribute('визир') then Result.Vis := v.СТОЛ.визир;
   if n.HasAttribute('амплит_magnit') then Result.EtalonMag := v.СТОЛ.амплит_magnit
   else Result.EtalonMag := 1000;
+  var inf: string := string(v.INFO)[2];
+  Result.SetNo :=  StrToInt(inf)-1;
+
+
 //  try
 //   Result.EtalonMag := v.СТОЛ.амплит_magnit;
 //  except

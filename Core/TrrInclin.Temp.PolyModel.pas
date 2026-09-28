@@ -2,7 +2,7 @@
 
 interface
 
-uses   System.SysUtils,
+uses   System.SysUtils,  Math,
  Vector, MathIntf;
 
   type SetVector = (vX, vY, vZ);
@@ -10,7 +10,7 @@ uses   System.SysUtils,
   const SVectorsNames:  array [SetVector] of Char = ('X','Y','Z');
 
 type
-  TTemperatureBasis = (tbLegacyPower, tbChebyshev);
+//  TTemperatureBasis = (tbLegacyPower, tbChebyshev);
   TVArray<T> = array [SetVector] of TArray<T>;
 
   // Вариант
@@ -40,16 +40,11 @@ type
    // Power T array
    // если x = kx to длина ax = 1
    // если x = kx+kXX to длина ax = 2
-   ax: TArray<Integer>;
+   ax: Integer;
    // как правило меньше ао длине и по значениям
-   ku: TArray<Integer>;
+   ku: Integer;
    // Power T DZ;
    dz: Integer;
-   Basis: TTemperatureBasis;
-   TMin, TMax: Double;
-   procedure UseLegacyTemperature;
-   procedure UseChebyshevTemperature(const AMin, AMax: Double);
-   function BasisName: string;
    function KoeffCnt():Integer;
    function DzCnt(): Integer;
    function AxCnt(): Integer;
@@ -64,7 +59,7 @@ type
    function MaxPowT: Integer;
    function KoefToKoso(const k : PDoubleArray): TKosUgol;
    function RowToArrays(r: RowModel): TVArray<Double>;
-   function CreatePowerT(t: Double; tPpow: Integer): TArray<Double>;
+   function CreatePowerT(t, TMin, TMax: Double; tPpow: Integer): TArray<Double>;
    function CreateRow(art,axies: TArray<Double>; scale: Double = 1): RowModel;overload;
    function CreateRow(art: TArray<Double>; axies: TVector3Array; scale: Double = 1): RowModel;overload;
    procedure FindAxis(const k : PDoubleArray; const rm : RowModel;  var x,y,z: Double);overload;
@@ -99,13 +94,13 @@ end;
 
 function PolyModel.AxCnt: Integer;
 begin
-  Result := 0;
-  for var a in ax do Inc(Result, 1+a);
+  Result := 1+ax;
+//  for var a in ax do Inc(Result, 1+a);
 end;
 function PolyModel.KuCnt: Integer;
 begin
-  Result := 0;
-  for var k in ku do Inc(Result, 1+k);
+  Result := 1+ku;
+//  for var k in ku do Inc(Result, 1+k);
 end;
 function PolyModel.DzCnt: Integer;
 begin
@@ -191,9 +186,9 @@ end;
 
 function PolyModel.MaxPowT: Integer;
 begin
-  Result := dz;
-  for var a in ax do if a > Result then Result := a;
-  for var k in ku do if k > Result then Result := k;
+  Result := Max(dz,Max(ax,ku));
+//  for var a in ax do if a > Result then Result := a;
+//  for var k in ku do if k > Result then Result := k;
 end;
 
 function PolyModel.RowToArrays(r: RowModel): TVArray<Double>;
@@ -209,7 +204,7 @@ begin
    end;
 end;
 
-function PolyModel.CreatePowerT(t: Double; tPpow: Integer): TArray<Double>;
+function PolyModel.CreatePowerT(t, TMin, TMax: Double; tPpow: Integer): TArray<Double>;
 var
   X: Double;
 begin
@@ -222,53 +217,48 @@ begin
 
 //   Basis := tbLegacyPower;
 
-  if Basis = tbChebyshev then
-  begin
+//  if Basis = tbChebyshev then
+//  begin
     Result[1] := X;
     for var I := 2 to tPpow do
       Result[I] := 2 * X * Result[I - 1] - Result[I - 2];
-  end
-  else
-  begin
-//    X := (t - 25) / 100;
-    Result[1] := X;
-    for var I := 2 to tPpow do
-      Result[I] := X * Result[I - 1];
-  end;
+//  end
+//  else
+//  begin
+////    X := (t - 25) / 100;
+//    Result[1] := X;
+//    for var I := 2 to tPpow do
+//      Result[I] := X * Result[I - 1];
+//  end;
 end;
 
-procedure PolyModel.UseLegacyTemperature;
-begin
-  Basis := tbLegacyPower;
-  TMin := 25;
-  TMax := 125;
-end;
+//procedure PolyModel.UseLegacyTemperature;
+//begin
+//  Basis := tbLegacyPower;
+//  TMin := 25;
+//  TMax := 125;
+//end;
+//
+//procedure PolyModel.UseChebyshevTemperature(const AMin, AMax: Double);
+//begin
+//  if AMax <= AMin then
+//    raise EArgumentException.Create('PolyModel: TMax must be greater than TMin');
+//  Basis := tbChebyshev;
+//  TMin := AMin;
+//  TMax := AMax;
+//end;
 
-procedure PolyModel.UseChebyshevTemperature(const AMin, AMax: Double);
-begin
-  if AMax <= AMin then
-    raise EArgumentException.Create('PolyModel: TMax must be greater than TMin');
-  Basis := tbChebyshev;
-  TMin := AMin;
-  TMax := AMax;
-end;
-
-function PolyModel.BasisName: string;
-begin
-  if Basis = tbChebyshev then Result := 'Chebyshev'
-  else Result := 'Power';
-end;
+//function PolyModel.BasisName: string;
+//begin
+//  if Basis = tbChebyshev then Result := 'Chebyshev'
+//  else Result := 'Power';
+//end;
 
 function PolyModel.CreateRow(art, axies: TArray<Double>; scale: Double): RowModel;
-  function ModelFind(axis: Double; modelT: TArray<Integer>):TArray<Double>;
+  function ModelFind(axis: Double; modelPwr: Integer):TArray<Double>;
   begin
-     var cura := axis;
-     Result := [];
-     for var nt in modelT do
-      begin
-       for var i := 0 to nt do Result := Result +[cura * art[i]];
-       cura := cura*axis;
-      end;
+   Result := [];
+   for var i := 0 to modelPwr do Result := Result +[axis * art[i]];
   end;
 begin
   with Result do
@@ -278,7 +268,7 @@ begin
       axs[v] := ModelFind(axies[Integer(v)]/scale, ax);
       kus[v] := ModelFind(axies[Integer(v)]/scale, ku);
      end;
-    dzs := ModelFind(1,     [dz]);
+    dzs := ModelFind(1,     dz);
    end;
 end;
 
@@ -400,18 +390,17 @@ begin
 end;
 
 class operator PolyModel.Implicit(const s: string): PolyModel;
- function s2i(const a: string): TArray<Integer>;
- begin
-   Result := [];
-   for var i:= 1 to Length(a) do Result := Result + [string(a[i]).ToInteger];
- end;
+// function s2i(const a: string): TArray<Integer>;
+// begin
+//   Result := [];
+//   for var i:= 1 to Length(a) do Result := Result + [string(a[i]).ToInteger];
+// end;
 begin
-  Result.UseLegacyTemperature;
   var sa := s.Split([';',':',' ',','], TStringSplitOptions.ExcludeEmpty);
   if Length(sa) = 0 then
     raise EConvertError.Create('Empty polynomial model');
-  Result.ax := s2i(sa[0]);
-  if Length(sa) > 1 then Result.ku := s2i(sa[1]) else Result.ku := [0];
+  Result.ax := sa[0].ToInteger;
+  if Length(sa) > 1 then Result.ku := sa[1].ToInteger else Result.ku := 0;
   if Length(sa) > 2 then Result.dz := sa[2].ToInteger else Result.dz := 2;
 end;
 

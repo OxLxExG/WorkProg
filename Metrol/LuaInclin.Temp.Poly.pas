@@ -23,11 +23,13 @@ type
    class procedure FindInkl(trr, Res: IXMLNode; scA,scH: Double; var Incl: TInclRes);
    class var EStat: array[0..5] of TeStat;
 //   class var CorrStolA, CorrStolz, CorrStolv, CorrStoli, CorrStolMag: Double;
-   class procedure findErr(alg, trr: IXMLNode; scA,scH, amp, nak: Double; Iskoso: Boolean);
+   class procedure findErr(alg, trr: IXMLNode; scA,scH, amp, nak: Double; Iskoso: Boolean; Islin: Boolean = false);
    class procedure FindInklKoso(inx: Integer; var Incl: TInclRes);
    class function StepToIdx(st: integer): Integer;
    class function EStatToStr(const Fmt: string): string;
    class function EStatToStrN(n: integer; const s1,s2,Fmt: string; scale: double = 1): string; static;
+  private
+    class procedure FindLin(trr, Res: IXMLNode; var Incl: TInclRes); static;
   end;
 
   TColumn = class
@@ -109,12 +111,12 @@ type
   end;
 
   TColumns = class
-   private
-   class var cls: TArray<TColumn>;
    public
-   class function Get(col: Integer; st: IXMLNode): string; static;
-   class procedure Paint(col: Integer; st: IXMLNode; const TargetCanvas: TCanvas); static;
-   class procedure SetTreeColumns(Tree: TVirtualStringTree); static;
+   cls: TArray<TColumn>;
+   function Get(col: Integer; st: IXMLNode): string;
+   procedure Paint(col: Integer; st: IXMLNode; const TargetCanvas: TCanvas);
+   procedure SetTreeColumns(Tree: TVirtualStringTree);
+   constructor Create(cls: TArray<TColumn>);
   end;
 
 
@@ -132,11 +134,11 @@ function TPolyModelHelper.ResultHeaders: TArray<string>;
   end;
 begin
   s := [];
-  for var axs := 0 to High(ax) do
+  //for var axs := 0 to High(ax) do
    begin
     var si: string := '%s';
-    if axs > 0 then si := '%s' + IntToStr(axs+1);
-    for var t := 0 to ax[axs] do
+   // if axs > 0 then si := '%s' + IntToStr(axs+1);
+    for var t := 0 to ax{[axs]} do
      begin
       var sit: string := si;
       if t = 1 then sit := si+'t';
@@ -222,7 +224,7 @@ begin
 
 end;
 
-class procedure TpolyMathHelper.findErr(alg, trr: IXMLNode; scA,scH, amp, nak: Double; Iskoso: Boolean);
+class procedure TpolyMathHelper.findErr(alg, trr: IXMLNode; scA,scH, amp, nak: Double; Iskoso: Boolean; Islin: Boolean = false);
   var
    inpIdx: Integer;
 begin
@@ -244,13 +246,24 @@ begin
     if string(st.INFO).Contains('NotUse') or (string(st.EXECUTED) = 'false') then Continue;
 
     InclRes[inpIdx].Inp := @InpData.Inpt[inpIdx];
-    if Iskoso then  FindInklKoso(inpIdx, InclRes[inpIdx])
-    else FindInkl(trr, xst, scA, scH, InclRes[inpIdx]);
+    if IsLin then
+        FindLin(trr, xst, InclRes[inpIdx])
+    else if Iskoso then  FindInklKoso(inpIdx, InclRes[inpIdx])
+    else
+       FindInkl(trr, xst, scA, scH, InclRes[inpIdx]);
 
     for var e in eStat do e.Test(i, InclRes[inpIdx]);
     Inc(inpIdx);
    end;
   for var e in eStat do e.SetAV();
+end;
+
+class procedure TpolyMathHelper.FindLin(trr, Res: IXMLNode; var Incl: TInclRes);
+ var
+  ax, ay, az, x, y, z: Double;
+begin
+  TXMLScriptMath.TrrVectLin(trr, Res, ax, ay, az, x, y, z);
+  FindInclRes(VecCollect(ax, ay, az, x, y, z ), eStol, Incl);
 end;
 
 class procedure TpolyMathHelper.FindInkl(trr, Res: IXMLNode; scA, scH: Double; var Incl: TInclRes);
@@ -369,6 +382,9 @@ class procedure TpolyMathHelper.ResultToXML(trr: IXMLNode; G, H: TVArray<Double>
     end;
  end;
 begin
+  var Poly := GetXNode(trr,'Poly');
+  Poly.Attributes['TMin'] := InpData.Tmin;
+  Poly.Attributes['TMax'] := InpData.Tmax;
   AssignSensor(GetXNode(trr,'Poly.accel'), G);
   AssignSensor(GetXNode(trr,'Poly.magnit'), H);
 end;
@@ -386,19 +402,24 @@ end;
 
 { TColumns }
 
-class function TColumns.Get(col: Integer; st: IXMLNode): string;
+constructor TColumns.Create(cls: TArray<TColumn>);
+begin
+  Self.cls := cls;
+end;
+
+function TColumns.Get(col: Integer; st: IXMLNode): string;
 begin
   var f := cls[col];
   if Assigned(f) then Result := f.Get(st);
 end;
 
-class procedure TColumns.Paint(col: Integer; st: IXMLNode; const TargetCanvas: TCanvas);
+procedure TColumns.Paint(col: Integer; st: IXMLNode; const TargetCanvas: TCanvas);
 begin
   var f := cls[col];
   if Assigned(f) then f.Paint(st, TargetCanvas);
 end;
 
-class procedure TColumns.SetTreeColumns(Tree: TVirtualStringTree);
+procedure TColumns.SetTreeColumns(Tree: TVirtualStringTree);
   function AddCol(d: TColumn): TVirtualTreeColumn;
   begin
     Result := Tree.Header.Columns.Add;
@@ -606,52 +627,4 @@ begin
 end;
 
 
-initialization
- TColumns.cls := [
-   TColumnXML.Create('¹','','STEP','',50),
-   TColumnXML.Create('T','T.DEV'),
-   TColumnXML.Create( 'sZu','ÑÒÎË','çåíèò','%7.2f'),
-   TColumnAngleZ.Create( 'csZu', cacsA ),
-   TColumnAngleZ.Create( 'Zu'  , caA   ),
-   TColumnAngleZ.Create( 'eZU' , caE   ),
-   TColumnXML.Create('sAz','ÑÒÎË','àçèìóò'),
-   TColumnAngle.Create( 'csAz', cacsA ),
-   TColumnAngle.Create( 'Az'  , caA   ),
-   TColumnAngle.Create( 'eAz' , caE   ),
-   TColumnXML.Create('sVis','ÑÒÎË','âèçèð'),
-   TColumnAngleV.Create( 'csViz', cacsA ),
-   TColumnAngleV.Create( 'Vis'  , caA   ),
-   TColumnAngleV.Create( 'eVis' , caE   ),
-   TColumnXML.Create( 'sH','ÑÒÎË','àìïëèò_magnit'),
-   TColumnAmp.Create( 'H',sMag),
-   TColumnAmp.Create( 'eH',sMag, True),
-   TColumnAmp.Create( 'G',sAcc),
-   TColumnAmp.Create( 'eG',sAcc,True),
-   TColumnAngleI.Create( 'I', caA),
-   TColumnAngleI.Create( 'eI',caE),
-   TColumnXML.Create('GX','accel.X.DEV'),
-   TColumnXML.Create('GY','accel.Y.DEV'),
-   TColumnXML.Create('GZ','accel.Z.DEV'),
-   TColumnEtalon.Create('ýGX',sAcc,vX),
-   TColumnEtalon.Create('ýGY',sAcc,vY),
-   TColumnEtalon.Create('ýGZ',sAcc,vZ),
-   TColumnTrr.Create( 'tGX',sAcc,vX),
-   TColumnTrr.Create( 'tGY',sAcc,vY),
-   TColumnTrr.Create( 'tGZ',sAcc,vZ),
-   TColumnErr.Create( 'eGX',sAcc,vX),
-   TColumnErr.Create( 'eGY',sAcc,vY),
-   TColumnErr.Create( 'eGZ',sAcc,vZ),
-   TColumnXML.Create( 'HX','magnit.X.DEV'),
-   TColumnXML.Create( 'HY','magnit.Y.DEV'),
-   TColumnXML.Create( 'HZ','magnit.Z.DEV'),
-   TColumnEtalon.Create( 'ýHX', sMag, vX),
-   TColumnEtalon.Create( 'ýHY', sMag, vY),
-   TColumnEtalon.Create( 'ýHZ', sMag, vZ),
-   TColumnTrr.Create( 'tHX', sMag, vX),
-   TColumnTrr.Create( 'tHY', sMag, vY),
-   TColumnTrr.Create( 'tHZ', sMag, vZ),
-   TColumnErr.Create( 'eHX', sMag, vX),
-   TColumnErr.Create( 'eHY', sMag, vY),
-   TColumnErr.Create( 'eHZ', sMag, vZ)
- ];
 end.

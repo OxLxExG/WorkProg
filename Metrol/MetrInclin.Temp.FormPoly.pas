@@ -38,6 +38,7 @@ type
     Fhck: Double;
     FhckCnt: Integer;
     pmA,pmH: PolyModel;
+    FColumns: TColumns;
     procedure UpdateRes(trr: IXMLNode);
     procedure NShowStolAndDev(Sender: TObject);
     procedure NShowResClick(Sender: TObject);
@@ -48,10 +49,10 @@ type
     function GetCurrentAlg: IXMLNode;
     function GetCurrentTrr: IXMLNode;
     procedure HChekOnUpdate(Sender: TObject);
-
   protected
    const
     NICON = 186;
+    procedure InitializeNewForm; override;
     procedure OptionChanged(); override;
     procedure Loaded; override;
     function UserExecStep(Step: Integer; alg,trr: IXMLNode): Boolean; override;
@@ -60,7 +61,7 @@ type
     procedure DoStopAtt(AttNode: IXMLNode); override;
     class function ClassIcon: Integer; override;
   public
-    procedure RecalcResultAndUpdateTree(Iskoso: Boolean);
+    procedure RecalcResultAndUpdateTree(Iskoso: Boolean; IsLin: Boolean = False);
     property CurrentTrr: IXMLNode read GetCurrentTrr;
     property CurrentAlg: IXMLNode read GetCurrentAlg;
 
@@ -75,6 +76,14 @@ type
     destructor Destroy; override;
     property AutomatMetrology: TinclAuto read FAutomatMetrology implements IAutomatMetrology;
   end;
+  TFormMetrInclinUniT = class(TFormMetrInclinTP)
+   const
+    NICON = 196;
+    [StaticAction('Метр. Инкл. Т Uni ALL 540', 'Метрология', NICON, '0:Метрология.Инклинометры:-1')]
+    class procedure DoCreateForm(Sender: IAction); override;
+    class function MetrolType: string; override;
+    class function MetrolAttrName: string; override;
+    end;
 
   TFormMetrInclinTPOnlyT = class(TFormMetrInclinTP)
    const
@@ -100,6 +109,7 @@ end;
 destructor TFormMetrInclinTP.Destroy;
 begin
   FAutomatMetrology.Free;
+  FColumns.Free;
   inherited;
 end;
 
@@ -204,7 +214,7 @@ begin
   inherited;
 end;
 
-procedure TFormMetrInclinTP.RecalcResultAndUpdateTree(Iskoso: Boolean);
+procedure TFormMetrInclinTP.RecalcResultAndUpdateTree(Iskoso: Boolean; IsLin: Boolean = False);
 begin
   TpolyMath.findErr(CurrentAlg, CurrentTrr, SCALE_A,SCALE_H,RES_AMP, FNakl, Iskoso);
   UpdateRes(CurrentTrr);
@@ -217,6 +227,58 @@ begin
 end;
 
 
+procedure TFormMetrInclinTP.InitializeNewForm;
+begin
+  FColumns:= TColumns.Create([
+   TColumnXML.Create('№','','STEP','',50),
+   TColumnXML.Create('T','T.DEV'),
+   TColumnXML.Create( 'sZu','СТОЛ','зенит','%7.2f'),
+   TColumnAngleZ.Create( 'csZu', cacsA ),
+   TColumnAngleZ.Create( 'Zu'  , caA   ),
+   TColumnAngleZ.Create( 'eZU' , caE   ),
+   TColumnXML.Create('sAz','СТОЛ','азимут'),
+   TColumnAngle.Create( 'csAz', cacsA ),
+   TColumnAngle.Create( 'Az'  , caA   ),
+   TColumnAngle.Create( 'eAz' , caE   ),
+   TColumnXML.Create('sVis','СТОЛ','визир'),
+   TColumnAngleV.Create( 'csViz', cacsA ),
+   TColumnAngleV.Create( 'Vis'  , caA   ),
+   TColumnAngleV.Create( 'eVis' , caE   ),
+   TColumnXML.Create( 'sH','СТОЛ','амплит_magnit'),
+   TColumnAmp.Create( 'H',sMag),
+   TColumnAmp.Create( 'eH',sMag, True),
+   TColumnAmp.Create( 'G',sAcc),
+   TColumnAmp.Create( 'eG',sAcc,True),
+   TColumnAngleI.Create( 'I', caA),
+   TColumnAngleI.Create( 'eI',caE),
+   TColumnXML.Create('GX','accel.X.DEV'),
+   TColumnXML.Create('GY','accel.Y.DEV'),
+   TColumnXML.Create('GZ','accel.Z.DEV'),
+   TColumnEtalon.Create('эGX',sAcc,vX),
+   TColumnEtalon.Create('эGY',sAcc,vY),
+   TColumnEtalon.Create('эGZ',sAcc,vZ),
+   TColumnTrr.Create( 'tGX',sAcc,vX),
+   TColumnTrr.Create( 'tGY',sAcc,vY),
+   TColumnTrr.Create( 'tGZ',sAcc,vZ),
+   TColumnErr.Create( 'eGX',sAcc,vX),
+   TColumnErr.Create( 'eGY',sAcc,vY),
+   TColumnErr.Create( 'eGZ',sAcc,vZ),
+   TColumnXML.Create( 'HX','magnit.X.DEV'),
+   TColumnXML.Create( 'HY','magnit.Y.DEV'),
+   TColumnXML.Create( 'HZ','magnit.Z.DEV'),
+   TColumnEtalon.Create( 'эHX', sMag, vX),
+   TColumnEtalon.Create( 'эHY', sMag, vY),
+   TColumnEtalon.Create( 'эHZ', sMag, vZ),
+   TColumnTrr.Create( 'tHX', sMag, vX),
+   TColumnTrr.Create( 'tHY', sMag, vY),
+   TColumnTrr.Create( 'tHZ', sMag, vZ),
+   TColumnErr.Create( 'eHX', sMag, vX),
+   TColumnErr.Create( 'eHY', sMag, vY),
+   TColumnErr.Create( 'eHZ', sMag, vZ)
+ ]);
+  inherited;
+end;
+
 procedure TFormMetrInclinTP.Loaded;
  var
   e: TevTypes;
@@ -224,7 +286,7 @@ procedure TFormMetrInclinTP.Loaded;
 begin
   e.Update := HChekOnUpdate;
   if Assigned(GChekH) then GChekH.Bind(Self, e);
-  if Tree.Header.Columns.Count = 0 then  TColumns.SetTreeColumns(Tree);
+  if Tree.Header.Columns.Count = 0 then  FColumns.SetTreeColumns(Tree);
 
   OnFileChahge := EFileChahge;
 
@@ -305,56 +367,7 @@ begin
   p := Sender.GetNodeData(Node);
   if not Assigned(p.XMNode) then Exit;
 //  vp := XToVar(p.XMNode);
-  CellText := TColumns.Get(Column, p.XMNode);
-//  case Column of
-//   0: begin
-//       r := p.XMNode;
-//       if r.HasAttribute('STEP') then CellText := r.Attributes['STEP']
-//       else CellText := 'STEP';
-//      end;
-//   1: SetData('T.DEV',     AT_VALUE,     '%7.1f');
-//
-//   2: SetData('СТОЛ',      'зенит',     '%7.2f');
-//   3: SetData('зенит.CLC',        AT_VALUE,     '%7.2f');
-//   4: SetData('СТОЛ',             'err_зенит',  '%6.2f');
-//
-//    5: SetData('СТОЛ',      'азимут',     '%7.1f');
-//    6: SetData('азимут.CLC',       AT_VALUE,     '%6.1f');
-//    7: SetData('СТОЛ',             'err_азимут', '%6.2f');
-//
-//   8: SetData('СТОЛ',      'визир',     '%7.1f');
-//   9: SetData('отклонитель.CLC',  AT_VALUE,     '%6.1f');
-//   10: SetData('СТОЛ',             'err_визир',  '%6.2f');
-//
-//   11: SetData('амплит_accel.CLC', AT_VALUE,     '%7.3f', -RES_AMP,100/RES_AMP);
-//   12: SetData('амплит_magnit.CLC',AT_VALUE,     '%7.3f', -RES_AMP,100/RES_AMP);
-//
-//
-//   13: SetData('accel.X.DEV',      AT_VALUE,     '%7.1f');
-//   14: SetData('accel.Y.DEV',      AT_VALUE,     '%7.1f');
-//   15: SetData('accel.Z.DEV',      AT_VALUE,     '%7.1f');
-//   16: SetData('magnit.X.DEV',     AT_VALUE,     '%7.1f');
-//   17: SetData('magnit.Y.DEV',     AT_VALUE,     '%7.1f');
-//   18: SetData('magnit.Z.DEV',     AT_VALUE,    '%7.1f');
-//
-//   19: SetData('СТОЛ',      'GX',     FmtEnalon);
-//   20: SetData('СТОЛ',      'GY',     FmtEnalon);
-//   21: SetData('СТОЛ',      'GZ',     FmtEnalon);
-//   22: SetData('СТОЛ',      'HX',     FmtEnalon);
-//   23: SetData('СТОЛ',      'HY',     FmtEnalon);
-//   24: SetData('СТОЛ',      'HZ',     FmtEnalon);
-//
-//
-//   25: SetData('accel.X.CLC',      AT_VALUE,     '%7.3f', -StolEtalon('GX'),100/RES_AMP);
-//   26: SetData('accel.Y.CLC',      AT_VALUE,     '%7.3f', -StolEtalon('GY'),100/RES_AMP);
-//   27: SetData('accel.Z.CLC',      AT_VALUE,     '%7.3f', -StolEtalon('GZ'),100/RES_AMP);
-//   28: SetData('magnit.X.CLC',     AT_VALUE,     '%7.3f', -StolEtalon('HX'),100/RES_AMP);
-//   29: SetData('magnit.Y.CLC',     AT_VALUE,     '%7.3f', -StolEtalon('HY'),100/RES_AMP);
-//   30: SetData('magnit.Z.CLC',     AT_VALUE,     '%7.3f', -StolEtalon('HZ'),100/RES_AMP);
-//
-//   31: SetData('маг_наклон.CLC',   AT_VALUE,     '%6.2f', -FNakl);
-//
-//  end;
+  CellText := FColumns.Get(Column, p.XMNode);
 end;
 
 procedure TFormMetrInclinTP.TreePaintText(Sender: TBaseVirtualTree; const TargetCanvas: TCanvas; Node: PVirtualNode;
@@ -366,14 +379,7 @@ begin
   xd := Sender.GetNodeData(Node);
   if Assigned(xd.XMNode) and xd.XMNode.HasAttribute('EXECUTED') then
    begin
-     TColumns.Paint(Column, xd.XMNode, TargetCanvas);
-//     if Column in [13,14,15,19,20,21,25,26,27] then TargetCanvas.Font.Color := clBlue
-//     else if Column in [11,12,31] then
-//      begin
-//       TargetCanvas.Font.Style := TargetCanvas.Font.Style + [fsBold];
-//       TargetCanvas.Font.Color := clRed
-//      end
-//     else if Column in [4,7,10] then TargetCanvas.Font.Color := clGreen
+     FColumns.Paint(Column, xd.XMNode, TargetCanvas);
    end;
 end;
 
@@ -421,19 +427,19 @@ end;
 
 
 procedure TFormMetrInclinTP.UpdateFromOptions(alg: IXMLNode);
-  procedure ReadTemperatureModel(const Node: IXMLNode; var Model: PolyModel);
-  begin
-    if Assigned(Node) and Node.HasAttribute('Basis') and
-       SameText(string(Node.Attributes['Basis']), 'Chebyshev') then
-    begin
-      if not Node.HasAttribute('TMin') or not Node.HasAttribute('TMax') then
-        raise Exception.Create('Chebyshev model requires TMin and TMax');
-      Model.UseChebyshevTemperature(Double(Node.Attributes['TMin']),
-                                    Double(Node.Attributes['TMax']));
-    end
-    else
-      Model.UseLegacyTemperature;
-  end;
+//  procedure ReadTemperatureModel(const Node: IXMLNode; var Model: PolyModel);
+//  begin
+//    if Assigned(Node) and Node.HasAttribute('Basis') and
+//       SameText(string(Node.Attributes['Basis']), 'Chebyshev') then
+//    begin
+//      if not Node.HasAttribute('TMin') or not Node.HasAttribute('TMax') then
+//        raise Exception.Create('Chebyshev model requires TMin and TMax');
+//      Model.UseChebyshevTemperature(Double(Node.Attributes['TMin']),
+//                                    Double(Node.Attributes['TMax']));
+//    end
+//    else
+//      Model.UseLegacyTemperature;
+//  end;
   procedure UpdateTree(pm: PolyModel; TreeRes: TVirtualStringTree);
     function AddCol(const name: string): TVirtualTreeColumn;
     begin
@@ -459,8 +465,14 @@ begin
 
   TXMLScriptMath.AddPolyTrr(alg.ParentNode, alg.Attributes['ModelA'], alg.Attributes['ModelH'], False);
   var Poly := alg.ParentNode.ChildNodes.FindNode('Poly');
-  ReadTemperatureModel(Poly.ChildNodes.FindNode('accel'), pmA);
-  ReadTemperatureModel(Poly.ChildNodes.FindNode('magnit'), pmH);
+
+  if not Poly.HasAttribute('TMin') or not Poly.HasAttribute('TMax') then
+    raise Exception.Create('Chebyshev model requires TMin and TMax');
+  var TMin := Poly.Attributes['TMin'];
+  var TMax := Poly.Attributes['TMax'];
+
+//  ReadTemperatureModel(Poly.ChildNodes.FindNode('accel'), pmA);
+//  ReadTemperatureModel(Poly.ChildNodes.FindNode('magnit'), pmH);
 
   UpdateTree(pmA, TreeResA);
   UpdateTree(pmH, TreeResH);
@@ -637,12 +649,73 @@ begin
   Result := 'IT4poly'
 end;
 
+{ TFormMetrInclinUniT }
+
+class procedure TFormMetrInclinUniT.DoCreateForm(Sender: IAction);
+begin
+  inherited;
+
+end;
+
+class function TFormMetrInclinUniT.MetrolAttrName: string;
+begin
+  Result := 'INKLGK5'
+end;
+
+class function TFormMetrInclinUniT.MetrolType: string;
+begin
+  Result := 'ITUniALL';
+end;
+
 initialization
-  RegisterClass(TFormMetrInclinTP);
-  RegisterClass(TFormMetrInclinTPOnlyT);
-  TRegister.AddType<TFormMetrInclinTP, IForm>.LiveTime(ltSingletonNamed);
-  TRegister.AddType<TFormMetrInclinTPOnlyT, IForm>.LiveTime(ltSingletonNamed);
+//  RegisterClass(TFormMetrInclinTP);
+  RegisterClass(TFormMetrInclinUniT);
+//  RegisterClass(TFormMetrInclinTPOnlyT);
+//  TRegister.AddType<TFormMetrInclinTP, IForm>.LiveTime(ltSingletonNamed);
+//  TRegister.AddType<TFormMetrInclinTPOnlyT, IForm>.LiveTime(ltSingletonNamed);
+  TRegister.AddType<TFormMetrInclinUniT, IForm>.LiveTime(ltSingletonNamed);
 finalization
-  GContainer.RemoveModel<TFormMetrInclinTP>;
-  GContainer.RemoveModel<TFormMetrInclinTPOnlyT>;
+  GContainer.RemoveModel<TFormMetrInclinUniT>;
+//  GContainer.RemoveModel<TFormMetrInclinTP>;
+//  GContainer.RemoveModel<TFormMetrInclinTPOnlyT>;
 end.
+
+//0.902665913105011
+//0.93473082780838
+//1.01189911365509
+//1.13982844352722
+//1.26766741275787
+//-0.130773618817329
+//-0.0275490470230579
+//0.0573432072997093
+//0.00693212868645787
+//0.0184410288929939
+//0.0175569280982018
+//0.0168231017887592
+//0.015779560431838
+//0.0149461682885885
+//0
+//0
+//0
+//0
+//0
+//1.63935156866242E-30
+//7700
+//12000
+//19.8196430206299
+//31.3578758239746
+//
+//0.902665913105011 0.93473082780838 1.01189911365509 1.13982844352722 1.26766741275787 -0.130773618817329 -0.0275490470230579 0.0573432072997093 0.00693212868645787 0.0184410288929939 0.0175569280982018 0.0168231017887592
+//0.015779560431838
+//0.0149461682885885
+//0
+//0
+//0
+//0
+//0
+//0
+//0
+//0
+//0
+//0
+

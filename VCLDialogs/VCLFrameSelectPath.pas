@@ -69,16 +69,36 @@ procedure TFrameSelectPath.Execute(const FileName: string; CheckEvent: TCheckEve
     s := (GContainer as  IProjectDataFile).ConstructDataDir(n)+ n.Attributes[AT_FILE_NAME];
     Result := False;
     if not TFile.Exists(s) then Exit;
-    try
-     with TFile.OpenRead(s) do
-     try
-      Result := Size > 0;
-     finally
-      Free;
-     end;
-    except
-     Result := True;  //если занят то данные есть
+
+    var
+      FS: TFileStream;
+    begin
+      Result := False;
+      try
+        // fmShareDenyNone позволяет открывать файл многократно
+        FS := TFileStream.Create(s, fmOpenRead or fmShareDenyNone);
+        try
+          Result := FS.Size > 0;
+        finally
+          FS.Free;
+        end;
+      except
+        Result := True;  //если занят то данные есть
+      end;
     end;
+
+//    try
+//     with TFile.OpenRead(s) do
+//     try
+//      Result := Size > 0;
+//
+//     finally
+//      Free;
+//     end;
+//    except
+//     Result := True;  //если занят то данные есть
+//    end;
+
   end;
  var
   r, n, d, s: IXMLNode;

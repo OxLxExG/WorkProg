@@ -106,8 +106,8 @@
         <DCC_DebugInformation>0</DCC_DebugInformation>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
-        <VerInfo_Build>22</VerInfo_Build>
-        <VerInfo_Keys>CompanyName=;FileVersion=2.13.0.22;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=3.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
+        <VerInfo_Build>24</VerInfo_Build>
+        <VerInfo_Keys>CompanyName=;FileVersion=2.13.0.24;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=3.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_MinorVer>13</VerInfo_MinorVer>
     </PropertyGroup>

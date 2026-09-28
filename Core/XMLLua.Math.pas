@@ -4,7 +4,7 @@ interface
 
 uses
   XMLLua, tools, debug_except, MathIntf, System.UITypes,System.DateUtils, VerySimple.Lua.Lib,  Vector,
-  Container, ExtendIntf, SysUtils, Xml.XMLIntf, System.Generics.Collections,
+  Container, ExtendIntf, SysUtils, Xml.XMLIntf, System.Generics.Collections, TrrInclin.Temp.LinPacked,
   System.Classes, math, System.Variants, TrrInclin.Temp.PolyModel;
 
  {$M+}
@@ -38,6 +38,7 @@ type
     class procedure TrrVectAll3D4T(trr, v: IXMLNode; var ax,ay,az, x, y, z: Double; Scale: Integer = 1; TrrAngle: Boolean = True); overload; static;
     class function SenseToKoefs(sns: IXMLNode): TArray<Double>;
     class procedure TrrVectPoly(trr, v: IXMLNode; var ax,ay,az, x, y, z: Double; ScaleA: Double = 1; ScaleH: Double = 1); overload; static;
+    class procedure TrrVectLin(trr, v: IXMLNode; var ax,ay,az, x, y, z: Double); overload; static;
     class procedure TrrVect3D(r, Inp: IXMLNode; var x: Double; var y: Double; var z: Double; Scale: Integer = 1; xyzInVar: Boolean = false); overload; static;
 //    class procedure AddXmlMatrix(root: IXMLNode; Row, col: Integer); overload; static;
 //    class function AddXmlPath(root: Variant; const path: string): Variant; static;
@@ -60,6 +61,7 @@ type
     class function AddXmlPath(root: Variant; const path: string): Variant; overload; static;
     class function RadToDeg360(r: Double): Double; overload; static;
     class function AddPolyTrr(root: IXMLNode; const ModelA,ModelH: string; CreateOnly: Boolean): IXMLNode; overload; static;
+    class function AddLinTrr(root: IXMLNode; CreateOnly: Boolean): IXMLNode; overload; static;
   published
     class function ExecStepGK1(L: lua_State): Integer; cdecl; static;
     class function AddMetrology(L: lua_State): Integer; overload; cdecl; static;
@@ -70,9 +72,11 @@ type
     class function TrrVect3D3T(L: lua_State): Integer; overload; cdecl; static;
     class function TrrVectAll3D4T(L: lua_State): Integer; overload; cdecl; static;
     class function TrrVectPoly(L: lua_State): Integer; overload; cdecl; static;
+    class function TrrVectLin(L: lua_State): Integer; overload; cdecl; static;
     class function AddXmlMatrix(L: lua_State): Integer; cdecl; static;
     class function Add4PolTrr(L: lua_State): Integer; cdecl; static;
     class function AddPolyTrr(L: lua_State): Integer; overload; cdecl; static;
+    class function AddLinTrr(L: lua_State): Integer; overload; cdecl; static;
     class function SetIfNotExist(L: lua_State): Integer; cdecl; static;
     class function AddXmlPath(L: lua_State): Integer; overload; cdecl; static;
     class function HasXmlPath(L: lua_State): Integer; cdecl; static;
@@ -387,6 +391,25 @@ begin
   Result := 1;
 end;
 
+class function TXMLScriptMath.AddLinTrr(L: lua_State): Integer;
+ var
+  root: IXMLNode;
+  c: Boolean;
+begin
+  root := TXMLLua.XNode(L, 1);
+  c := Boolean(lua_toboolean(L,4));
+
+  TXMLLua.PushXmlToTable(L, AddLinTrr(root,c));
+  Result := 1;
+end;
+
+class function TXMLScriptMath.AddLinTrr(root: IXMLNode; CreateOnly: Boolean): IXMLNode;
+begin
+  if CreateOnly and Assigned(root.ChildNodes.FindNode('Lin')) then Exit;
+  TGkiPackedCodec.SaveToXML(root, TGkiPackedLinearModel.Default);
+end;
+
+
 class function TXMLScriptMath.AddPolyTrr(root: IXMLNode; const ModelA, ModelH: string; CreateOnly: Boolean): IXMLNode;
  const
   xyz = ['X','Y','Z'];
@@ -408,18 +431,22 @@ class function TXMLScriptMath.AddPolyTrr(root: IXMLNode; const ModelA, ModelH: s
     var IsNew := not Assigned(r.ChildNodes.FindNode(sense));
     var sns := GetXNode(r, sense, true);
     sns.Attributes['Model'] := model.Replace(',',' ');
-    if IsNew then
-    begin
-      sns.Attributes['Basis'] := 'Chebyshev';
-      sns.Attributes['TMin'] := 20;
-      sns.Attributes['TMax'] := 120;
-    end;
+//    if IsNew then
+//    begin
+////      sns.Attributes['Basis'] := 'Chebyshev';
+//      sns.Attributes['TMin'] := 20;
+//      sns.Attributes['TMax'] := 120;
+//    end;
     for var ax in xyz do
     sns.Attributes[ax] := SetAx(ax, model);
   end;
 begin
   if CreateOnly and Assigned(root.ChildNodes.FindNode('Poly')) then Exit;
+
   Result := GetXNode(root,'Poly', true);
+  if not Result.HasAttribute('TMin') then Result.Attributes['TMin'] := 20;
+  if not Result.HasAttribute('TMax') then Result.Attributes['TMax'] := 140;
+
   SetSence(Result,'accel', ModelA);
   SetSence(Result,'magnit',ModelH);
 end;
@@ -706,13 +733,48 @@ begin
     for var sk in ksa do Result := Result +[sk.ToDouble];
 end;
 
+class procedure TXMLScriptMath.TrrVectLin(trr, v: IXMLNode; var ax, ay, az, x, y, z: Double);
+ var
+  lin: TGkiPackedLinearModel;
+  na,ca,nm,cm: TVector3;
+  t: single;
+begin
+  try
+   lin := TGkiPackedCodec.LoadFromXML(trr);
+  except
+   lin := TGkiPackedLinearModel.Default;
+  end;
+  var c := TGkiPackedCorrector.Create(lin);
+  var d := XToVar(v);
+  t := d.T.DEV.VALUE;
+  var acc := XToVar(GetXNode(v, 'accel'));
+  var mag := XToVar(GetXNode(v, 'magnit'));
+  na := TVector3.Create(acc.X.DEV.VALUE,acc.Y.DEV.VALUE,acc.Z.DEV.VALUE);
+  nm := TVector3.Create(mag.X.DEV.VALUE,mag.Y.DEV.VALUE,mag.Z.DEV.VALUE);
+  c.CorrectAll(t, na,nm,ca,cm);
+  ax := ca.X;
+  ay := ca.Y;
+  az := ca.Z;
+  x := cm.X;
+  y := cm.Y;
+  z := cm.Z;
+//  TXMLScriptMath.AddXmlPath(acc.X,'CLC').VALUE := ax;
+//  TXMLScriptMath.AddXmlPath(acc.Y,'CLC').VALUE := ay;
+//  TXMLScriptMath.AddXmlPath(acc.Z,'CLC').VALUE := az;
+//  TXMLScriptMath.AddXmlPath(mag.X,'CLC').VALUE := x;
+//  TXMLScriptMath.AddXmlPath(mag.Y,'CLC').VALUE := y;
+//  TXMLScriptMath.AddXmlPath(mag.Z,'CLC').VALUE := z;
+end;
+
 class procedure TXMLScriptMath.TrrVectPoly(trr, v: IXMLNode; var ax, ay, az, x, y, z: Double; ScaleA: Double = 1; ScaleH: Double = 1);
+ var
+ TMin, TMax: Double;
 
   procedure RunTrr(sence: IXMLNode; k: TArray<Double>; pm: PolyModel;
     const Temp: Double; var rx, ry, rz: Double; Scale: Double; coso: boolean);
   begin
     var vs := XToVar(sence);
-    var at := pm.CreatePowerT(Temp, pm.MaxPowT);
+    var at := pm.CreatePowerT(Temp,TMin, TMax, pm.MaxPowT);
     var r := pm.CreateRow(at,[vs.X.DEV.VALUE,vs.Y.DEV.VALUE,vs.Z.DEV.VALUE], Scale);
     if coso then pm.FindAxisKoso(@k[0], r, rx, ry, rz)
     else pm.FindAxis(@k[0], r, rx, ry, rz);
@@ -720,20 +782,6 @@ class procedure TXMLScriptMath.TrrVectPoly(trr, v: IXMLNode; var ax, ay, az, x, 
 
  var
  pmA, pmH: PolyModel;
-
-  procedure ReadTemperatureModel(const Node: IXMLNode; var Model: PolyModel);
-  begin
-    if Node.HasAttribute('Basis') and
-       SameText(string(Node.Attributes['Basis']), 'Chebyshev') then
-    begin
-      if not Node.HasAttribute('TMin') or not Node.HasAttribute('TMax') then
-        raise Exception.Create('Chebyshev model requires TMin and TMax');
-      Model.UseChebyshevTemperature(Double(Node.Attributes['TMin']),
-                                    Double(Node.Attributes['TMax']));
-    end
-    else
-      Model.UseLegacyTemperature;
-  end;
 begin
   var d := XToVar(v);
   var acc := GetXNode(trr, 'Poly.accel');
@@ -741,13 +789,17 @@ begin
 
   pma :=  acc.Attributes['Model'];
   pmh :=  mag.Attributes['Model'];
-  ReadTemperatureModel(acc, pmA);
-  ReadTemperatureModel(mag, pmH);
+
+  var ply := GetXNode(trr, 'Poly');
+  if not ply.HasAttribute('TMin') or not ply.HasAttribute('TMax') then
+    raise Exception.Create('Chebyshev model requires TMin and TMax');
+  TMin := ply.Attributes['TMin'];
+  TMax := ply.Attributes['TMax'];
 
   var sens := GetXNode(v, 'accel');
   var ak := SenseToKoefs(acc);
   var coso := ak[pma.KyIdx] = 0;
-  RunTrr(sens, ak, pmA, d.T.DEV.VALUE, ax, ay, az, ScaleA, coso);
+  RunTrr(sens, ak, pmA, d.T.DEV.VALUE, ax, ay, az, ScaleA, false);
 
   var vs := XtoVar(sens);
   TXMLScriptMath.AddXmlPath(vs.X,'CLC').VALUE := ax;
@@ -757,7 +809,7 @@ begin
   sens := GetXNode(v, 'magnit');
   ak := SenseToKoefs(mag);
   coso := ak[pmH.KyIdx] = 0;
-  RunTrr(sens,ak,pmH, d.T.DEV.VALUE, x, y, z, ScaleH, coso);
+  RunTrr(sens,ak,pmH, d.T.DEV.VALUE, x, y, z, ScaleH, false);
 
   vs := XtoVar(sens);
   TXMLScriptMath.AddXmlPath(vs.X,'CLC').VALUE := x;
@@ -832,6 +884,30 @@ begin
     Scale := 1;
 
   TrrVectAll3D4T(rt, t, ax, ay, az, x, y, z, Scale);
+
+  lua_pushnumber(L, ax);
+  lua_pushnumber(L, ay);
+  lua_pushnumber(L, az);
+  lua_pushnumber(L, x);
+  lua_pushnumber(L, y);
+  lua_pushnumber(L, z);
+
+  Result := 6;
+end;
+
+class function TXMLScriptMath.TrrVectLin(L: lua_State): Integer;
+var
+  ax, ay, az,x, y, z: Double;
+  rt, t, r, Inp: IXMLNode;
+  ScaleA, ScaleH: Integer;
+  ArgCount: integer;
+  path: string;
+begin
+  ArgCount := Lua_GetTop(L);
+  rt := TXMLLua.XNode(L, 1);
+  t := TXMLLua.XNode(L, 2);
+
+  TrrVectLin(rt, t, ax, ay, az, x, y, z);
 
   lua_pushnumber(L, ax);
   lua_pushnumber(L, ay);

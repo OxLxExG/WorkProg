@@ -5,7 +5,7 @@ interface
 uses DeviceIntf, PluginAPI, ExtendIntf, RootIntf, Container, Actns, debug_except, DockIForm, math, tools, XMLLua.Math,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, System.Bindings.Expression, Xml.XMLIntf,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, VirtualTrees, Vcl.Menus, Vcl.PlatformDefaultStyleActnCtrls, Vcl.ActnPopup, Vcl.ImgList, Vcl.ExtCtrls, Vcl.StdCtrls,
-  MetrForm, Vcl.ComCtrls, AutoMetr.Inclin, RootImpl;
+  MetrForm, Vcl.ComCtrls, AutoMetr.Inclin, RootImpl, VirtualTrees.BaseAncestorVCL, VirtualTrees.BaseTree, VirtualTrees.AncestorVCL;
 
 type
   TFormMetrInclin4T = class(TFormMetrolog, IAutomatMetrology)
@@ -172,9 +172,9 @@ begin
     for i := 1 to NFORT do AddStep(t, i, alg);
 end;  }
 
-initialization
-  RegisterClass(TFormMetrInclin4T);
-  TRegister.AddType<TFormMetrInclin4T, IForm>.LiveTime(ltSingletonNamed);
-finalization
-  GContainer.RemoveModel<TFormMetrInclin4T>;
+//initialization
+//  RegisterClass(TFormMetrInclin4T);
+//  TRegister.AddType<TFormMetrInclin4T, IForm>.LiveTime(ltSingletonNamed);
+//finalization
+//  GContainer.RemoveModel<TFormMetrInclin4T>;
 end.

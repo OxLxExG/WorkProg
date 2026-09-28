@@ -18,6 +18,7 @@ type
 
   TGR32GraphicData = class;
 
+
   IParamMouseEdit = interface
     procedure DoMouseMove(X, Y: Integer);
     procedure DoMouseUp(X, Y: Integer);
@@ -131,7 +132,7 @@ type
     function TryHitParametr(pos: TPoint; out Par: TGraphPar; Button: TMouseButton = TMouseButton.mbLeft; Shift: TShiftState = []): Boolean; override;
     property Bitmap: TBitmap32 read FBitmap;
     property C_PropertyChanged: string read FPropertyChanged write SetPropertyChanged;
-    property CurrentParamsEvent : TCurrentParamsEvent read FCurrentParamsEvent write FCurrentParamsEvent;
+//    property CurrentParamsEvent : TCurrentParamsEvent read FCurrentParamsEvent write FCurrentParamsEvent;
   published
     [ShowProp('Labels axis Y')]
     property ShowYlegend: boolean read FShowYlegend write SetShowYlegend default True;
@@ -419,7 +420,7 @@ var
   Dist, delta: TFloat;
 begin
   clPoint := TFloatPoint.Create(MouseToClient(TPoint.Create(X,Y)));
-  FCurrentParamsEvent(Self, clPoint.Y)
+//  FCurrentParamsEvent(Self, clPoint.Y)
 end;
 
 function TGR32GraphicData.GetCursor: Integer;
@@ -451,8 +452,9 @@ procedure TGR32GraphicData.MouseMove(Shift: TShiftState; X, Y: Integer);
 begin
 
   if Assigned(FParamMouseEdit) then
-    FParamMouseEdit.DoMouseMove(X, Y)
-  else if Assigned(FCurrentParamsEvent) then GetCurrentParamsAtMouseY(X, Y);
+    FParamMouseEdit.DoMouseMove(X, Y);
+//  else if Assigned(FCurrentParamsEvent) then
+  GetCurrentParamsAtMouseY(X, Y);
 end;
 
 function TGR32GraphicData.MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer): boolean;

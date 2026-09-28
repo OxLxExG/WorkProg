@@ -6,7 +6,8 @@ uses DeviceIntf, PluginAPI, ExtendIntf, RootIntf, Container, Actns, debug_except
      LuaInclin.Math, XMLLua.Math, UakiIntf,
      VirtualTrees, Xml.XMLIntf, Vcl.Menus, JvInspector,
      Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-     Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.ExtCtrls;
+     Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.ExtCtrls, VirtualTrees.BaseAncestorVCL, VirtualTrees.BaseTree,
+  VirtualTrees.AncestorVCL;
 
 type
   TFormInclinCheck = class(TFormMetrolog, IAutomatMetrology)
@@ -83,6 +84,18 @@ type
     class procedure DoCreateForm(Sender: IAction); override;
     class function MetrolAttrName: string; override;
   end;
+
+  TFormInclinCheckUni = class(TFormInclinCheck)
+  protected
+   function UserExecStep(Step: Integer; alg, trr: IXMLNode): Boolean; override;
+  public
+   const
+    NICON = 86;
+    [StaticAction('Новая поверка 104 UNI', 'Метрология', NICON, '0:Метрология.Инклинометры:-1')]
+    class procedure DoCreateForm(Sender: IAction); override;
+    class function MetrolAttrName: string; override;
+  end;
+
 implementation
 
 {$R *.dfm}
@@ -615,12 +628,81 @@ begin
 
 end;
 
+{ TFormInclinCheckUni }
+
+class procedure TFormInclinCheckUni.DoCreateForm(Sender: IAction);
+begin
+  inherited;
+end;
+
+class function TFormInclinCheckUni.MetrolAttrName: string;
+begin
+  Result := 'INKLGK5'
+end;
+
+function TFormInclinCheckUni.UserExecStep(Step: Integer; alg, trr: IXMLNode): Boolean;
+ var
+   pmA,pmH: PolyModel;
+   Naklon: Double;
+   Input: TArray<TinclInput>;
+   cnt: Integer;
+begin
+  Result := True;
+  if Step = 104 then
+    begin
+
+     Naklon := alg.Attributes['MagNaklon'];
+     pmA :=  GetXNode(trr, 'Poly.accel').Attributes['Model'];
+     pmH :=  GetXNode(trr, 'Poly.magnit').Attributes['Model'];
+
+     SetLength(Input, alg.ChildNodes.Count);
+     cnt := 0;
+     for var i := 0 to alg.ChildNodes.Count-1 do
+      begin
+       var st := XtoVar(alg.ChildNodes[i]);
+       if string(st.INFO).Contains('NotUse') or (string(st.EXECUTED) = 'false') then Continue;
+       Input[cnt] := st;
+       Inc(cnt);
+      end;
+     Setlength(Input,cnt);
+     TpolyMath.Init(pmA,pmH, Naklon, Input);
+
+
+
+    TpolyMath.findErr(alg, trr, SCALE_A,SCALE_H, RES_AMP, Naklon, False, True);
+
+
+    for var i:= 0 to High(TpolyMath.InclRes) do
+    begin
+     var a := XtoVar(GetXNode(alg, Format('STEP%d',[i+1])));
+     var r := TpolyMath.InclRes[i];
+      a.зенит.CLC.VALUE := r.Zen.Angle;
+      a.азимут.CLC.VALUE := r.Azi.Angle;
+      a.отклонитель.CLC.VALUE := r.Otk.Angle;
+      a.маг_отклон.CLC.VALUE := r.MO.Angle;
+      a.маг_наклон.CLC.VALUE := r.Nakl.Angle;
+      a.амплит_accel.CLC.VALUE := r.Amp[sAcc];
+      a.амплит_magnit.CLC.VALUE := r.Amp[sMag];
+     a.СТОЛ.err_зенит := r.Zen.Error;
+     a.СТОЛ.err_азимут := r.Azi.Error;
+    end;
+
+    AttestatLabel.Caption := TpolyMath.EStatToStr(
+      'Accel: %d %1.2f%% av: %1.3f%%     Magnit: %d %1.2f%% av: %1.3f%%     Ink: %d %1.2f av: %1.3f'#$D#$A
+     +'Зенит: %d %1.2f av: %1.3f      Азимут: %d %1.2f av: %1.3f     Визир: %d %1.2f av: %1.3f');
+   end;
+
+end;
+
 initialization
-  RegisterClass(TFormInclinCheck);
-  TRegister.AddType<TFormInclinCheck, IForm>.LiveTime(ltSingletonNamed);
-  RegisterClass(TFormInclinCheckPoly);
-  TRegister.AddType<TFormInclinCheckPoly, IForm>.LiveTime(ltSingletonNamed);
+//  RegisterClass(TFormInclinCheck);
+//  TRegister.AddType<TFormInclinCheck, IForm>.LiveTime(ltSingletonNamed);
+//  RegisterClass(TFormInclinCheckPoly);
+//  TRegister.AddType<TFormInclinCheckPoly, IForm>.LiveTime(ltSingletonNamed);
+//  RegisterClass(TFormInclinCheckUni);
+//  TRegister.AddType<TFormInclinCheckUni, IForm>.LiveTime(ltSingletonNamed);
 finalization
-  GContainer.RemoveModel<TFormInclinCheck>;
-  GContainer.RemoveModel<TFormInclinCheckPoly>;
+//  GContainer.RemoveModel<TFormInclinCheck>;
+////  GContainer.RemoveModel<TFormInclinCheckPoly>;
+//  GContainer.RemoveModel<TFormInclinCheckUni>;
 end.

@@ -17,23 +17,23 @@ package Core;
 {$EXTENDEDSYNTAX ON}
 {$IMPORTEDDATA ON}
 {$IOCHECKS ON}
-{$LOCALSYMBOLS ON}
+{$LOCALSYMBOLS OFF}
 {$LONGSTRINGS ON}
 {$OPENSTRINGS ON}
 {$OPTIMIZATION ON}
 {$OVERFLOWCHECKS OFF}
 {$RANGECHECKS OFF}
-{$REFERENCEINFO ON}
+{$REFERENCEINFO OFF}
 {$SAFEDIVIDE OFF}
-{$STACKFRAMES ON}
+{$STACKFRAMES OFF}
 {$TYPEDADDRESS OFF}
 {$VARSTRINGCHECKS ON}
 {$WRITEABLECONST OFF}
 {$MINENUMSIZE 1}
 {$IMAGEBASE $400000}
-{$DEFINE DEBUG}
+{$DEFINE RELEASE}
 {$ENDIF IMPLICITBUILDING}
-{$DESCRIPTION 'Core 3.0.0 Корневые классы и утилиты'}
+{$DESCRIPTION 'Core 2.0.0 Корневые классы и утилиты Плагинов '}
 {$IMPLICITBUILD ON}
 
 requires
@@ -128,7 +128,8 @@ contains
   Plot.GR32.Legend in 'Plot\GR32\Plot.GR32.Legend.pas',
   Plot.GR32.Tools in 'Plot\GR32\Plot.GR32.Tools.pas',
   Plot.VirtualData in 'Plot\New\Plot.VirtualData.pas',
-  Plot.VirtualDataLink in 'Plot\New\Plot.VirtualDataLink.pas';
+  Plot.VirtualDataLink in 'Plot\New\Plot.VirtualDataLink.pas',
+  TrrInclin.Temp.LinPacked in 'TrrInclin.Temp.LinPacked.pas';
 
 end.
 

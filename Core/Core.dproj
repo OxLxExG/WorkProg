@@ -122,11 +122,11 @@
     <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
         <Debugger_HostApplication>C:\XE\Projects\Device2\_exe\Debug\WorkProg.exe</Debugger_HostApplication>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
-        <VerInfo_Keys>CompanyName=;FileVersion=2.12.0.33;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.Core;FileDescription=Core;ProductName=Core</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=;FileVersion=2.12.0.24;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.Core;FileDescription=Core;ProductName=Core</VerInfo_Keys>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_MajorVer>2</VerInfo_MajorVer>
-        <VerInfo_Build>33</VerInfo_Build>
+        <VerInfo_Build>24</VerInfo_Build>
         <VerInfo_MinorVer>12</VerInfo_MinorVer>
     </PropertyGroup>
     <ItemGroup>
@@ -224,6 +224,7 @@
         <DCCReference Include="Plot\GR32\Plot.GR32.Tools.pas"/>
         <DCCReference Include="Plot\New\Plot.VirtualData.pas"/>
         <DCCReference Include="Plot\New\Plot.VirtualDataLink.pas"/>
+        <DCCReference Include="TrrInclin.Temp.LinPacked.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

@@ -13,6 +13,13 @@ uses CustomPlot.DataLink, Plot.GR32.Tools,
   type
   TThemedRangeBar = class(TCustomRangeBar);
 
+
+  TGR32DataRow = class(TCustomGraphDataRow)
+  protected
+    procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
+  end;
+
+
   TGR32GraphicInfo = class(TGR32Region, ICaption)
   private
     FCanvasShowRect: TRect;
@@ -20,7 +27,6 @@ uses CustomPlot.DataLink, Plot.GR32.Tools,
     FCurY: TFloat;
     FBitmap: TBitmap32;
     procedure Render;
-    procedure OnCurrentParamsEvent( Sender: TObject; Y: TFloat);
   protected
     function GetCaption: string;
     procedure SetCaption(const Value: string);
@@ -30,6 +36,7 @@ uses CustomPlot.DataLink, Plot.GR32.Tools,
     procedure Paint; override;
     procedure SetClientRect(const Value: TRect); override;
   public
+    procedure OnCurrentParamsEvent( Sender: TObject; Y: TFloat);
     constructor Create(Collection: TCollection); override;
     destructor Destroy; override;
   end;
@@ -48,7 +55,7 @@ begin
   inherited;
   FBitmap := Bm32ThemeGreate;
   for var r in Column.Regions do if r is TGR32GraphicData then
-  TGR32GraphicData(r).CurrentParamsEvent := OnCurrentParamsEvent;
+//  TGR32GraphicData(r).CurrentParamsEvent := OnCurrentParamsEvent;
 end;
 
 destructor TGR32GraphicInfo.Destroy;
@@ -471,6 +478,10 @@ var
     FBitmap.VertLineTS(CurrentX, 0, FBitmap.Height, ACL_AXIS);
 
     var TrimmedTitle := Param.Title;
+
+ if TrimmedTitle.EndsWith('.DEV', True) or TrimmedTitle.EndsWith('.CLC', True) then
+    TrimmedTitle := TrimmedTitle.Substring(0, TrimmedTitle.Length - 4);
+
     FBitmap.Font.Style := [fsBold];
     var MaxTextWidth := FixedColWidth - (TextPadding * 2);
     if FBitmap.TextWidth(TrimmedTitle) > MaxTextWidth then
@@ -688,6 +699,8 @@ var
 
 // --- нямнбмни йнд лерндю RENDER ---
 begin
+  if not (not Graph.Frosted and Graph.HandleAllocated and Column.Visible and Row.Visible) then Exit;
+
   FBitmap.FillRect(0, 0, FBitmap.Width, FBitmap.Height, Color32(StyleServices.GetStyleColor(scTreeView)));
 
   var AvailableHeight := FBitmap.Height - HeaderHeight;
@@ -748,7 +761,41 @@ end;
 
 {$ENDREGION}
 
+{ TGR32DataRow }
+
+procedure TGR32DataRow.MouseMove(Shift: TShiftState; X, Y: Integer);
+ var
+  RData: TGR32GraphicData;
+  RInfo: TGR32GraphicInfo;
+begin
+  //to do get info row if region TGR32GraphicInfo then OnCurrentParamsEvent
+  for var c in Graph.Columns do
+   begin
+    RData := nil;
+    RInfo := nil;
+    for var r in c.Regions do if r is TGR32GraphicData then
+     begin
+      RData := r as TGR32GraphicData;
+      break;
+     end;
+    for var r in c.Regions do if r is TGR32GraphicInfo then
+     begin
+      RInfo := r as TGR32GraphicInfo;
+      break;
+     end;
+
+     if Assigned(RData) and Assigned(RInfo) then
+      begin
+        var clPoint := TFloatPoint.Create(RData.MouseToClient(TPoint.Create(X,Y)));
+        RInfo.OnCurrentParamsEvent(self, clPoint.Y);
+      end;
+   end;
+end;
+
 initialization
   TGraphRegion.RegClsRegister(TGR32GraphicInfo, TGR32InfoRow, TGR32GraphicCollumn);
   RegisterClasses([TGR32GraphicInfo]);
+  TGraphRegion.RegClsRegister(TGR32GraphicData, TGR32DataRow, TGR32GraphicCollumn);
+  RegisterClasses([TGR32DataRow]);
+
 end.

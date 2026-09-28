@@ -92,13 +92,13 @@
         <DCC_DebugDCUs>true</DCC_DebugDCUs>
         <DCC_RangeChecking>true</DCC_RangeChecking>
         <UsePackages>true</UsePackages>
-        <VerInfo_Keys>CompanyName=;FileVersion=2.13.0.21;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=;FileVersion=2.13.0.22;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
         <VerInfo_MajorVer>2</VerInfo_MajorVer>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
         <Debugger_HostApplication>C:\Projects\Delphi\13\Device2\_exe\Win32\Debug\WorkProg.exe</Debugger_HostApplication>
         <VerInfo_DLL>true</VerInfo_DLL>
         <VerInfo_Locale>1049</VerInfo_Locale>
-        <VerInfo_Build>21</VerInfo_Build>
+        <VerInfo_Build>22</VerInfo_Build>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <DCC_MapFile>3</DCC_MapFile>
     </PropertyGroup>
@@ -109,13 +109,13 @@
         <DCC_DebugInformation>0</DCC_DebugInformation>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
-        <VerInfo_Keys>CompanyName=;FileVersion=2.13.0.22;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=;FileVersion=2.13.0.24;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
         <DCC_MapFile>3</DCC_MapFile>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
         <VerInfo_MajorVer>2</VerInfo_MajorVer>
-        <VerInfo_Build>22</VerInfo_Build>
+        <VerInfo_Build>24</VerInfo_Build>
         <VerInfo_MinorVer>13</VerInfo_MinorVer>
     </PropertyGroup>
     <Import Project="..\..\_Defaul_pak.optset" Condition="'$(Cfg_1_Win32)'!='' And Exists('..\..\_Defaul_pak.optset')"/>
@@ -176,9 +176,6 @@
         <DCCReference Include="MetrInclin4.Temp.Form.pas">
             <Form>FormMetrInclin4T</Form>
         </DCCReference>
-        <DCCReference Include="MetrInclin.CheckForm.pas">
-            <Form>FormInclinCheck</Form>
-        </DCCReference>
         <DCCReference Include="MetrGK.pas">
             <Form>FormGK</Form>
         </DCCReference>
@@ -230,6 +227,15 @@
         <DCCReference Include="MetrInclin.Temp.Stat.pas"/>
         <DCCReference Include="PatchCart.pas"/>
         <DCCReference Include="ai\MetrInclin.Temp.LeaveOneOut.pas"/>
+        <DCCReference Include="ai\LotoAdapter.pas"/>
+        <DCCReference Include="ai\TrrInclin.Temp.LinModel.pas"/>
+        <DCCReference Include="LuaInclin.Temp.Lin.pas"/>
+        <DCCReference Include="ai\TrrInclin.Temp.LinTrainingReport.pas"/>
+        <DCCReference Include="MetrInclin.CheckForm.Uni.pas">
+            <Form>FormCheckUni</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="ai\MetrInclin.VerificationReport.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

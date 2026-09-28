@@ -117,9 +117,9 @@
     <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
         <VerInfo_DLL>true</VerInfo_DLL>
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <VerInfo_Keys>CompanyName=;FileVersion=2.13.0.22;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=3.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=;FileVersion=2.13.0.24;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=3.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
         <Debugger_HostApplication>C:\XE\Projects\Device2\_exe\Release\WorkProg.exe</Debugger_HostApplication>
-        <VerInfo_Build>22</VerInfo_Build>
+        <VerInfo_Build>24</VerInfo_Build>
         <VerInfo_MinorVer>13</VerInfo_MinorVer>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
     </PropertyGroup>

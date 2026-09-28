@@ -216,6 +216,7 @@ type
 
   TCustomGraphDataRow = class(TGraphRow)
   protected
+    procedure MouseMove(Shift: TShiftState; X, Y: Integer); virtual;
     function GetCaption: string; override;
   end;
 
@@ -2711,6 +2712,8 @@ begin
     FEditGraph.Move(TPoint.Create(X, Y))
   else if Assigned(FHitRegion) then
     FHitRegion.MouseMove(Shift, X, Y);
+  var r := HitRow(TPoint.Create(X, Y));
+  if Assigned(r) and (r is TCustomGraphDataRow) then TCustomGraphDataRow(r).MouseMove(Shift,X, Y);
   inherited;
 end;
 
@@ -3057,6 +3060,12 @@ begin
 {$ELSE}
   Result := 'Графики'
 {$ENDIF}
+end;
+
+
+procedure TCustomGraphDataRow.MouseMove(Shift: TShiftState; X, Y: Integer);
+begin
+
 end;
 
 { TGraphRegions }

@@ -48,6 +48,7 @@ object FormMetrInclinT: TFormMetrInclinT
     Colors.UnfocusedSelectionColor = 13421772
     Colors.UnfocusedSelectionBorderColor = 13421772
     Header.AutoSizeIndex = -1
+    Header.Height = 13
     Header.Options = [hoAutoResize, hoColumnResize, hoDrag, hoShowSortGlyphs, hoVisible, hoAutoSpring]
     TabOrder = 0
     TreeOptions.AutoOptions = [toAutoDropExpand, toAutoScrollOnExpand, toAutoSpanColumns, toAutoTristateTracking, toAutoHideButtons, toAutoDeleteMovedNodes]
@@ -56,6 +57,8 @@ object FormMetrInclinT: TFormMetrInclinT
     TreeOptions.SelectionOptions = [toFullRowSelect]
     OnAddToSelection = TreeAddToSelection
     OnGetText = TreeGetText
+    Touch.InteractiveGestures = [igPan, igPressAndTap]
+    Touch.InteractiveGestureOptions = [igoPanSingleFingerHorizontal, igoPanSingleFingerVertical, igoPanInertia, igoPanGutter, igoParentPassthrough]
     Columns = <
       item
         Options = [coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAllowFocus]

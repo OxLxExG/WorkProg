@@ -128,9 +128,11 @@ type
     class function New(const AParent: TJvCustomInspectorItem;
           RootDataNode, RootOption: IXMLNode; AOnAddOPtion: TJvInspectorOptionDataEvent): TJvInspectorItemInstances; reintroduce;
   end;
-  IDialogOptions = IDialog<IXMLNode, IXMLNode, TJvInspectorOptionDataEvent, TDialogResult>;
 
-procedure SetInspectorItemFont(Item: TJvCustomInspectorItem; const ACanvas: TCanvas);
+  IDialogOptions = IDialog<IXMLNode, IXMLNode, TJvInspectorOptionDataEvent, TDialogResult>;
+
+
+procedure SetInspectorItemFont(Item: TJvCustomInspectorItem; const ACanvas: TCanvas);
 
 implementation
 
@@ -551,7 +553,8 @@ begin
     Result := nil;
 end;
 
-function TJvInspectorArrayPropData.GetAs<T>(a0: T; GetProp: TGetPropProc<T>): T;
+
+function TJvInspectorArrayPropData.GetAs<T>(a0: T; GetProp: TGetPropProc<T>): T;
  var
   a: TArray<T>;
   i: Integer;

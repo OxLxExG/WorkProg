@@ -116,8 +116,8 @@
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <VerInfo_DLL>true</VerInfo_DLL>
-        <VerInfo_Keys>CompanyName=;FileVersion=2.13.3.22;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=3.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
-        <VerInfo_Build>22</VerInfo_Build>
+        <VerInfo_Keys>CompanyName=;FileVersion=2.13.3.24;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=3.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
+        <VerInfo_Build>24</VerInfo_Build>
         <UsePackages>true</UsePackages>
         <Debugger_HostApplication>C:\Projects\Delphi\13\Device2\_exe\Win32\Debug\WorkProg.exe</Debugger_HostApplication>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>

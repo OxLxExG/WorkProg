@@ -52,7 +52,6 @@ type
     FImportFile: string;
     FMetaDataInfo: TInfoEventRes;
     FBindWorkRes: TWorkEventRes;
-    NTrrApply: TMenuItem;
     NConnect: TMenuItem;
     NFile: TMenuItem;
     NFileNew: TMenuItem;
@@ -117,6 +116,7 @@ type
   protected
 //    NIsMedian: TMenuItem;
     FlagNoUpdateFromEtalon: boolean;
+    FlagIgnoreEtalon: boolean;
     procedure CopyTrrToDev();
     procedure AutoReport(Status: TStatusAutomatMetrology; const info: string);
     procedure DoStandartSetup(Item: TJvCustomInspectorItem; Option: IXMLNode; var Data: IXMLNode); virtual;
@@ -134,6 +134,7 @@ type
     procedure DoCancelAtt(AttNode: IXMLNode); virtual;
     procedure NCPopup(Sender: TObject); override;
     function UserExecStep(Step: Integer; alg, trr: IXMLNode): Boolean; virtual;
+    procedure DoOnExecuteExport(FilrerNo: Integer; const ExportFile: string; Data: IXMLNode); virtual;
     function UserSetupAlg(alg: IXMLNode): Boolean; virtual;
     function UserSummKadr(summ, KadrData: IXMLNode): Boolean; virtual;
     function UserShowCurrentSumm(show, summ: IXMLNode; AttN, AttCnt: Integer): Boolean; virtual;
@@ -149,6 +150,7 @@ type
     class procedure AddSum<C: TIObject, constructor>(Root: IXMLNode; Data: Double); static;
 //    procedure UpdateRunXmlDir;
   public
+    NTrrApply: TMenuItem;
     constructor CreateUser(const aName: string = ''); override;
     destructor Destroy; override;
     procedure ReCalc(NeedSave: Boolean = True);
@@ -783,11 +785,12 @@ var
   procedure LoadFile;
   begin
     //////
-    //m.OwnerDocument.SaveToFile('C:\XE\Projects\Device2\_exe\Debug\Метрология\ГКИ\polytest\m.xml');
+//    m.OwnerDocument.SaveToFile('C:\Projects\Delphi\13\Device2\_exe\Win32\Debug\Метрология\ГКИ\polytest\m.xml');
+//    FEtalonData.OwnerDocument.SaveToFile('C:\Projects\Delphi\13\Device2\_exe\Win32\Debug\Метрология\ГКИ\polytest\etalon.xml');
     //////
-    if HasXTree(FEtalonData, m) then
+    if FlagIgnoreEtalon or HasXTree(FEtalonData, m) then
     begin
-      if not Assigned(t) then
+      if not FlagIgnoreEtalon and not Assigned(t) then
       begin
         m.ChildNodes.Add(FEtalonAlg.CloneNode(True));
         GDoc.SaveToFile(Value);
@@ -1355,6 +1358,11 @@ begin
   end;
 end;
 
+procedure TFormMetrolog.DoOnExecuteExport(FilrerNo: Integer; const ExportFile: string; Data: IXMLNode);
+begin
+ FImportExport.ExecuteExport(FilrerNo, ExportFile, Data); // NewFFileData(GetMetr([], GetFileOrDevData).ParentNode.ParentNode.NodeName)));
+end;
+
 procedure TFormMetrolog.NFileSaveAsClick(Sender: TObject);
 begin
   with TSaveDialog.Create(nil) do
@@ -1377,7 +1385,7 @@ begin
         TrrFile := FileName;
       end
       else
-        FImportExport.ExecuteExport(FilterIndex - 1, FileName, GetMetr([], FFileData)); // NewFFileData(GetMetr([], GetFileOrDevData).ParentNode.ParentNode.NodeName)));
+        DoOnExecuteExport(FilterIndex - 1, FileName, GetMetr([], FFileData)); // NewFFileData(GetMetr([], GetFileOrDevData).ParentNode.ParentNode.NodeName)));
     end;
   finally
     Free;

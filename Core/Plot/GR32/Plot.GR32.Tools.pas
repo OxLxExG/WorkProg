@@ -18,6 +18,7 @@ const
 type
   TCurrentParamsEvent = procedure(Sender: TObject; Y: TFloat) of object;
 
+
   TGR32GraphicCollumn = class(TGraphColmn, ICaption)
   protected
     function GetCaption: string;

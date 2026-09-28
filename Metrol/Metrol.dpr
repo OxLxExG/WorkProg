@@ -38,7 +38,6 @@ uses
   MetrInclin.TrrAndP3 in 'MetrInclin.TrrAndP3.pas',
   MetrAGK in 'MetrAGK.pas' {FormAGK},
   MetrInclin4.Temp.Form in 'MetrInclin4.Temp.Form.pas' {FormMetrInclin4T},
-  MetrInclin.CheckForm in 'MetrInclin.CheckForm.pas' {FormInclinCheck},
   MetrGK in 'MetrGK.pas' {FormGK},
   MetrInd in 'MetrInd.pas' {FormInd},
   MetrNNK2X in 'MetrNNK2X.pas' {FormNNK2X},
@@ -57,7 +56,13 @@ uses
   MetrInclin.Temp.Form in 'MetrInclin.Temp.Form.pas' {FormMetrInclinT},
   MetrInclin.Temp.Stat in 'MetrInclin.Temp.Stat.pas',
   PatchCart in 'PatchCart.pas',
-  MetrInclin.Temp.LeaveOneOut in 'ai\MetrInclin.Temp.LeaveOneOut.pas';
+  MetrInclin.Temp.LeaveOneOut in 'ai\MetrInclin.Temp.LeaveOneOut.pas',
+  LotoAdapter in 'ai\LotoAdapter.pas',
+  TrrInclin.Temp.LinModel in 'ai\TrrInclin.Temp.LinModel.pas',
+  LuaInclin.Temp.Lin in 'LuaInclin.Temp.Lin.pas',
+  TrrInclin.Temp.LinTrainingReport in 'ai\TrrInclin.Temp.LinTrainingReport.pas',
+  MetrInclin.CheckForm.Uni in 'MetrInclin.CheckForm.Uni.pas' {FormCheckUni},
+  MetrInclin.VerificationReport in 'ai\MetrInclin.VerificationReport.pas';
 
 {$R *.res}
 

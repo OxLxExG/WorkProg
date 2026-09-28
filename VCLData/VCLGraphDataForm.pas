@@ -111,7 +111,7 @@ class procedure TGraphDataForm.DoCreateForm(Sender: IAction);
 begin
   gdf := CreateUser();
   gdf.Graph.Rows.Add<TGR32LegendRow>;
-  gdf.Graph.Rows.Add<TCustomGraphDataRow>;
+  gdf.Graph.Rows.Add<TGR32DataRow>;
   gdf.Graph.Rows.Add<TGR32InfoRow>;
   gdf.Graph.Columns.Add<TGR32GraphicCollumn>;
   gdf.Caption := 'Chart';
